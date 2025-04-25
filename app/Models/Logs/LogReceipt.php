@@ -33,4 +33,8 @@ class LogReceipt extends Model
         'result_research',
         'section_medical',
     ];
+    protected $dates = [
+        'date_receipt',
+        'datetime_alcohol',
+    ];
 }

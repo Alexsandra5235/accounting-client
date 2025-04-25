@@ -25,4 +25,8 @@ class LogDischarge extends Model
         'outcome',
         'section_transferred',
     ];
+    protected array $dates = [
+        'datetime_discharge',
+        'datetime_inform',
+    ];
 }

@@ -40,6 +40,9 @@ class Patient extends Model
         'snils',
         'polis',
     ];
+    protected $dates = [
+        'birth_day',
+    ];
 
     /**
      * @return BelongsTo
