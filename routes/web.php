@@ -18,6 +18,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::post('/log',[LogController::class, 'store'])->name('log.store');
+    Route::delete('/log/{id}',[LogController::class, 'destroy'])->name('log.destroy');
 });
 
 require __DIR__.'/auth.php';

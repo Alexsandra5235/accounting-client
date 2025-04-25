@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Logs\LogReceipt;
 use App\Services\LogReceiptService;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class LogController extends Controller
 {
@@ -15,5 +17,17 @@ class LogController extends Controller
             'time_receipt' => ['required'],
         ]);
         return app(LogReceiptService::class)->create($request);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function destroy(int $id): bool|string
+    {
+        try {
+            return app(LogReceiptService::class)->destroy($id);
+        } catch (Exception $exception) {
+            return $exception->getMessage();
+        }
     }
 }
