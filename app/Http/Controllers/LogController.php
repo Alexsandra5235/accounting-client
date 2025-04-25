@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Logs\LogDischarge;
 use App\Models\Logs\LogReceipt;
 use App\Models\Logs\LogReject;
+use App\Services\LogDischargeService;
 use App\Services\LogReceiptService;
 use App\Services\LogRejectService;
 use Exception;
@@ -12,9 +14,9 @@ use Illuminate\Support\Facades\Log;
 
 class LogController extends Controller
 {
-    public function store(Request $request): LogReject
+    public function store(Request $request): LogDischarge
     {
-        return app(LogRejectService::class)->create($request);
+        return app(LogDischargeService::class)->create($request);
     }
 
     /**
@@ -23,7 +25,7 @@ class LogController extends Controller
     public function destroy(int $id): bool|string
     {
         try {
-            return app(LogRejectService::class)->destroy($id);
+            return app(LogDischargeService::class)->destroy($id);
         } catch (Exception $exception) {
             return $exception->getMessage();
         }
