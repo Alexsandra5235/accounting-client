@@ -44,27 +44,10 @@ class LogReceiptRepository implements LogInterface
     public function destroy(int $id): bool
     {
         try {
-            $logReceipt = $this->findById($id);
-            $logReceipt->delete();
-            return true;
+            return $this->destroyLog($id, LogReceipt::class);
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage());
         }
     }
 
-    /**
-     * Поиск записи по id
-     * @param int $id
-     * @return LogReceipt
-     * Если запись была найдена она будет возвращена,
-     * в противном случае возвращается исключение.
-     */
-    public function findById(int $id): LogReceipt
-    {
-        try {
-            return LogReceipt::query()->findOrFail($id);
-        } catch (ModelNotFoundException $exception) {
-            throw new ModelNotFoundException("Log Receipt with id = {$id} not found");
-        }
-    }
 }
