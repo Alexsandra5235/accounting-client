@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use app\Interfaces\LogInterface;
 use App\Models\Logs\LogReceipt;
+use app\Traits\HasLog;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -13,6 +14,7 @@ use Illuminate\Http\Request;
  */
 class LogReceiptRepository implements LogInterface
 {
+    use HasLog;
     /**
      * Create a new class instance.
      */
@@ -28,10 +30,7 @@ class LogReceiptRepository implements LogInterface
      */
     public function create(Request $request): LogReceipt
     {
-        return LogReceipt::query()->create([
-            'date_receipt' => $request->input('date_receipt'),
-            'time_receipt' => $request->input('time_receipt'),
-        ]);
+        return $this->createLog($request, LogReceipt::class);
     }
 
     /**
