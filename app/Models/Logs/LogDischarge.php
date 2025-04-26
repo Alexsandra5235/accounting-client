@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $datetime_inform
  * @property string $outcome
  * @property string $section_transferred
+ * @property int $id
  */
 class LogDischarge extends Model
 {

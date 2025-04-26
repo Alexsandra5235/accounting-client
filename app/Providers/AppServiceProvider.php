@@ -8,12 +8,14 @@ use App\Repository\DiagnosisRepository;
 use App\Repository\LogDischargeRepository;
 use App\Repository\LogReceiptRepository;
 use App\Repository\LogRejectRepository;
+use App\Repository\LogRepository;
 use App\Repository\PatientRepository;
 use App\Services\ClassifiersService;
 use App\Services\DiagnosisService;
 use App\Services\LogDischargeService;
 use App\Services\LogReceiptService;
 use App\Services\LogRejectService;
+use App\Services\LogService;
 use App\Services\PatientService;
 use Illuminate\Support\ServiceProvider;
 
@@ -48,6 +50,10 @@ class AppServiceProvider extends ServiceProvider
             return new PatientRepository();
         });
 
+        $this->app->singleton(LogRepository::class, function () {
+            return new LogRepository();
+        });
+
         $this->app->singleton(LogReceiptService::class, function () {
             return new LogReceiptService();
         });
@@ -70,6 +76,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(PatientService::class, function () {
             return new PatientService();
+        });
+
+        $this->app->singleton(LogService::class, function () {
+            return new LogService();
         });
     }
 

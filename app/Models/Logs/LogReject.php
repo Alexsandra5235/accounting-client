@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $reason_refusal
  * @property string $name_medical_worker
  * @property string $add_info
+ * @property int $id
  */
 class LogReject extends Model
 {

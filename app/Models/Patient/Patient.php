@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $snils
  * @property string $polis
  * @property int $diagnosis_id
+ * @property int $id
  */
 class Patient extends Model
 {
@@ -40,7 +41,7 @@ class Patient extends Model
         'snils',
         'polis',
     ];
-    protected $dates = [
+    protected array $dates = [
         'birth_day',
     ];
 

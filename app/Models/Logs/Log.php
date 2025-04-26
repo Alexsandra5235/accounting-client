@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $log_discharge_id
  * @property int $log_reject_id
  * @property int $patient_id
+ * @property int $id
  */
 class Log extends Model
 {

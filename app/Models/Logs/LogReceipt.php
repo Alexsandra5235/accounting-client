@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $fact_alcohol
  * @property string $result_research
  * @property string $section_medical
+ * @property int $id
  */
 class LogReceipt extends Model
 {
