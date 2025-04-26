@@ -25,7 +25,7 @@ trait HasLog
      * Поиск записи по id
      * @param int $id
      * @param class-string<Model> $modelClass
-     * @return LogReceipt
+     * @return Model
      * Если запись была найдена она будет возвращена,
      * в противном случае возвращается исключение.
      */
