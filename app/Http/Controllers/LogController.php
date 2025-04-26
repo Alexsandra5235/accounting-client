@@ -11,6 +11,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\String\Exception\ExceptionInterface;
 
 class LogController extends Controller
 {
@@ -40,19 +41,19 @@ class LogController extends Controller
     }
     public function update(int $id, Request $request): bool|string
     {
+        $request->validate([
+            'date_receipt' => ['required'],
+            'time_receipt' => ['required'],
+            'name' => ['required'],
+            'gender' => ['required'],
+            'birth_day' => ['required'],
+            'medical_card' => ['required'],
+        ]);
         try {
-            validator($request->all(), [
-                'date_receipt' => ['required'],
-                'time_receipt' => ['required'],
-                'name' => ['required'],
-                'gender' => ['required'],
-                'birth_day' => ['required'],
-                'medical_card' => ['required'],
-            ]);
-            return app(LogService::class)->update($id, $request);
+            app(LogService::class)->update($id, $request);
+            return redirect()->route('dashboard');
         } catch (Exception $e) {
-            \Illuminate\Support\Facades\Log::info('controller');
-            return $e->getMessage();
+            return redirect()->back()->withErrors(['error_update' => $e->getMessage()]);
         }
     }
     public function findAll(): Collection
@@ -66,6 +67,15 @@ class LogController extends Controller
             return view('log.logShow', compact('log'));
         } catch (Exception $exception){
             return redirect()->route('dashboard')->withErrors(['error_show' => $exception->getMessage()]);
+        }
+    }
+    public function edit(int $id): View|RedirectResponse
+    {
+        try {
+            $log = app(LogService::class)->findById($id);
+            return view('log.logEdit', compact('log'));
+        } catch (Exception $exception){
+            return redirect()->route('dashboard')->withErrors(['error_edit' => $exception->getMessage()]);
         }
     }
 }
