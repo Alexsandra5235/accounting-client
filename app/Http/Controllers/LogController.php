@@ -7,7 +7,9 @@ use App\Models\Logs\Log;
 use App\Services\LogDischargeService;
 use App\Services\LogService;
 use Exception;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class LogController extends Controller
@@ -57,12 +59,13 @@ class LogController extends Controller
     {
         return app(LogService::class)->findAll();
     }
-    public function findById(int $id): Log|string
+    public function findById(int $id): View|RedirectResponse
     {
         try {
-            return app(LogService::class)->findById($id);
+            $log = app(LogService::class)->findById($id);
+            return view('log.logShow', compact('log'));
         } catch (Exception $exception){
-            return $exception->getMessage();
+            return redirect()->route('dashboard')->withErrors(['error_show' => $exception->getMessage()]);
         }
     }
 }

@@ -8,6 +8,21 @@
         </p>
     </x-slot>
 
+    @error('error_show')
+    <div style="padding-top: 48px">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="flex items-center p-6 text-gray-900 dark:text-gray-100">
+                    <svg class="w-6 h-6 text-red-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12c0 4.97-4.03 9-9 9S3 16.97 3 12 7.03 3 12 3s9 4.03 9 9z" />
+                    </svg>
+                    {{ $message }}
+                </div>
+            </div>
+        </div>
+    </div>
+    @enderror
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -35,9 +50,9 @@
                                     <button onclick="toggleDropdown(this)" class="text-gray-600 focus:outline-none">⋮</button>
                                     <div class="dropdown-menu absolute right-0 hidden bg-white border border-gray-300 mt-1">
                                         <ul class="list-none p-2">
-                                            <li class="border-b"><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Редактировать</a></li>
-                                            <li class="border-b"><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Удалить</a></li>
-                                            <li><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Просмотр</a></li>
+                                            <li class="border"><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Редактировать</a></li>
+                                            <li class="border"><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Удалить</a></li>
+                                            <li class="border"><a href="{{ route('log.find', ['id' => $log->id]) }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Просмотр</a></li>
                                         </ul>
                                     </div>
                                 </td>
