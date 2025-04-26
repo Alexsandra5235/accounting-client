@@ -34,12 +34,13 @@ class LogController extends Controller
     public function destroy(int $id): bool|string
     {
         try {
-            return app(LogService::class)->destroy($id);
+            app(LogService::class)->destroy($id);
+            return redirect()->back();
         } catch (Exception $exception) {
-            return $exception->getMessage();
+            return redirect()->back()->withErrors(['error_delete' => $exception->getMessage()]);
         }
     }
-    public function update(int $id, Request $request): bool|string
+    public function update(int $id, Request $request): RedirectResponse
     {
         $request->validate([
             'date_receipt' => ['required'],

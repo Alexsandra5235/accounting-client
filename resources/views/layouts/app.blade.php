@@ -33,6 +33,9 @@
             </main>
         </div>
     <script>
+        function confirmDeletion() {
+            return confirm('Вы уверены, что хотите удалить эту запись? Это действие невозможно будет отменить.');
+        }
         function toggleDropdown(button) {
             const dropdown = button.nextElementSibling;
             dropdown.classList.toggle('hidden');
