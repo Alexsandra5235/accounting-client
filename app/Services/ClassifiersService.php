@@ -16,9 +16,13 @@ class ClassifiersService
     {
         //
     }
-    public function create(Request $request): Classifiers
+    public function createState(Request $request): Classifiers
     {
-        return app(ClassifiersRepository::class)->create($request);
+        return app(ClassifiersRepository::class)->createState($request);
+    }
+    public function createWound(Request $request): Classifiers
+    {
+        return app(ClassifiersRepository::class)->createWound($request);
     }
 
     /**

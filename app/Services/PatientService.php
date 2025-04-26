@@ -17,8 +17,9 @@ class PatientService
     {
         //
     }
-    public function create(Request $request, Diagnosis $diagnosis): Patient
+    public function create(Request $request): Patient
     {
+        $diagnosis = app(DiagnosisService::class)->create($request);
         return app(PatientRepository::class)->create($request, $diagnosis);
     }
 

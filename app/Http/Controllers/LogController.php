@@ -2,21 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Logs\LogDischarge;
-use App\Models\Logs\LogReceipt;
-use App\Models\Logs\LogReject;
+
+use App\Models\Logs\Log;
 use App\Services\LogDischargeService;
-use App\Services\LogReceiptService;
-use App\Services\LogRejectService;
+use App\Services\LogService;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class LogController extends Controller
 {
-    public function store(Request $request): LogDischarge
+    public function store(Request $request): Log
     {
-        return app(LogDischargeService::class)->create($request);
+        validator($request->all(), [
+            'date_receipt' => ['required'],
+            'time_receipt' => ['required'],
+            'name' => ['required'],
+            'gender' => ['required'],
+            'birth_day' => ['required'],
+            'medical_card' => ['required'],
+        ]);
+        return app(LogService::class)->create($request);
     }
 
     /**

@@ -9,6 +9,7 @@ use App\Models\Logs\LogReject;
 use App\Models\Patient\Patient;
 use App\Repository\LogRepository;
 use Exception;
+use Illuminate\Http\Request;
 
 class LogService
 {
@@ -19,9 +20,12 @@ class LogService
     {
         //
     }
-    public function create(LogReceipt $logReceipt, LogDischarge $logDischarge, LogReject $logReject,
-                           Patient $patient): Log
+    public function create(Request $request): Log
     {
+        $patient = app(PatientService::class)->create($request);
+        $logReceipt = app(LogReceiptService::class)->create($request);
+        $logDischarge = app(LogDischargeService::class)->create($request);
+        $logReject = app(LogRejectService::class)->create($request);
         return app(LogRepository::class)->create($logDischarge, $logReceipt, $logReject, $patient);
     }
 

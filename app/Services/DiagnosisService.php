@@ -7,6 +7,7 @@ use App\Models\Patient\Classifiers;
 use App\Models\Patient\Diagnosis;
 use App\Repository\DiagnosisRepository;
 use Exception;
+use Illuminate\Http\Request;
 
 class DiagnosisService
 {
@@ -19,12 +20,13 @@ class DiagnosisService
     }
 
     /**
-     * @param Classifiers $wound
-     * @param Classifiers $state
+     * @param Request $request
      * @return Diagnosis
      */
-    public function create(Classifiers $wound, Classifiers $state): Diagnosis
+    public function create(Request $request): Diagnosis
     {
+        $state = app(ClassifiersService::class)->createState($request);
+        $wound = app(ClassifiersService::class)->createWound($request);
         return app(DiagnosisRepository::class)->create($wound, $state);
     }
 
