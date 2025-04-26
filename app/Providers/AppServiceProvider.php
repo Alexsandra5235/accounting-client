@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use app\Interfaces\LogInterface;
+use App\Interfaces\LogModelInterface;
 use App\Repository\ClassifiersRepository;
 use App\Repository\DiagnosisRepository;
 use App\Repository\LogDischargeRepository;

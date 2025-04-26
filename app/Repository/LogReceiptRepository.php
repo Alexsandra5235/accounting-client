@@ -2,17 +2,16 @@
 
 namespace App\Repository;
 
-use app\Interfaces\LogInterface;
+use App\Interfaces\LogModelInterface;
 use App\Models\Logs\LogReceipt;
 use app\Traits\HasLog;
 use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 /**
  *
  */
-class LogReceiptRepository implements LogInterface
+class LogReceiptRepository implements LogModelInterface
 {
     use HasLog;
     /**

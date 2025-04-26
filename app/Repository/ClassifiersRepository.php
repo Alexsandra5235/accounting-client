@@ -2,14 +2,14 @@
 
 namespace App\Repository;
 
-use app\Interfaces\LogInterface;
+use App\Interfaces\LogModelInterface;
 use App\Models\Patient\Classifiers;
 use app\Traits\HasLog;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
-class ClassifiersRepository implements LogInterface
+class ClassifiersRepository implements LogModelInterface
 {
     use HasLog;
     /**

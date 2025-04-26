@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use app\Interfaces\LogInterface;
+use App\Interfaces\LogModelInterface;
 use App\Interfaces\PatientInterface;
 use App\Models\Patient\Diagnosis;
 use App\Models\Patient\Patient;
