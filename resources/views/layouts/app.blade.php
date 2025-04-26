@@ -32,5 +32,19 @@
                 {{ $slot }}
             </main>
         </div>
+    <script>
+        function toggleDropdown(button) {
+            const dropdown = button.nextElementSibling;
+            dropdown.classList.toggle('hidden');
+        }
+        window.onclick = function(event) {
+            if (!event.target.matches('button')) {
+                const dropdowns = document.querySelectorAll('.dropdown-menu');
+                dropdowns.forEach(dropdown => {
+                    dropdown.classList.add('hidden');
+                });
+            }
+        }
+    </script>
     </body>
 </html>

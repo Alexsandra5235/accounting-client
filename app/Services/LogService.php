@@ -10,6 +10,7 @@ use App\Models\Patient\Patient;
 use App\Repository\LogRepository;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -59,5 +60,9 @@ class LogService
     public function findAll(): Collection
     {
         return app(LogRepository::class)->findAll();
+    }
+    public function findByID(int $id): Log
+    {
+        return app(LogRepository::class)->findByID($id);
     }
 }

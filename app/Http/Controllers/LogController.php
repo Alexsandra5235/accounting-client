@@ -57,4 +57,12 @@ class LogController extends Controller
     {
         return app(LogService::class)->findAll();
     }
+    public function findById(int $id): Log|string
+    {
+        try {
+            return app(LogService::class)->findById($id);
+        } catch (Exception $exception){
+            return $exception->getMessage();
+        }
+    }
 }

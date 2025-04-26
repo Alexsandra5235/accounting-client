@@ -9,6 +9,7 @@ use App\Models\Logs\LogReject;
 use App\Models\Patient\Patient;
 use Couchbase\KeyDeletedException;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Monolog\LogRecord;
 
@@ -30,4 +31,5 @@ interface LogInterface
     public function update(int $id, Request $request): bool;
 
     public function findAll(): Collection;
+    public function findById(int $id): Model;
 }

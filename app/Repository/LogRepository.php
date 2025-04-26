@@ -17,8 +17,10 @@ use App\Services\PatientService;
 use app\Traits\HasLog;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Expr\AssignOp\Mod;
 
 class LogRepository implements LogInterface, DeleteInterface
 {
@@ -100,5 +102,14 @@ class LogRepository implements LogInterface, DeleteInterface
     public function findAll(): Collection
     {
         return Log::all();
+    }
+
+    /**
+     * @param int $id
+     * @return Model<Log>
+     */
+    public function findById(int $id): Model
+    {
+        return $this->findByIdLog($id, Log::class);
     }
 }

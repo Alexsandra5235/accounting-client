@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\ProfileController;
+use App\Services\LogService;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -9,7 +10,8 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $logs = app(LogService::class)->findAll();
+    return view('dashboard', compact('logs'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -21,6 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/log/{id}',[LogController::class, 'destroy'])->name('log.destroy');
     Route::put('/log/{id}',[LogController::class, 'update'])->name('log.update');
     Route::get('/logs', [LogController::class, 'findAll'])->name('logs');
+    Route::get('/log/{id}', [LogController::class, 'findById'])->name('log.find');
 
 });
 
