@@ -4,12 +4,13 @@ namespace App\Models\Patient;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use NunoMaduro\Collision\Adapters\Phpunit\State;
 
 /**
  * @property int $id
  * @property int $state_id
  * @property int $wound_id
+ * @property Classifiers wound
+ * @property Classifiers state
  */
 class Diagnosis extends Model
 {
@@ -30,7 +31,7 @@ class Diagnosis extends Model
      */
     public function state() : BelongsTo
     {
-        return $this->belongsTo(Diagnosis::class);
+        return $this->belongsTo(Classifiers::class);
     }
 
     /**
@@ -38,6 +39,6 @@ class Diagnosis extends Model
      */
     public function wound() : BelongsTo
     {
-        return $this->belongsTo(Diagnosis::class);
+        return $this->belongsTo(Classifiers::class);
     }
 }

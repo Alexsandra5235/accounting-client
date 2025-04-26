@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $polis
  * @property int $diagnosis_id
  * @property int $id
+ * @property Diagnosis diagnosis
  */
 class Patient extends Model
 {

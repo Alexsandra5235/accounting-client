@@ -30,7 +30,7 @@ class LogController extends Controller
     public function destroy(int $id): bool|string
     {
         try {
-            return app(LogDischargeService::class)->destroy($id);
+            return app(LogService::class)->destroy($id);
         } catch (Exception $exception) {
             return $exception->getMessage();
         }

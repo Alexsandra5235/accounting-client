@@ -12,6 +12,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $log_reject_id
  * @property int $patient_id
  * @property int $id
+ * @property LogReceipt log_receipt
+ * @property LogReject log_reject
+ * @property LogDischarge log_discharge
+ * @property Patient patient
  */
 class Log extends Model
 {

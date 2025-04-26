@@ -6,6 +6,7 @@ use App\Interfaces\DeleteInterface;
 use App\Interfaces\DiagnosisInterface;
 use App\Models\Patient\Classifiers;
 use App\Models\Patient\Diagnosis;
+use App\Services\ClassifiersService;
 use app\Traits\HasLog;
 use Exception;
 
@@ -34,6 +35,8 @@ class DiagnosisRepository implements DiagnosisInterface, DeleteInterface
     }
 
     /**
+     * Удаление данных из таблицы Diagnosis и связанные с ними записи
+     * в таблице Classifiers
      * @param int $id
      * @return bool
      * @throws Exception
@@ -42,6 +45,10 @@ class DiagnosisRepository implements DiagnosisInterface, DeleteInterface
     {
         try {
             $diagnosis = $this->findByIdLog($id, Diagnosis::class);
+            if ($diagnosis instanceof Diagnosis) {
+                app(ClassifiersService::class)->destroy($diagnosis->wound->id);
+                app(ClassifiersService::class)->destroy($diagnosis->state->id);
+            }
             $diagnosis->delete();
             return true;
         } catch (Exception $exception) {

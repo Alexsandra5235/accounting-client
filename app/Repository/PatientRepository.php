@@ -7,6 +7,7 @@ use App\Interfaces\LogModelInterface;
 use App\Interfaces\PatientInterface;
 use App\Models\Patient\Diagnosis;
 use App\Models\Patient\Patient;
+use App\Services\DiagnosisService;
 use app\Traits\HasLog;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -45,6 +46,9 @@ class PatientRepository implements PatientInterface, DeleteInterface
     {
         try {
             $patient = $this->findByIdLog($id, Patient::class);
+            if ($patient instanceof Patient) {
+                app(DiagnosisService::class)->destroy($patient->diagnosis->id);
+            }
             $patient->delete();
             return true;
         } catch (Exception $exception) {

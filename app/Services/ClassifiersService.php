@@ -28,7 +28,7 @@ class ClassifiersService
     /**
      * @throws Exception
      */
-    public function destroyLog(int $id): bool
+    public function destroy(int $id): bool
     {
         try {
             return app(ClassifiersRepository::class)->destroy($id);

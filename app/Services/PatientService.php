@@ -26,10 +26,10 @@ class PatientService
     /**
      * @throws Exception
      */
-    public function delete(int $id): bool
+    public function destroy(int $id): bool
     {
         try {
-            return app(PatientRepository::class)->delete($id);
+            return app(PatientRepository::class)->destroy($id);
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage());
         }
