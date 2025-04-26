@@ -4,10 +4,12 @@ namespace App\Providers;
 
 use app\Interfaces\LogInterface;
 use App\Repository\ClassifiersRepository;
+use App\Repository\DiagnosisRepository;
 use App\Repository\LogDischargeRepository;
 use App\Repository\LogReceiptRepository;
 use App\Repository\LogRejectRepository;
 use App\Services\ClassifiersService;
+use App\Services\DiagnosisService;
 use App\Services\LogDischargeService;
 use App\Services\LogReceiptService;
 use App\Services\LogRejectService;
@@ -36,6 +38,10 @@ class AppServiceProvider extends ServiceProvider
             return new ClassifiersRepository();
         });
 
+        $this->app->singleton(DiagnosisRepository::class, function () {
+            return new DiagnosisRepository();
+        });
+
         $this->app->singleton(LogReceiptService::class, function () {
             return new LogReceiptService();
         });
@@ -50,6 +56,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(ClassifiersService::class, function () {
             return new ClassifiersService();
+        });
+
+        $this->app->singleton(DiagnosisService::class, function () {
+            return new DiagnosisService();
         });
     }
 
