@@ -38,6 +38,7 @@
                                             <li class="border-b"><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Редактировать</a></li>
                                             <li class="border-b"><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Удалить</a></li>
                                             <li><a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Просмотр</a></li>
+                                        </ul>
                                     </div>
                                 </td>
                             </tr>
