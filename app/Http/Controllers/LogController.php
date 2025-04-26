@@ -7,6 +7,7 @@ use App\Models\Logs\Log;
 use App\Services\LogDischargeService;
 use App\Services\LogService;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 class LogController extends Controller
@@ -51,5 +52,9 @@ class LogController extends Controller
             \Illuminate\Support\Facades\Log::info('controller');
             return $e->getMessage();
         }
+    }
+    public function findAll(): Collection
+    {
+        return app(LogService::class)->findAll();
     }
 }

@@ -9,6 +9,7 @@ use App\Models\Logs\LogReject;
 use App\Models\Patient\Patient;
 use App\Repository\LogRepository;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -54,5 +55,9 @@ class LogService
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
+    }
+    public function findAll(): Collection
+    {
+        return app(LogRepository::class)->findAll();
     }
 }

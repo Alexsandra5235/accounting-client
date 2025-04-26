@@ -16,6 +16,7 @@ use App\Services\LogService;
 use App\Services\PatientService;
 use app\Traits\HasLog;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -91,5 +92,13 @@ class LogRepository implements LogInterface, DeleteInterface
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage());
         }
+    }
+
+    /**
+     * @return Collection
+     */
+    public function findAll(): Collection
+    {
+        return Log::all();
     }
 }
