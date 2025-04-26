@@ -19,6 +19,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/log',[LogController::class, 'store'])->name('log.store');
     Route::delete('/log/{id}',[LogController::class, 'destroy'])->name('log.destroy');
+    Route::put('/log/{id}',[LogController::class, 'update'])->name('log.update');
 
 });
 

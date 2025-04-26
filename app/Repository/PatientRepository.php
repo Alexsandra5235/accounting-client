@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Interfaces\DeleteInterface;
 use App\Interfaces\LogModelInterface;
 use App\Interfaces\PatientInterface;
+use App\Models\Logs\Log;
 use App\Models\Patient\Diagnosis;
 use App\Models\Patient\Patient;
 use App\Services\DiagnosisService;
@@ -50,6 +51,27 @@ class PatientRepository implements PatientInterface, DeleteInterface
                 app(DiagnosisService::class)->destroy($patient->diagnosis->id);
             }
             $patient->delete();
+            return true;
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage());
+        }
+    }
+
+    /**
+     * @param int $id
+     * @param Request $request
+     * @return bool
+     * @throws Exception
+     */
+    public function update(int $id, Request $request): bool
+    {
+        try {
+            $log = $this->findByIdLog($id, Log::class);
+            if ($log instanceof Log) {
+                $patient = $log->patient;
+                app(DiagnosisService::class)->update($patient->diagnosis, $request);
+                $patient->update($request->all());
+            }
             return true;
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage());

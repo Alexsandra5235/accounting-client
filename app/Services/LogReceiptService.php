@@ -43,4 +43,16 @@ class LogReceiptService
             throw new Exception($exception->getMessage());
         }
     }
+
+    /**
+     * @throws Exception
+     */
+    public function update(Request $request, int $id): bool
+    {
+        try {
+            return app(LogReceiptRepository::class)->update($id, $request);
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage());
+        }
+    }
 }

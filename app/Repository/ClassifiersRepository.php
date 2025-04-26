@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Interfaces\ClassifiersInterface;
 use App\Interfaces\DeleteInterface;
 use App\Models\Patient\Classifiers;
+use App\Models\Patient\Diagnosis;
 use app\Traits\HasLog;
 use Exception;
 use Illuminate\Http\Request;
@@ -56,5 +57,45 @@ class ClassifiersRepository implements ClassifiersInterface, DeleteInterface
             'code' => $request->get('wound_code'),
             'value' => $request->get('wound_value'),
         ]);
+    }
+
+    /**
+     * @param Diagnosis $diagnosis
+     * @param Request $request
+     * @return bool
+     * @throws Exception
+     */
+    public function updateState(Diagnosis $diagnosis, Request $request): bool
+    {
+        try {
+            $classifier_state = $this->findByIdLog($diagnosis->state->id, Classifiers::class);
+            $classifier_state->update([
+                'code' => $request->input('state_code'),
+                'value' => $request->input('state_value'),
+            ]);
+            return true;
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage());
+        }
+    }
+
+    /**
+     * @param Diagnosis $diagnosis
+     * @param Request $request
+     * @return bool
+     * @throws Exception
+     */
+    public function updateWound(Diagnosis $diagnosis, Request $request): bool
+    {
+        try {
+            $classifier_state = $this->findByIdLog($diagnosis->wound->id, Classifiers::class);
+            $classifier_state->update([
+                'code' => $request->input('wound_code'),
+                'value' => $request->input('wound_value'),
+            ]);
+            return true;
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage());
+        }
     }
 }

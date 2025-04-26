@@ -16,6 +16,7 @@ use App\Services\LogService;
 use App\Services\PatientService;
 use app\Traits\HasLog;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class LogRepository implements LogInterface, DeleteInterface
@@ -66,6 +67,27 @@ class LogRepository implements LogInterface, DeleteInterface
                 $log->delete();
             });
             return true;
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage());
+        }
+    }
+
+    /**
+     * @param int $id
+     * @param Request $request
+     * @return bool
+     * @throws Exception
+     */
+    public function update(int $id, Request $request): bool
+    {
+        try {
+            return DB::transaction(function () use ($id, $request) {
+                app(LogReceiptService::class)->update($request, $id);
+                app(LogRejectService::class)->update($request, $id);
+                app(LogDischargeService::class)->update($request, $id);
+                app(PatientService::class)->update($request, $id);
+                return true;
+            });
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage());
         }

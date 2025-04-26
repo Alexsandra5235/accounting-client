@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Interfaces\DeleteInterface;
 use App\Interfaces\LogModelInterface;
+use App\Models\Logs\Log;
 use App\Models\Logs\LogDischarge;
 use app\Traits\HasLog;
 use Exception;
@@ -35,6 +36,25 @@ class LogDischargeRepository implements LogModelInterface, DeleteInterface
             return $this->destroyLog($id, LogDischarge::class);
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage());
+        }
+    }
+
+    /**
+     * @param int $id
+     * @param Request $request
+     * @return bool
+     * @throws Exception
+     */
+    public function update(int $id, Request $request): bool
+    {
+        try {
+            $log = $this->findByIdLog($id, Log::class);
+            if ($log instanceof Log) {
+                $log->log_discharge->update($request->all());
+            }
+            return true;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
         }
     }
 }

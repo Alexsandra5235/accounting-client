@@ -17,5 +17,6 @@ interface PatientInterface
      * @return Patient
      */
     public function create(Request $request, Diagnosis $diagnosis): Patient;
+    public function update(int $id, Request $request): bool;
 
 }

@@ -43,4 +43,16 @@ class LogService
             throw new Exception($exception->getMessage());
         }
     }
+
+    /**
+     * @throws Exception
+     */
+    public function update(int $id, Request $request): bool
+    {
+        try {
+            return app(LogRepository::class)->update($id, $request);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
 }

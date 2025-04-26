@@ -35,4 +35,21 @@ class LogController extends Controller
             return $exception->getMessage();
         }
     }
+    public function update(int $id, Request $request): bool|string
+    {
+        try {
+            validator($request->all(), [
+                'date_receipt' => ['required'],
+                'time_receipt' => ['required'],
+                'name' => ['required'],
+                'gender' => ['required'],
+                'birth_day' => ['required'],
+                'medical_card' => ['required'],
+            ]);
+            return app(LogService::class)->update($id, $request);
+        } catch (Exception $e) {
+            \Illuminate\Support\Facades\Log::info('controller');
+            return $e->getMessage();
+        }
+    }
 }

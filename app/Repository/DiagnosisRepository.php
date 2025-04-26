@@ -9,6 +9,7 @@ use App\Models\Patient\Diagnosis;
 use App\Services\ClassifiersService;
 use app\Traits\HasLog;
 use Exception;
+use Illuminate\Http\Request;
 
 class DiagnosisRepository implements DiagnosisInterface, DeleteInterface
 {
@@ -51,6 +52,18 @@ class DiagnosisRepository implements DiagnosisInterface, DeleteInterface
             }
             $diagnosis->delete();
             return true;
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage());
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function update(Diagnosis $diagnosis, Request $request): bool
+    {
+        try {
+            return app(ClassifiersService::class)->update($diagnosis, $request);
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage());
         }

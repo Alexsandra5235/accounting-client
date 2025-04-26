@@ -32,4 +32,16 @@ class LogRejectService
             throw new Exception($exception->getMessage());
         }
     }
+
+    /**
+     * @throws Exception
+     */
+    public function update(Request $request, int $id): bool
+    {
+        try {
+            return app(LogRejectRepository::class)->update($id, $request);
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage());
+        }
+    }
 }

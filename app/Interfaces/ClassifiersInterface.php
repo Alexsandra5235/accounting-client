@@ -3,6 +3,7 @@
 namespace App\Interfaces;
 
 use App\Models\Patient\Classifiers;
+use App\Models\Patient\Diagnosis;
 use Illuminate\Http\Request;
 
 /**
@@ -21,4 +22,6 @@ interface ClassifiersInterface
      * @return Classifiers
      */
     public function createWound(Request $request): Classifiers;
+    public function updateState(Diagnosis $diagnosis, Request $request): bool;
+    public function updateWound(Diagnosis $diagnosis, Request $request): bool;
 }

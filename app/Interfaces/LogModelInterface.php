@@ -15,5 +15,6 @@ interface LogModelInterface
      * @return Model
      */
     public function create(Request $request): Model;
+    public function update(int $id, Request $request): bool;
 
 }
