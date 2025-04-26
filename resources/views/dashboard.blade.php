@@ -87,7 +87,7 @@
                         @foreach ($logs as $log)
                             <tr>
                                 <td class="border border-gray-300 px-4 py-2">{{ \Carbon\Carbon::parse($log->log_receipt->date_receipt)->locale('ru')->translatedFormat('D, d M Y') }}</td>
-                                <td class="border border-gray-300 px-4 py-2">{{ $log->log_receipt->time_receipt }}</td>
+                                <td class="border border-gray-300 px-4 py-2">{{ \Carbon\Carbon::parse($log->log_receipt->time_receipt)->locale('ru')->translatedFormat('H:i') }}</td>
                                 <td class="border border-gray-300 px-4 py-2">{{ $log->patient->name }}</td>
                                 <td class="border border-gray-300 px-4 py-2">{{ \Carbon\Carbon::parse($log->patient->birth_day)->locale('ru')->translatedFormat('d M Y') }}</td>
                                 <td class="border border-gray-300 px-4 py-2">{{ $log->patient->medical_card }}</td>

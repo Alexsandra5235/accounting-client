@@ -22,7 +22,7 @@
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Информация о пациенте</h3>
                     <div class="space-y-2">
                         <p>ФИО пациента: <strong style="color: #2563eb">{{ $log->patient->name }}</strong></p>
-                        <p>Дата и время поступления: <strong style="color: #2563eb">{{ \Carbon\Carbon::parse($log->log_receipt->date_receipt)->locale('ru')->translatedFormat('D, d M Y') }} {{ $log->log_receipt->time_receipt }}</strong></p>
+                        <p>Дата и время поступления: <strong style="color: #2563eb">{{ \Carbon\Carbon::parse($log->log_receipt->date_receipt)->locale('ru')->translatedFormat('D, d M Y') }} {{ \Carbon\Carbon::parse($log->log_receipt->time_receipt)->locale('ru')->translatedFormat('H:i') }}</strong></p>
                         <p>Фамилия, имя, отчество (при наличии): <strong style="color: #2563eb">{{ $log->patient->name }}</strong></p>
                         <p>Дата рождения: <strong style="color: #2563eb">{{ $log->patient->birth_day }}</strong></p>
                         <p>Пол: <strong style="color: #2563eb">{{ $log->patient->gender }}</strong></p>

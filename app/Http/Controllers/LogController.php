@@ -15,9 +15,9 @@ use Symfony\Component\String\Exception\ExceptionInterface;
 
 class LogController extends Controller
 {
-    public function store(Request $request): Log
+    public function store(Request $request): RedirectResponse
     {
-        validator($request->all(), [
+        $request->validate([
             'date_receipt' => ['required'],
             'time_receipt' => ['required'],
             'name' => ['required'],
@@ -25,7 +25,13 @@ class LogController extends Controller
             'birth_day' => ['required'],
             'medical_card' => ['required'],
         ]);
-        return app(LogService::class)->create($request);
+        try {
+            app(LogService::class)->create($request);
+            return redirect()->route('dashboard');
+        } catch (Exception $exception) {
+            return redirect()->back()->withErrors(['error_store' => $exception->getMessage()]);
+        }
+
     }
 
     /**
@@ -78,5 +84,9 @@ class LogController extends Controller
         } catch (Exception $exception){
             return redirect()->route('dashboard')->withErrors(['error_edit' => $exception->getMessage()]);
         }
+    }
+    public function add() : View
+    {
+        return view('log.logAdd');
     }
 }

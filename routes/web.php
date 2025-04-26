@@ -25,6 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/log/{id}',[LogController::class, 'update'])->name('log.update');
     Route::get('/logs', [LogController::class, 'findAll'])->name('logs');
     Route::get('/log/{id}', [LogController::class, 'findById'])->name('log.find');
+    Route::get('/log', [LogController::class, 'add'])->name('log.add');
 
 });
 
