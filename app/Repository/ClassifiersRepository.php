@@ -3,14 +3,13 @@
 namespace App\Repository;
 
 use App\Interfaces\ClassifiersInterface;
-use App\Interfaces\LogModelInterface;
+use App\Interfaces\DeleteInterface;
 use App\Models\Patient\Classifiers;
 use app\Traits\HasLog;
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
-class ClassifiersRepository implements ClassifiersInterface
+class ClassifiersRepository implements ClassifiersInterface, DeleteInterface
 {
     use HasLog;
     /**

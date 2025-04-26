@@ -2,13 +2,14 @@
 
 namespace App\Repository;
 
+use App\Interfaces\DeleteInterface;
 use App\Interfaces\DiagnosisInterface;
 use App\Models\Patient\Classifiers;
 use App\Models\Patient\Diagnosis;
 use app\Traits\HasLog;
 use Exception;
 
-class DiagnosisRepository implements DiagnosisInterface
+class DiagnosisRepository implements DiagnosisInterface, DeleteInterface
 {
     use HasLog;
     /**

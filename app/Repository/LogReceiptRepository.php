@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Interfaces\DeleteInterface;
 use App\Interfaces\LogModelInterface;
 use App\Models\Logs\LogReceipt;
 use app\Traits\HasLog;
@@ -11,7 +12,7 @@ use Illuminate\Http\Request;
 /**
  *
  */
-class LogReceiptRepository implements LogModelInterface
+class LogReceiptRepository implements LogModelInterface, DeleteInterface
 {
     use HasLog;
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Interfaces\DeleteInterface;
 use App\Interfaces\LogModelInterface;
 use App\Models\Logs\LogReceipt;
 use App\Models\Logs\LogReject;
@@ -10,7 +11,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
-class LogRejectRepository implements LogModelInterface
+class LogRejectRepository implements LogModelInterface, DeleteInterface
 {
     use HasLog;
     /**

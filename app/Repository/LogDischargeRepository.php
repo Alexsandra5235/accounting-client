@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Interfaces\DeleteInterface;
 use App\Interfaces\LogModelInterface;
 use App\Models\Logs\LogDischarge;
 use app\Traits\HasLog;
@@ -9,7 +10,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
-class LogDischargeRepository implements LogModelInterface
+class LogDischargeRepository implements LogModelInterface, DeleteInterface
 {
     use HasLog;
     /**

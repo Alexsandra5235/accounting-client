@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Interfaces\DeleteInterface;
 use App\Interfaces\LogInterface;
 use App\Models\Logs\Log;
 use App\Models\Logs\LogDischarge;
@@ -11,7 +12,7 @@ use App\Models\Patient\Patient;
 use app\Traits\HasLog;
 use Exception;
 
-class LogRepository implements LogInterface
+class LogRepository implements LogInterface, DeleteInterface
 {
     use HasLog;
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Interfaces\DeleteInterface;
 use App\Interfaces\LogModelInterface;
 use App\Interfaces\PatientInterface;
 use App\Models\Patient\Diagnosis;
@@ -11,7 +12,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
-class PatientRepository implements PatientInterface
+class PatientRepository implements PatientInterface, DeleteInterface
 {
     use HasLog;
     /**

@@ -9,9 +9,19 @@ use App\Models\Logs\LogReject;
 use App\Models\Patient\Patient;
 use Monolog\LogRecord;
 
+/**
+ * Реализует добавление данных в таблицу Log.
+ */
 interface LogInterface
 {
+    /**
+     * @param LogDischarge $logDischarge
+     * @param LogReceipt $logReceipt
+     * @param LogReject $logReject
+     * @param Patient $patient
+     * @return Log
+     */
     public function create(LogDischarge $logDischarge, LogReceipt $logReceipt,
-                           LogReject $logReject, Patient $patient): Log;
-    public function destroy(int $id): bool;
+                           LogReject    $logReject, Patient $patient): Log;
+
 }
