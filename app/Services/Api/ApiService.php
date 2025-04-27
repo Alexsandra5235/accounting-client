@@ -43,4 +43,12 @@ class ApiService
         $url = env('API_LOG_URL') . "/{$id}";
         return app(ApiRepository::class)->putRequest($token, $url, $request);
     }
+
+    /**
+     * @throws ConnectionException
+     */
+    public function createLog(Request $request, string $token): Response
+    {
+        return app(ApiRepository::class)->postRequest($token, env('API_LOG_URL'), $request);
+    }
 }

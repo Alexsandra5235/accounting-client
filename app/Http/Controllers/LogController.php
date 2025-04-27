@@ -27,7 +27,7 @@ class LogController extends Controller
             'medical_card' => ['required'],
         ]);
         try {
-            app(LogService::class)->create($request);
+            app(ApiService::class)->createLog($request, env('API_LOG_TOKEN'));
             return redirect()->route('dashboard');
         } catch (Exception $exception) {
             return redirect()->back()->withErrors(['error_store' => $exception->getMessage()]);
