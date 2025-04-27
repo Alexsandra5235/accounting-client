@@ -9,6 +9,7 @@ use App\Services\Api\ApiService;
 use App\Services\LogDischargeService;
 use App\Services\LogService;
 use App\Services\TelegramService;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
@@ -35,7 +36,8 @@ class LogController extends Controller
             }
 
             $response = json_decode($response->getBody()->getContents());
-            $message = "👤 Новый пациент добавлен:\n\n<b>Имя:</b> {$response->patient->name}\n<b>Дата рождения:</b> {$response->patient->birth_day}";
+
+            $message = app(TelegramService::class)->generateMessage($response);
 
             SendTelegramNotification::dispatch($message);
 
