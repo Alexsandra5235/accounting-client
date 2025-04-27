@@ -73,10 +73,6 @@ class LogController extends Controller
             return redirect()->back()->withErrors(['error_update' => $e->getMessage()]);
         }
     }
-    public function findAll(): Collection
-    {
-        return app(LogService::class)->findAll();
-    }
     public function findById(int $id): View|RedirectResponse
     {
         try {
