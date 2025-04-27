@@ -19,6 +19,7 @@ use App\Services\LogReceiptService;
 use App\Services\LogRejectService;
 use App\Services\LogService;
 use App\Services\PatientService;
+use App\Services\TelegramService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -34,6 +35,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(ApiService::class, function () {
             return new ApiService();
+        });
+
+        $this->app->singleton(TelegramService::class, function () {
+            return new TelegramService();
         });
     }
 

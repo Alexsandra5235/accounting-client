@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 
+use App\Jobs\SendTelegramNotification;
 use App\Models\Logs\Log;
 use App\Services\Api\ApiService;
 use App\Services\LogDischargeService;
 use App\Services\LogService;
+use App\Services\TelegramService;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
@@ -31,6 +33,12 @@ class LogController extends Controller
             if ($response->badRequest()){
                 return redirect()->back()->withErrors(['error_store' => $response->getBody()]);
             }
+
+            $response = json_decode($response->getBody()->getContents());
+            $message = "👤 Новый пациент добавлен:\n\n<b>Имя:</b> {$response->patient->name}\n<b>Дата рождения:</b> {$response->patient->birth_day}";
+
+            SendTelegramNotification::dispatch($message);
+
             return redirect()->route('dashboard');
         } catch (Exception $exception) {
             return redirect()->back()->withErrors(['error_store' => $exception->getMessage()]);
