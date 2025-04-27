@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Interfaces\LogModelInterface;
+use App\Repository\Api\ApiRepository;
 use App\Repository\ClassifiersRepository;
 use App\Repository\DiagnosisRepository;
 use App\Repository\LogDischargeRepository;
@@ -10,6 +11,7 @@ use App\Repository\LogReceiptRepository;
 use App\Repository\LogRejectRepository;
 use App\Repository\LogRepository;
 use App\Repository\PatientRepository;
+use App\Services\Api\ApiService;
 use App\Services\ClassifiersService;
 use App\Services\DiagnosisService;
 use App\Services\LogDischargeService;
@@ -54,6 +56,10 @@ class AppServiceProvider extends ServiceProvider
             return new LogRepository();
         });
 
+        $this->app->singleton(ApiRepository::class, function () {
+            return new ApiRepository();
+        });
+
         $this->app->singleton(LogReceiptService::class, function () {
             return new LogReceiptService();
         });
@@ -80,6 +86,10 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(LogService::class, function () {
             return new LogService();
+        });
+
+        $this->app->singleton(ApiService::class, function () {
+            return new ApiService();
         });
     }
 

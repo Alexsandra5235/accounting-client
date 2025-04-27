@@ -8,6 +8,7 @@ use App\Models\Logs\LogReceipt;
 use App\Models\Logs\LogReject;
 use App\Models\Patient\Patient;
 use App\Repository\LogRepository;
+use App\Services\Api\ApiService;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -59,7 +60,7 @@ class LogService
     }
     public function findAll(): Collection
     {
-        return app(LogRepository::class)->findAll();
+        $response = app(ApiService::class)->findAll();
     }
     public function findByID(int $id): Log
     {

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\ProfileController;
+use App\Services\Api\ApiService;
 use App\Services\LogService;
 use Illuminate\Support\Facades\Route;
 
@@ -10,7 +11,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    $logs = app(LogService::class)->findAll();
+    $logs = json_decode(app(ApiService::class)->getLogs(env('API_LOG_TOKEN'))->body());
     return view('dashboard', compact('logs'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
