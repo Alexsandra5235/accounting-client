@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Logs\Log;
+use App\Services\Api\ApiService;
 use App\Services\LogDischargeService;
 use App\Services\LogService;
 use Exception;
@@ -70,7 +71,7 @@ class LogController extends Controller
     public function findById(int $id): View|RedirectResponse
     {
         try {
-            $log = app(LogService::class)->findById($id);
+            $log = json_decode(app(ApiService::class)->getLogById(env('API_LOG_TOKEN'), $id)->body());
             return view('log.logShow', compact('log'));
         } catch (Exception $exception){
             return redirect()->route('dashboard')->withErrors(['error_show' => $exception->getMessage()]);
