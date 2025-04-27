@@ -11,7 +11,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    $logs = json_decode(app(ApiService::class)->getLogs(env('API_LOG_TOKEN'))->body());
+    $logs = app(ApiService::class)->getLogs(env('API_LOG_TOKEN'));
     return view('dashboard', compact('logs'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 

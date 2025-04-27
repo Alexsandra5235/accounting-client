@@ -58,7 +58,10 @@ class LogController extends Controller
             'medical_card' => ['required'],
         ]);
         try {
-            app(LogService::class)->update($id, $request);
+            $response = app(ApiService::class)->updateLog($request, env('API_LOG_TOKEN') ,$id);
+            if ($response->badRequest()){
+                return redirect()->back()->withErrors(['error_update' => $response->getBody()]);
+            }
             return redirect()->route('dashboard');
         } catch (Exception $e) {
             return redirect()->back()->withErrors(['error_update' => $e->getMessage()]);
@@ -71,7 +74,7 @@ class LogController extends Controller
     public function findById(int $id): View|RedirectResponse
     {
         try {
-            $log = json_decode(app(ApiService::class)->getLogById(env('API_LOG_TOKEN'), $id)->body());
+            $log = app(ApiService::class)->getLogById(env('API_LOG_TOKEN'), $id);
             return view('log.logShow', compact('log'));
         } catch (Exception $exception){
             return redirect()->route('dashboard')->withErrors(['error_show' => $exception->getMessage()]);
@@ -80,7 +83,7 @@ class LogController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $log = app(LogService::class)->findById($id);
+            $log = app(ApiService::class)->getLogById(env('API_LOG_TOKEN'), $id);
             return view('log.logEdit', compact('log'));
         } catch (Exception $exception){
             return redirect()->route('dashboard')->withErrors(['error_edit' => $exception->getMessage()]);
