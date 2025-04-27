@@ -37,7 +37,7 @@ class LogController extends Controller
 
             $response = json_decode($response->getBody()->getContents());
 
-            $message = app(TelegramService::class)->generateMessage($response);
+            $message = app(TelegramService::class)->generateMessageStore($response);
 
             SendTelegramNotification::dispatch($message);
 
@@ -54,10 +54,20 @@ class LogController extends Controller
     public function destroy(int $id): bool|string
     {
         try {
+            $log = app(ApiService::class)->getLogById(env('API_LOG_TOKEN'), $id);
+            if ($log->badRequest()){
+                return redirect()->route('dashboard')->withErrors(['error_show' => json_decode($log->getBody())]);
+            }
+
+            $log = json_decode($log->getBody());
+
             $response = app(ApiService::class)->deleteLog(env('API_LOG_TOKEN'), $id);
             if($response->badRequest()){
                 return redirect()->back()->withErrors(['error_delete' => $response->getBody()]);
             }
+
+            $message = app(TelegramService::class)->generateMessageDestroy($log);
+            SendTelegramNotification::dispatch($message);
             return redirect()->back();
         } catch (Exception $exception) {
             return redirect()->back()->withErrors(['error_delete' => $exception->getMessage()]);
