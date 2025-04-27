@@ -11,4 +11,5 @@ interface ApiInterface
     public function getRequest(string $token, string $url): Response;
     public function putRequest(string $token, string $url, Request $request): Response;
     public function postRequest(string $token, string $url, Request $request): Response;
+    public function deleteRequest(string $token, string $url): Response;
 }

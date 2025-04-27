@@ -29,10 +29,10 @@ class ApiService
     /**
      * @throws ConnectionException
      */
-    public function getLogById(string $token, string $id): stdClass
+    public function getLogById(string $token, string $id): Response
     {
         $url = env('API_LOG_URL') . "/{$id}";
-        return json_decode(app(ApiRepository::class)->getRequest($token,$url)->body());
+        return app(ApiRepository::class)->getRequest($token,$url);
     }
 
     /**
@@ -50,5 +50,14 @@ class ApiService
     public function createLog(Request $request, string $token): Response
     {
         return app(ApiRepository::class)->postRequest($token, env('API_LOG_URL'), $request);
+    }
+
+    /**
+     * @throws ConnectionException
+     */
+    public function deleteLog(string $token, string $id): Response
+    {
+        $url = env('API_LOG_URL') . "/{$id}";
+        return app(ApiRepository::class)->deleteRequest($token, $url);
     }
 }

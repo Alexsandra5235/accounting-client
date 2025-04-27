@@ -27,7 +27,10 @@ class LogController extends Controller
             'medical_card' => ['required'],
         ]);
         try {
-            app(ApiService::class)->createLog($request, env('API_LOG_TOKEN'));
+            $response = app(ApiService::class)->createLog($request, env('API_LOG_TOKEN'));
+            if ($response->badRequest()){
+                return redirect()->back()->withErrors(['error_store' => $response->getBody()]);
+            }
             return redirect()->route('dashboard');
         } catch (Exception $exception) {
             return redirect()->back()->withErrors(['error_store' => $exception->getMessage()]);
@@ -41,7 +44,10 @@ class LogController extends Controller
     public function destroy(int $id): bool|string
     {
         try {
-            app(LogService::class)->destroy($id);
+            $response = app(ApiService::class)->deleteLog(env('API_LOG_TOKEN'), $id);
+            if($response->badRequest()){
+                return redirect()->back()->withErrors(['error_delete' => $response->getBody()]);
+            }
             return redirect()->back();
         } catch (Exception $exception) {
             return redirect()->back()->withErrors(['error_delete' => $exception->getMessage()]);
@@ -75,6 +81,10 @@ class LogController extends Controller
     {
         try {
             $log = app(ApiService::class)->getLogById(env('API_LOG_TOKEN'), $id);
+            if ($log->badRequest()){
+                return redirect()->route('dashboard')->withErrors(['error_show' => json_decode($log->getBody())]);
+            }
+            $log = json_decode($log->getBody());
             return view('log.logShow', compact('log'));
         } catch (Exception $exception){
             return redirect()->route('dashboard')->withErrors(['error_show' => $exception->getMessage()]);

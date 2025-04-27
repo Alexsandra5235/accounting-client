@@ -66,4 +66,19 @@ class ApiRepository implements ApiInterface
             'Authorization' => 'Bearer ' . $token
         ])->asForm()->post($url, $request->all());
     }
+
+    /**
+     * @param string $token
+     * @param string $url
+     * @return Response
+     * @throws ConnectionException
+     */
+    public function deleteRequest(string $token, string $url): Response
+    {
+        return Http::withHeaders([
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $token
+        ])->asForm()->delete($url);
+    }
 }
