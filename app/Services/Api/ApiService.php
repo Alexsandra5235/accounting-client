@@ -60,4 +60,12 @@ class ApiService
         $url = env('API_LOG_URL') . "/{$id}";
         return app(ApiRepository::class)->deleteRequest($token, $url);
     }
+
+    /**
+     * @throws ConnectionException
+     */
+    public function getLogByName(string $token, Request $request): Response
+    {
+        return app(ApiRepository::class)->postRequest($token, env('API_LOG_SEARCH_URL'), $request);
+    }
 }

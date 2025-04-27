@@ -3,7 +3,6 @@
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\ProfileController;
 use App\Services\Api\ApiService;
-use App\Services\LogService;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -26,6 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/log/{id}',[LogController::class, 'update'])->name('log.update');
     Route::get('/log/{id}', [LogController::class, 'findById'])->name('log.find');
     Route::get('/log', [LogController::class, 'add'])->name('log.add');
+    Route::post('/log/search', [LogController::class, 'getLogByName'])->name('log.search');
 
 });
 

@@ -68,10 +68,57 @@
     </div>
     @enderror
 
-    <div class="py-12">
+    <div class="py-4">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6 mb-4">
+            <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+                <div class="">
+                    <section>
+                        <header>
+                            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                                {{ __('Поиск пациента по ФИО') }}
+                            </h2>
+
+                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                                {{ __("По результатам поиска будут выведены записи, в которых имя пациента содержит введенный фрагмент.") }}
+                            </p>
+                        </header>
+
+                        <form method="post" action="{{ route('log.search') }}" class="mt-6 space-y-6">
+                            @csrf
+
+                            <div>
+                                <x-input-label for="search_name" :value="__('ФИО пациента')" />
+                                @isset($search_name)
+                                    <x-text-input id="search_name" name="search_name" type="text" class="mt-1 block w-full" :value="$search_name" autofocus autocomplete="search_name" />
+                                @else
+                                    <x-text-input id="search_name_" name="search_name" type="text" class="mt-1 block w-full" autofocus autocomplete="search_name" />
+                                @endif
+                            </div>
+
+                            <x-primary-button>{{ __('Поиск') }}</x-primary-button>
+                        </form>
+                        <a href="{{ route('dashboard') }}">
+                            <x-danger-button class="mt-2">
+                                {{ __('Отчистить поиск') }}
+                            </x-danger-button>
+                        </a>
+                    </section>
+                </div>
+            </div>
+        </div>
+
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
+                    <header class="mb-4">
+                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                            {{ __('Пациенты санатория') }}
+                        </h2>
+
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                            {{ __("В таблице представлена краткая информация о пациентах. При необходимости взаимодействия с данными, выберите необходимое действие в соответствующей колонке.") }}
+                        </p>
+                    </header>
                     <table class="table-auto border-collapse border border-gray-300 w-full">
                         <thead>
                         <tr>

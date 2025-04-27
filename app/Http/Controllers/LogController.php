@@ -4,15 +4,13 @@ namespace App\Http\Controllers;
 
 
 use App\Jobs\SendTelegramNotification;
-use App\Models\Logs\Log;
 use App\Services\Api\ApiService;
-use App\Services\LogDischargeService;
-use App\Services\LogService;
 use App\Services\TelegramService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\String\Exception\ExceptionInterface;
@@ -132,5 +130,16 @@ class LogController extends Controller
     public function add() : View
     {
         return view('log.logAdd');
+    }
+
+    /**
+     * @throws ConnectionException
+     */
+    public function getLogByName(Request $request): View
+    {
+        $response = app(ApiService::class)->getLogByName(env('API_LOG_TOKEN'), $request);
+        $logs = json_decode($response->getBody());
+        $search_name = $request->input('search_name');
+        return view('dashboard', compact(['logs', 'search_name']));
     }
 }
