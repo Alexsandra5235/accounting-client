@@ -26,6 +26,12 @@ class TelegramService
     {
         return "🙅🏻‍♀️ Запись была удалена.\n\n<b>Имя пациента: </b>{$log->patient->name}\n<b>Номер мед.карты пациента: </b>{$log->patient->medical_card}";
     }
+    public function generateMessageUpdate($log): string
+    {
+        $datetime_receipt = Carbon::parse($log->log_receipt->date_receipt)->locale('ru')->translatedFormat('D, d M Y') . ' ' . $log->log_receipt->time_receipt;
+        $birth_day = Carbon::parse($log->patient->birth_day)->locale('ru')->translatedFormat('D, d M Y');
+        return "🙊 Запись была обновлена:\n\n<b>Дата и время посупления:</b> {$datetime_receipt}\n<b>ФИО:</b> {$log->patient->name}\n<b>Дата рождения:</b> {$birth_day}\n<b>Номер мед.карты:</b> {$log->patient->medical_card}";
+    }
     public function sendMessage(string $message): void
     {
         Http::post("https://api.telegram.org/bot{$this->token}/sendMessage", [

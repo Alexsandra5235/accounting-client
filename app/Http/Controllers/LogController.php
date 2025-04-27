@@ -88,6 +88,16 @@ class LogController extends Controller
             if ($response->badRequest()){
                 return redirect()->back()->withErrors(['error_update' => $response->getBody()]);
             }
+
+            $log = app(ApiService::class)->getLogById(env('API_LOG_TOKEN'), $id);
+            if ($log->badRequest()){
+                return redirect()->route('dashboard')->withErrors(['error_show' => json_decode($log->getBody())]);
+            }
+
+            $log = json_decode($log->getBody());
+
+            $message = app(TelegramService::class)->generateMessageUpdate($log);
+            SendTelegramNotification::dispatch($message);
             return redirect()->route('dashboard');
         } catch (Exception $e) {
             return redirect()->back()->withErrors(['error_update' => $e->getMessage()]);
@@ -110,6 +120,10 @@ class LogController extends Controller
     {
         try {
             $log = app(ApiService::class)->getLogById(env('API_LOG_TOKEN'), $id);
+            if ($log->badRequest()){
+                return redirect()->route('dashboard')->withErrors(['error_show' => json_decode($log->getBody())]);
+            }
+            $log = json_decode($log->getBody());
             return view('log.logEdit', compact('log'));
         } catch (Exception $exception){
             return redirect()->route('dashboard')->withErrors(['error_edit' => $exception->getMessage()]);
