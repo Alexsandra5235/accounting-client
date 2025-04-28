@@ -11,8 +11,10 @@ use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use stdClass;
 use Symfony\Component\String\Exception\ExceptionInterface;
 
 class LogController extends Controller
@@ -141,5 +143,18 @@ class LogController extends Controller
         $logs = json_decode($response->getBody());
         $search_name = $request->input('search_name');
         return view('dashboard', compact(['logs', 'search_name']));
+    }
+
+    public function getGrouping(Request $request): stdClass|string
+    {
+        try {
+            $group = app(ApiService::class)->getGrouping(env('API_LOG_TOKEN'), $request);
+            if ($group->badRequest()){
+                return $group->getBody();
+            }
+            return json_decode($group->getBody());
+        } catch (Exception $exception) {
+            return $exception->getMessage();
+        }
     }
 }

@@ -27,6 +27,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/log', [LogController::class, 'add'])->name('log.add');
     Route::post('/log/search', [LogController::class, 'getLogByName'])->name('log.search');
 
+    Route::post('/test',[LogController::class, 'getGrouping'])->name('log.test');
+
 });
 
 require __DIR__.'/auth.php';

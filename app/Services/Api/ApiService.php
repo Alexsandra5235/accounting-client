@@ -11,14 +11,6 @@ use stdClass;
 class ApiService
 {
     /**
-     * Create a new class instance.
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
      * @throws ConnectionException
      */
     public function getLogs(string $token): array
@@ -67,5 +59,13 @@ class ApiService
     public function getLogByName(string $token, Request $request): Response
     {
         return app(ApiRepository::class)->postRequest($token, env('API_LOG_SEARCH_URL'), $request);
+    }
+
+    /**
+     * @throws ConnectionException
+     */
+    public function getGrouping(string $token, Request $request): Response
+    {
+        return app(ApiRepository::class)->postRequest($token, env('API_LOG_GROUPING'), $request);
     }
 }
