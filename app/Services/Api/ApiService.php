@@ -3,9 +3,12 @@
 namespace App\Services\Api;
 
 use App\Repository\Api\ApiRepository;
+use Exception;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use stdClass;
 
 class ApiService
@@ -62,10 +65,19 @@ class ApiService
     }
 
     /**
-     * @throws ConnectionException
+     * @throws Exception
      */
-    public function getGrouping(string $token, Request $request): Response
+    public function getGrouping(array $request): Collection
     {
-        return app(ApiRepository::class)->postRequest($token, env('API_LOG_GROUPING'), $request);
+        try {
+            $request = new Request($request);
+            $group = app(ApiRepository::class)->postRequest(env('API_LOG_TOKEN'), env('API_LOG_GROUPING'), $request);
+            if ($group->badRequest()){
+                throw new Exception($group->getBody());
+            }
+            return collect(json_decode($group->getBody()->getContents(), true));
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage());
+        }
     }
 }

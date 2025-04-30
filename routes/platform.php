@@ -11,6 +11,7 @@ use App\Orchid\Screens\Examples\ExampleGridScreen;
 use App\Orchid\Screens\Examples\ExampleLayoutsScreen;
 use App\Orchid\Screens\Examples\ExampleScreen;
 use App\Orchid\Screens\Examples\ExampleTextEditorsScreen;
+use App\Orchid\Screens\Patient\PatientFlowScreen;
 use App\Orchid\Screens\PlatformScreen;
 use App\Orchid\Screens\Role\RoleEditScreen;
 use App\Orchid\Screens\Role\RoleListScreen;
@@ -106,6 +107,9 @@ Route::screen('example', ExampleScreen::class)
      */ fn (Trail $trail) => $trail
         ->parent('platform.index')
         ->push('Example Screen'));
+
+
+Route::screen('patient/flow', PatientFlowScreen::class)->name('platform.patient.flow');
 
 Route::screen('/examples/form/fields', ExampleFieldsScreen::class)->name('platform.example.fields');
 Route::screen('/examples/form/advanced', ExampleFieldsAdvancedScreen::class)->name('platform.example.advanced');

@@ -15,6 +15,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -26,8 +27,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/log/{id}', [LogController::class, 'findById'])->name('log.find');
     Route::get('/log', [LogController::class, 'add'])->name('log.add');
     Route::post('/log/search', [LogController::class, 'getLogByName'])->name('log.search');
-
-    Route::post('/test',[LogController::class, 'getGrouping'])->name('log.test');
 
 });
 
