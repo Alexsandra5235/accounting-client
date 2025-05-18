@@ -65,6 +65,10 @@ class PlatformProvider extends OrchidServiceProvider
                 ->icon('bs.bar-chart')
                 ->route('platform.patient.flow'),
 
+            Menu::make('Предсказания')
+                ->icon('bs.bar-chart')
+                ->route('platform.predict'),
+
             Menu::make('Cards')
                 ->icon('bs.card-text')
                 ->route('platform.example.cards')

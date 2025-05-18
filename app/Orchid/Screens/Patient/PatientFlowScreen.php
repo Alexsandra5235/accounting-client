@@ -100,7 +100,7 @@ class PatientFlowScreen extends Screen
                     ->canSee(true),
 
                 Button::make('Применить')
-                    ->method('filter'), // Название метода будет "filter" (ниже)
+                    ->method('filter'),
             ]),
 
             PatientFlowChart::make('charts', 'Поток пациентов')
