@@ -37,6 +37,10 @@ use Tabuna\Breadcrumbs\Trail;
 Route::screen('/main', PlatformScreen::class)
     ->name('platform.main');
 
+Route::get('/logout', function () {
+    return redirect()->route('dashboard');
+})->name('platform.logout');
+
 // Platform > Profile
 Route::screen('profile', UserProfileScreen::class)
     ->name('platform.profile')

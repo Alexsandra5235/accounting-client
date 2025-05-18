@@ -24,15 +24,12 @@ class PlatformScreen extends Screen
      */
     public function name(): ?string
     {
-        return 'Get Started';
+        return 'Добро пожаловать!';
     }
 
-    /**
-     * Display header description.
-     */
     public function description(): ?string
     {
-        return 'Welcome to your Orchid application.';
+        return 'Информационная панель для мониторинга и управления системой';
     }
 
     /**
