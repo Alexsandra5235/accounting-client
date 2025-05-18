@@ -9,8 +9,12 @@ use Orchid\Screen\Components\Cells\Text;
 use Orchid\Screen\Fields\Label;
 use Orchid\Screen\Layout;
 use Orchid\Screen\Screen;
+use phpDocumentor\Reflection\Types\Integer;
 use Phpml\Regression\SVR;
 use Phpml\SupportVectorMachine\Kernel;
+use Rubix\ML\Datasets\Labeled;
+use Rubix\ML\Datasets\Unlabeled;
+use Rubix\ML\Regressors\GradientBoost;
 
 class PredictScreen extends Screen
 {
@@ -23,49 +27,67 @@ class PredictScreen extends Screen
      */
     public function query(): iterable
     {
-        $groups = app(ApiService::class)->getGrouping(['grouping' => 'month']);
+        $grouping = app(ApiService::class)->getGrouping(['grouping' => 'month']);
 
-        // Меняем данные на массивы для обучения
-        $admissionsData = [];
-        $dischargesData = [];
-        $months = [];
+        // Собираем уникальные месяцы
+        $allMonths = array_unique(array_merge(
+            array_keys($grouping['admissions']),
+            array_keys($grouping['discharges']),
+        ));
+        sort($allMonths);
 
-        if (count($groups['admissions']) < 6 || count($groups['discharges']) < 6) {
-            $this->message = 'Предсказания могут быть неточными из-за недостаточного количества тестовых данных!';
+        $admissionsSamples = [];
+        $admissionsLabels = [];
+
+        $dischargesSamples = [];
+        $dischargesLabels = [];
+
+        foreach ($allMonths as $monthStr) {
+            $date = \DateTime::createFromFormat('Y-m', $monthStr);
+            $timestamp = $date->getTimestamp();
+            $year = (int)$date->format('Y');
+            $month = (int)$date->format('n');
+            $index = array_search($monthStr, $allMonths); // Признак — порядок
+
+            $admissionsSamples[] = [$year, $month, $index];
+            $admissionsLabels[] = $grouping['admissions'][$monthStr] ?? 0;
+
+            $dischargesSamples[] = [$year, $month, $index];
+            $dischargesLabels[] = $grouping['discharges'][$monthStr] ?? 0;
         }
 
-        foreach ($groups['admissions'] as $month => $count) {
-            $months[] = strtotime($month);
-            $admissionsData[] = $count;
-        }
+        // Обучение
+        $admissionModel = new GradientBoost();
+        $dischargeModel = new GradientBoost();
 
-        foreach ($groups['discharges'] as $month => $count) {
-            $dischargesData[] = $count;
-        }
+        $admissionModel->train(new Labeled($admissionsSamples, $admissionsLabels));
+        $dischargeModel->train(new Labeled($dischargesSamples, $dischargesLabels));
 
-        // Создаём модели для прогноза с использованием SVR
-        $admissionModel = new SVR(Kernel::LINEAR);
-        $dischargeModel = new SVR(Kernel::LINEAR);
+        // Генерация 12 будущих месяцев
+        $futurePredictions = [];
+        $lastDate = \DateTime::createFromFormat('Y-m', end($allMonths));
 
-        // Обучаем модели
-        $admissionModel->train(array_map(function($month) { return [$month]; }, $months), $admissionsData);
-        $dischargeModel->train(array_map(function($month) { return [$month]; }, $months), $dischargesData);
-
-        $yearProjections = [];
         for ($i = 1; $i <= 12; $i++) {
-            $futureMonth = strtotime('+' . $i . ' month', end($months));
-            $monthYearKey = date('Y-m', $futureMonth);
+            $futureDate = (clone $lastDate)->modify("+$i month");
+            $futureKey = $futureDate->format('Y-m');
+            $year = (int)$futureDate->format('Y');
+            $month = (int)$futureDate->format('n');
+            $index = count($allMonths) + $i;
 
-            // Прогноз для данного месяца
-            $yearProjections[] = [
-                'month' => $monthYearKey,
-                'admissions' => $admissionModel->predict([[$futureMonth]]),
-                'discharges' => $dischargeModel->predict([[$futureMonth]]),
+            $sample = new Unlabeled([[$year, $month, $index]]);
+
+            $admission = round($admissionModel->predict($sample)[0]);
+            $discharge = round($dischargeModel->predict($sample)[0]);
+
+            $futurePredictions[] = [
+                'month' => $futureKey,
+                'admissions' => (int)$admission,
+                'discharges' => (int)$discharge,
             ];
         }
 
         return [
-            'predict' => $yearProjections,
+            'predict' => $futurePredictions,
         ];
     }
 

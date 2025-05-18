@@ -37,13 +37,13 @@ class PredictListLayout extends Table
                 ->sort()
                 ->filter('', 'admissions')
                 ->render(function ($predict) {
-                    return $predict['admissions'][0];
+                    return $predict['admissions'];
                 }),
             TD::make('discharges', 'Выписки')
                 ->sort()
                 ->filter('', 'discharges')
                 ->render(function ($predict) {
-                    return $predict['discharges'][0];
+                    return $predict['discharges'];
                 }),
         ];
     }
