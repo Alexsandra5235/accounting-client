@@ -6,6 +6,7 @@ use App\Orchid\Layouts\Chart\PatientFlowChart;
 use App\Services\Api\ApiService;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Layouts\Chart;
@@ -37,6 +38,14 @@ class PatientFlowScreen extends Screen
             ->sort()
             ->values();
 
+        $formattedDates = $periods->map(function ($date) use ($grouping) {
+            return match ($grouping) {
+                'day' => Carbon::parse($date)->format('D, d M Y'),
+                'month' => Carbon::parse($date)->format('F Y'),
+                default => $date,
+            };
+        });
+
         // Готовим финальные массивы для графика
         $admissionsData = $periods->map(fn($period) => $groups['admissions'][$period] ?? 0);
         $dischargesData = $periods->map(fn($period) => $groups['discharges'][$period] ?? 0);
@@ -47,12 +56,12 @@ class PatientFlowScreen extends Screen
                 [
                     'name'   => 'Принятые пациенты',
                     'values' => $admissionsData,
-                    'labels' => $periods,
+                    'labels' => $formattedDates,
                 ],
                 [
                     'name'   => 'Выписанные пациенты',
                     'values' => $dischargesData,
-                    'labels' => $periods,
+                    'labels' => $formattedDates,
                 ],
             ],
         ];
