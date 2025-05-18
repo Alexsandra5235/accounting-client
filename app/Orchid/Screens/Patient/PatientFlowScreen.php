@@ -32,7 +32,7 @@ class PatientFlowScreen extends Screen
 
         // Объединяем периоды чтобы все даты были в графике
         $periods = collect($groups->get('admissions'))->keys()
-            ->merge(collect($groups->get('admissions'))->keys())
+            ->merge(collect($groups->get('discharges'))->keys())
             ->unique()
             ->sort()
             ->values();
