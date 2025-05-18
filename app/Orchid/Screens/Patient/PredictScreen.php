@@ -30,9 +30,9 @@ class PredictScreen extends Screen
         $dischargesData = [];
         $months = [];
 
-//        if (count($groups['admissions']) < 6 || count($groups['discharges']) < 6) {
-//            $this->message = 'Предсказания могут быть неточными из-за недостаточного количества тестовых данных!';
-//        }
+        if (count($groups['admissions']) < 6 || count($groups['discharges']) < 6) {
+            $this->message = 'Предсказания могут быть неточными из-за недостаточного количества тестовых данных!';
+        }
 
         foreach ($groups['admissions'] as $month => $count) {
             $months[] = strtotime($month);
