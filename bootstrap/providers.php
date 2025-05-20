@@ -5,4 +5,5 @@ return [
     Orchid\Platform\Providers\PlatformServiceProvider::class,
     Orchid\Platform\Providers\RouteServiceProvider::class,
     App\Orchid\PlatformProvider::class,
+    Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
 ];

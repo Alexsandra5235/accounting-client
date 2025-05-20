@@ -24,6 +24,12 @@
                 </x-nav-link>
             </div>
 
+            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <x-nav-link :href="route('excel.store')" :active="request()->routeIs('excel.store')">
+                    {{ __('Отчеты') }}
+                </x-nav-link>
+            </div>
+
             @if(auth()->user()->hasAccess('platform.index'))
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('platform.main')" :active="request()->routeIs('platform.main')">

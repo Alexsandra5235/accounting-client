@@ -64,11 +64,11 @@
 
                                 <div>
                                     <x-input-label for="gender" :value="__('Пол (мужской, женский)')"/>
-                                    <select id="gender" name="gender" class="mt-1 block w-full dark:bg-gray-800 text-white rounded-lg border border-gray-700 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                                    <x-select id="gender" name="gender" class="mt-1 block w-full">
                                         <option value="" style="font-weight: bold">Пожалуйста, сделайте выбор</option>
                                         <option value="мужской">мужской</option>
                                         <option value="женский">женский</option>
-                                    </select>
+                                    </x-select>
                                     <x-input-error class="mt-2" :messages="$errors->get('gender')" />
                                 </div>
 
@@ -134,13 +134,13 @@
 
                                 <div>
                                     <x-input-label for="delivered" :value="__('Пациент доставлен (направлен)')" />
-                                    <select id="delivered" name="delivered" class="mt-1 block w-full dark:bg-gray-800 text-white rounded-lg border border-gray-700 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                                    <x-select id="delivered" name="delivered" class="mt-1 block w-full">
                                         <option value="" style="font-weight: bold">Пожалуйста, сделайте выбор</option>
                                         <option value="полицией" >полицией</option>
                                         <option value="выездной бригадой скорой медицинской помощи">выездной бригадой скорой медицинской помощи</option>
                                         <option value="другой медицинской организацией">другой медицинской организацией</option>
                                         <option value="обратился самостоятельно">обратился самостоятельно</option>
-                                    </select>
+                                    </x-select>
                                     <x-input-error class="mt-2" :messages="$errors->get('delivered')" />
                                 </div>
 
@@ -196,12 +196,12 @@
                             <div class="mt-6 space-y-6">
                                 <div>
                                     <x-input-label for="outcome" :value="__('Исход госпитализации')" />
-                                    <select id="outcome" name="outcome" class="mt-1 block w-full dark:bg-gray-800 text-white rounded-lg border border-gray-700 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                                    <x-select id="outcome" name="outcome" class="mt-1 block w-full">
                                         <option value="" style="font-weight: bold">Пожалуйста, сделайте выбор</option>
                                         <option value="выписан" >выписан</option>
                                         <option value="переведен в другую медицинскую организацию" >переведен в другую медицинскую организацию</option>
                                         <option value="умер">умер</option>
-                                    </select>
+                                    </x-select>
                                     <x-input-error class="mt-2" :messages="$errors->get('outcome')" />
                                 </div>
 
@@ -237,14 +237,14 @@
                             <div class="mt-6 space-y-6">
                                 <div>
                                     <x-input-label for="reason_refusal" :value="__('Причина отказа в госпитализации')" />
-                                    <select id="reason_refusal" name="reason_refusal" class="mt-1 block w-full dark:bg-gray-800 text-white rounded-lg border border-gray-700 focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                                    <x-select id="reason_refusal" name="reason_refusal" class="mt-1 block w-full">
                                         <option value="" selected style="font-weight: bold">Пожалуйста, сделайте выбор...</option>
                                         <option value="отказался пациент" >отказался пациент</option>
                                         <option value="отсутствие показаний">отсутствие показаний</option>
                                         <option value="помощь оказана в приемном отделении медицинской организации">помощь оказана в приемном отделении медицинской организации</option>
                                         <option value="направлен в другую медицинскую организацию" >направлен в другую медицинскую организацию</option>
                                         <option value="иная причина">иная причина</option>
-                                    </select>
+                                    </x-select>
                                     <x-input-error class="mt-2" :messages="$errors->get('reason_refusal')" />
                                 </div>
 

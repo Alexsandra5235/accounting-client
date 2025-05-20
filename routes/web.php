@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ExcelController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\ProfileController;
 use App\Services\Api\ApiService;
@@ -27,6 +28,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/log/{id}', [LogController::class, 'findById'])->name('log.find');
     Route::get('/log', [LogController::class, 'add'])->name('log.add');
     Route::post('/log/search', [LogController::class, 'getLogByName'])->name('log.search');
+
+    Route::get('/excel', [ExcelController::class, 'getPageStore'])->name('excel.store');
+    Route::get('/excel/download', [ExcelController::class, 'downloadExcel'])->name('excel.download');
 
 });
 
