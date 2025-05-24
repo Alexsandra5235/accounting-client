@@ -9,20 +9,20 @@
         </p>
     </header>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('excel.download.summary') }}" class="mt-6 space-y-6">
         @csrf
-        @method('patch')
+        @method('post')
 
         <div>
-            <x-input-label for="name" :value="__('Дата начала')" />
-            <x-text-input id="name" name="name" type="date" class="mt-1 block w-full" :value="old('name', '$user->name')" required />
-            <x-input-error class="mt-2" :messages="$errors->get('name')" />
+            <x-input-label for="date1" :value="__('Дата начала')" />
+            <x-text-input id="date1" name="date1" type="date" class="mt-1 block w-full" :value="old('date1')" />
+            <x-input-error class="mt-2" :messages="$errors->get('date1')" />
         </div>
 
         <div>
-            <x-input-label for="email" :value="__('Дата конца')" />
-            <x-text-input id="email" name="email" type="date" class="mt-1 block w-full" :value="old('email', '$user->email')" required />
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
+            <x-input-label for="date2" :value="__('Дата конца')" />
+            <x-text-input id="date2" name="date2" type="date" class="mt-1 block w-full" :value="old('date2')" />
+            <x-input-error class="mt-2" :messages="$errors->get('date2')" />
         </div>
 
         <div class="flex items-center gap-4">

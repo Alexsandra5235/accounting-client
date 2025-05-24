@@ -31,7 +31,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/excel', [ExcelController::class, 'getPageStore'])->name('excel.store');
     Route::post('/excel/download', [ExcelController::class, 'downloadExcel'])->name('excel.download');
-
+    Route::post('/excel/download/summary', [ExcelController::class, 'downloadExcelSummary'])->name('excel.download.summary');
 });
 
 require __DIR__.'/auth.php';

@@ -36,6 +36,10 @@ class PredictScreen extends Screen
         ));
         sort($allMonths);
 
+        if (count($allMonths) < 6) {
+            $this->message = 'Предсказания могут быть не точными из-за недостаточного количества тестовых данных! Добавьте больше данных в систему учета для более точных предсказаний.';
+        }
+
         $admissionsSamples = [];
         $admissionsLabels = [];
 

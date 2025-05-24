@@ -41,4 +41,27 @@ class ExcelController extends Controller
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ]);
     }
+
+    /**
+     * @throws ConnectionException
+     */
+    public function downloadExcelSummary(Request $request): StreamedResponse
+    {
+        $request->validate([
+            'date1' => 'required',
+            'date2' => 'required',
+        ]);
+
+        $date1 = $request->input('date1');
+        $date2 = $request->input('date2');
+
+        $writer = app(GenerateExcelService::class)->getWriterSummary($date1, $date2);
+        $fileName = app(GenerateExcelService::class)->getFileNameSummary($date1, $date2);
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $fileName, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
+    }
 }

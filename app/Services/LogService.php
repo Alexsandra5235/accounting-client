@@ -16,33 +16,72 @@ class LogService
     {
         $date1 = Carbon::createFromFormat('Y-m-d H:i:s', $date1 . ' 08:00:00');
         $date2 = Carbon::createFromFormat('Y-m-d H:i:s', $date2 . ' 07:59:00');
-        $logs = app(ApiService::class)->getLogs(env('API_LOG_TOKEN'));
-        $filteredLogs = collect($logs)->filter(function ($log) use ($date1, $date2) {
-            try {
-                $receiptDateTime = Carbon::createFromFormat('Y-m-d H:i', $log->log_receipt->date_receipt . ' ' . $log->log_receipt->time_receipt);
-            } catch (Exception $e) {
-                return false;
-            }
 
-            return $receiptDateTime->between($date1, $date2);
-        });
-
-        $filteredLogsDischarge = collect($logs)->filter(function ($log) use ($date1, $date2) {
-            if (empty($log->log_discharge?->datetime_discharge)) {
-                return false;
-            }
-            try {
-                $dischargeDateTime = Carbon::parse($log->log_discharge->datetime_discharge);
-            } catch (Exception $e) {
-                return false;
-            }
-
-            return $dischargeDateTime->between($date1, $date2);
-        });
+        $logs = collect(app(ApiService::class)->getLogs(env('API_LOG_TOKEN')));
+        $logsReceipt = $logs->filter(fn($log) => $this->isInReceiptRange($log, $date1, $date2));
 
         return [
-            'receipt' => $filteredLogs->values()->toArray(),
-            'discharge' => $filteredLogsDischarge->values()->toArray(),
+            'receipt' => $logsReceipt->values()->toArray(),
+            'discharge' => $logs->filter(fn($log) => $this->isInDischargeRange($log, $date1, $date2))->values()->toArray(),
+            'before' => $logs->filter(fn($log) => $this->isReceiptBefore($log, $date1))->values()->toArray(),
+            'birthday' => $logsReceipt->filter(fn($log) => $this->isChild($log))->values()->toArray(),
+            'total' => $logs->filter(fn($log) => $this->isNotDischargedAndBefore($log, $date2))->values()->toArray(),
         ];
+    }
+    private function isInReceiptRange($log, Carbon $start, Carbon $end): bool
+    {
+        try {
+            $dt = Carbon::createFromFormat('Y-m-d H:i', $log->log_receipt->date_receipt . ' ' . $log->log_receipt->time_receipt);
+            return $dt->between($start, $end);
+        } catch (Exception) {
+            return false;
+        }
+    }
+
+    private function isInDischargeRange($log, Carbon $start, Carbon $end): bool
+    {
+        if (empty($log->log_discharge?->datetime_discharge)) {
+            return false;
+        }
+
+        try {
+            $dt = Carbon::parse($log->log_discharge->datetime_discharge);
+            return $dt->between($start, $end);
+        } catch (Exception) {
+            return false;
+        }
+    }
+
+    private function isReceiptBefore($log, Carbon $date): bool
+    {
+        try {
+            $dt = Carbon::createFromFormat('Y-m-d H:i', $log->log_receipt->date_receipt . ' ' . $log->log_receipt->time_receipt);
+            return $dt->isBefore($date);
+        } catch (Exception) {
+            return false;
+        }
+    }
+
+    private function isChild($log): bool
+    {
+        try {
+            return Carbon::parse($log->patient->birth_day)->age <= 17;
+        } catch (Exception) {
+            return false;
+        }
+    }
+
+    private function isNotDischargedAndBefore($log, Carbon $date): bool
+    {
+        if (!empty($log->log_discharge?->datetime_discharge)) {
+            return false;
+        }
+
+        try {
+            $dt = Carbon::createFromFormat('Y-m-d H:i', $log->log_receipt->date_receipt . ' ' . $log->log_receipt->time_receipt);
+            return $dt->isBefore($date);
+        } catch (Exception) {
+            return false;
+        }
     }
 }
