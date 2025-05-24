@@ -7,12 +7,14 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "irazasyed/telegram-bot-sdk": "^3.15",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "orchid/platform": "^14.50",
         "php-ai/php-ml": "^0.10.0",
         "phpoffice/phpspreadsheet": "^4.2",
-        "rubix/ml": "^2.5"
+        "rubix/ml": "^2.5",
+        "ext-xlswriter": "*"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5",

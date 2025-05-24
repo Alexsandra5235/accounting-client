@@ -6,4 +6,5 @@ return [
     Orchid\Platform\Providers\RouteServiceProvider::class,
     App\Orchid\PlatformProvider::class,
     Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+    Telegram\Bot\Laravel\TelegramServiceProvider::class,
 ];
