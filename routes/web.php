@@ -30,7 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/log/search', [LogController::class, 'getLogByName'])->name('log.search');
 
     Route::get('/excel', [ExcelController::class, 'getPageStore'])->name('excel.store');
-    Route::get('/excel/download', [ExcelController::class, 'downloadExcel'])->name('excel.download');
+    Route::post('/excel/download', [ExcelController::class, 'downloadExcel'])->name('excel.download');
 
 });
 

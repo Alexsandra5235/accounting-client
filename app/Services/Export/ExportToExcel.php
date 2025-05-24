@@ -12,7 +12,6 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 class ExportToExcel
 {
     public function setDefaultSettings(
-        Spreadsheet $spreadsheet,
         Worksheet $sheet,
         int $firstRow,
         int $endRow,

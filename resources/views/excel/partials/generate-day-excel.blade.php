@@ -9,24 +9,24 @@
         </p>
     </header>
 
-    <div class="mt-6 space-y-6">
+    <form class="mt-6 space-y-6" method="post" action="{{ route('excel.download') }}">
         @csrf
-        @method('patch')
+        @method('post')
 
         <div>
-            <x-input-label for="name" :value="__('Дата начала')" />
-            <x-text-input id="name" name="name" type="date" class="mt-1 block w-full" :value="old('name', '$user->name')" required autofocus autocomplete="name" />
-            <x-input-error class="mt-2" :messages="$errors->get('name')" />
+            <x-input-label for="date1" :value="__('Дата начала')" />
+            <x-text-input id="date1" name="date1" type="date" class="mt-1 block w-full" :value="old('date1')"/>
+            <x-input-error class="mt-2" :messages="$errors->get('date1')" />
         </div>
 
         <div>
-            <x-input-label for="email" :value="__('Дата конца')" />
-                <x-text-input id="email" name="email" type="date" class="mt-1 block w-full" :value="old('email', '$user->email')" required autocomplete="username"/>
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
+            <x-input-label for="date2" :value="__('Дата конца')" />
+                <x-text-input id="date2" name="date2" type="date" class="mt-1 block w-full" :value="old('date2')"/>
+            <x-input-error class="mt-2" :messages="$errors->get('date2')" />
         </div>
 
         <div class="flex items-center gap-4">
-            <x-link-primary-button href="{{ route('excel.download') }}">{{ __('Сформировать отчет') }}</x-link-primary-button>
+            <x-primary-button>{{ __('Сформировать отчет') }}</x-primary-button>
 
             @if (session('status') === 'profile-updated')
                 <p
@@ -38,5 +38,5 @@
                 >{{ __('Saved.') }}</p>
             @endif
         </div>
-    </div>
+    </form>
 </section>

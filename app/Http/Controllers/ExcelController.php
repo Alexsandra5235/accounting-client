@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Export\GenerateExcelService;
+use App\Services\LogService;
+use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -15,20 +19,25 @@ class ExcelController extends Controller
         return view('excel.excel-store');
     }
 
-    public function downloadExcel(): StreamedResponse
+    /**
+     * @throws ConnectionException
+     */
+    public function downloadExcel(Request $request): StreamedResponse
     {
-        // Создаем пустую таблицу
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle('Sheet1'); // можно опустить
+        $request->validate([
+            'date1' => 'required',
+            'date2' => 'required',
+        ]);
 
-        // Создаем объект Writer
-        $writer = new Xlsx($spreadsheet);
+        $date1 = $request->input('date1');
+        $date2 = $request->input('date2');
 
-        // Возвращаем в виде скачиваемого файла
+        $writer = app(GenerateExcelService::class)->getWriter($date1, $date2);
+        $fileName = app(GenerateExcelService::class)->getFileName($date1, $date2);
+
         return response()->streamDownload(function () use ($writer) {
             $writer->save('php://output');
-        }, 'empty_sheet.xlsx', [
+        }, $fileName, [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ]);
     }
