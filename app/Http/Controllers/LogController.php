@@ -41,7 +41,7 @@ class LogController extends Controller
 
             SendTelegramNotification::dispatch($message);
 
-            return redirect()->route('dashboard');
+            return redirect()->route('dashboard')->with('toast', 'Запись успешно добавлена!');;
         } catch (Exception $exception) {
             return redirect()->back()->withErrors(['error_store' => $exception->getMessage()]);
         }
@@ -56,7 +56,7 @@ class LogController extends Controller
         try {
             $log = app(ApiService::class)->getLogById(env('API_LOG_TOKEN'), $id);
             if ($log->badRequest()){
-                return redirect()->route('dashboard')->withErrors(['error_show' => json_decode($log->getBody())]);
+                return redirect()->route('dashboard')->withErrors(['error_delete' => json_decode($log->getBody())]);
             }
 
             $log = json_decode($log->getBody());
@@ -68,7 +68,7 @@ class LogController extends Controller
 
             $message = app(TelegramService::class)->generateMessageDestroy($log);
             SendTelegramNotification::dispatch($message);
-            return redirect()->back();
+            return redirect()->back()->with('toast', "Запись о пациенте '{$log->patient->name}' успешно удалена!");
         } catch (Exception $exception) {
             return redirect()->back()->withErrors(['error_delete' => $exception->getMessage()]);
         }

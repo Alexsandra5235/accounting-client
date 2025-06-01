@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Address\AddressController;
 use App\Http\Controllers\ExcelController;
 use App\Http\Controllers\LogController;
+use App\Http\Controllers\MKD\MkdController;
 use App\Http\Controllers\ProfileController;
 use App\Services\Api\ApiService;
 use Illuminate\Support\Facades\Route;
@@ -12,6 +14,18 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     $logs = app(ApiService::class)->getLogs(env('API_LOG_TOKEN'));
+    usort($logs, function($a, $b) {
+        // Получаем дату + время как строку
+        $datetimeA = $a->log_receipt->date_receipt . ' ' . $a->log_receipt->time_receipt;
+        $datetimeB = $b->log_receipt->date_receipt . ' ' . $b->log_receipt->time_receipt;
+
+        // Конвертируем в timestamp для сравнения
+        $timestampA = strtotime($datetimeA);
+        $timestampB = strtotime($datetimeB);
+
+        // Сравниваем по убыванию — то есть больший timestamp должен идти первым
+        return $timestampB <=> $timestampA;
+    });
     return view('dashboard', compact('logs'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -32,6 +46,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/excel', [ExcelController::class, 'getPageStore'])->name('excel.store');
     Route::post('/excel/download', [ExcelController::class, 'downloadExcel'])->name('excel.download');
     Route::post('/excel/download/summary', [ExcelController::class, 'downloadExcelSummary'])->name('excel.download.summary');
+
+    Route::post('/mkd/suggestions/state', [MkdController::class, 'suggestState'])->name('mkd.suggestState');
+    Route::post('/mkd/suggestions/wound', [MkdController::class, 'suggestWound'])->name('mkd.suggestWound');
+
+    Route::post('/address/suggest', [AddressController::class, 'suggestAddress'])->name('address.suggest');
+    Route::post('/address/suggest/place', [AddressController::class, 'suggestPlace'])->name('address.suggest.place');
+
 });
 
 require __DIR__.'/auth.php';

@@ -4,10 +4,12 @@ namespace App\Providers;
 
 use App\Facades\ExcelStyler;
 use App\Repository\Api\ApiRepository;
+use App\Services\Address\AddressService;
 use App\Services\Api\ApiService;
 use App\Services\Export\ExportToExcel;
 use App\Services\Export\GenerateExcelService;
 use App\Services\LogService;
+use App\Services\MKD\MkdService;
 use App\Services\TelegramService;
 use Illuminate\Support\ServiceProvider;
 
@@ -42,6 +44,13 @@ class AppServiceProvider extends ServiceProvider
             return new LogService();
         });
 
+        $this->app->singleton(MkdService::class, function () {
+            return new MkdService();
+        });
+
+        $this->app->singleton(AddressService::class, function () {
+            return new AddressService();
+        });
     }
 
     /**
