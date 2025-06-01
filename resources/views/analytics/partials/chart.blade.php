@@ -10,9 +10,6 @@
     </header>
 
     <form class="mt-6 space-y-6" method="get" action="{{ route('patient.flow') }}">
-        @csrf
-        @method('get')
-
         <div>
             <x-input-label for="grouping" :value="__('Группировать по:')" />
             <x-select id="grouping" name="grouping" class="mt-1 block w-full">
@@ -86,7 +83,11 @@
                     plugins: {
                         title: {
                             display: true,
-                            text: 'Поток пациентов',
+                            text: grouping === 'day'
+                                ? 'Поток пациентов (по дням)'
+                                : (grouping === 'month'
+                                ? 'Поток пациентов (по месяцам)'
+                                : 'Поток пациентов (по годам)'),
                             font: {
                                 size: 18
                             }

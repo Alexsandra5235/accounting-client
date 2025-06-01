@@ -34,13 +34,13 @@ class PlatformProvider extends OrchidServiceProvider
     public function menu(): array
     {
         return [
-            Menu::make('Графики')
-                ->icon('bs.bar-chart')
-                ->route('platform.patient.flow'),
-
-            Menu::make('Предсказания')
-                ->icon('bs.columns-gap')
-                ->route('platform.predict'),
+//            Menu::make('Графики')
+//                ->icon('bs.bar-chart')
+//                ->route('platform.patient.flow'),
+//
+//            Menu::make('Предсказания')
+//                ->icon('bs.columns-gap')
+//                ->route('platform.predict'),
 
             Menu::make(__('Users'))
                 ->icon('bs.people')

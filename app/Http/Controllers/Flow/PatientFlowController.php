@@ -21,12 +21,12 @@ class PatientFlowController extends Controller
     public function index(Request $request): View
     {
         // 1) Получаем параметр группировки из query-string (или 'day' по умолчанию)
-        $grouping = $request->query('grouping', 'day');
+        $groupingType = $request->query('grouping', 'day');
 
         // 2) Вызываем тот же ApiService, что и в Orchid-экране, чтобы получить данные.
         //    Предполагается, что у вас есть mapped route в ApiService: getGrouping(['grouping' => ...])
         $groups = app(ApiService::class)
-            ->getGrouping(['grouping' => $grouping]);
+            ->getGrouping(['grouping' => $groupingType]);
 
         // 3) Собираем все даты (ключи) из admissions и discharges,
         //    чтобы обеспечить, что даже если в каком-то дне/месяце нет данных, точка все равно попадёт на график.
@@ -37,8 +37,8 @@ class PatientFlowController extends Controller
             ->values();
 
         // 4) Форматируем даты для отображения (для легенды графика или оси X)
-        $formattedDates = $periods->map(function ($date) use ($grouping) {
-            return match ($grouping) {
+        $formattedDates = $periods->map(function ($date) use ($groupingType) {
+            return match ($groupingType) {
                 'day'   => Carbon::parse($date)->format('d M Y'),    // напр.: 01 июн 2025
                 'month' => Carbon::parse($date)->format('F Y'),      // напр.: June 2025
                 default => $date,
@@ -145,7 +145,7 @@ class PatientFlowController extends Controller
         //    - текущую группировку (чтобы сбросить значение select)
         //    - сформированные данные для Chart.js
         return view('analytics.analytics', [
-            'grouping' => $grouping,
+            'grouping' => $groupingType,
             'charts'   => $charts,
             'predictions' => $futurePredictions,
             'message'     => $message,
