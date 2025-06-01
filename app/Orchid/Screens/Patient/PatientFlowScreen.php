@@ -50,6 +50,9 @@ class PatientFlowScreen extends Screen
         $admissionsData = $periods->map(fn($period) => $groups['admissions'][$period] ?? 0);
         $dischargesData = $periods->map(fn($period) => $groups['discharges'][$period] ?? 0);
 
+        //uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu
+
+
         return [
             'grouping' => $grouping,
             'charts' => [

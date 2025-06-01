@@ -86,7 +86,7 @@
                     plugins: {
                         title: {
                             display: true,
-                            text: 'Поток пациентов (' + grouping.charAt(0).toUpperCase() + grouping.slice(1) + ')',
+                            text: 'Поток пациентов',
                             font: {
                                 size: 18
                             }

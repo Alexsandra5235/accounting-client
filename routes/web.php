@@ -3,6 +3,7 @@
 use App\Http\Controllers\Address\AddressController;
 use App\Http\Controllers\ExcelController;
 use App\Http\Controllers\Flow\PatientFlowController;
+use App\Http\Controllers\Flow\PredictController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\MKD\MkdController;
 use App\Http\Controllers\ProfileController;
