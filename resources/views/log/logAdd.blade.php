@@ -104,18 +104,6 @@
                                     value="Регистрация по месту пребывания"
                                 />
 
-{{--                                <div>--}}
-{{--                                    <x-input-label for="address" :value="__('Регистрация по месту жительства')" />--}}
-{{--                                    <x-text-input id="address" name="address" type="text" class="mt-1 block w-full"  autocomplete="off" />--}}
-{{--                                    <x-input-error class="mt-2" :messages="$errors->get('address')" />--}}
-{{--                                </div>--}}
-
-{{--                                <div>--}}
-{{--                                    <x-input-label for="register_place" :value="__('Регистрация по месту пребывания')" />--}}
-{{--                                    <x-text-input id="register_place" name="register_place" type="text" class="mt-1 block w-full"  autocomplete="off" />--}}
-{{--                                    <x-input-error class="mt-2" :messages="$errors->get('register_place')" />--}}
-{{--                                </div>--}}
-
                                 <div>
                                     <x-input-label for="snils" :value="__('СНИСЛ (при наличии)')" />
                                     <x-text-input id="snils" name="snils" type="text" class="mt-1 block w-full"  />

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Address\AddressController;
 use App\Http\Controllers\ExcelController;
+use App\Http\Controllers\Flow\PatientFlowController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\MKD\MkdController;
 use App\Http\Controllers\ProfileController;
@@ -52,6 +53,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/address/suggest', [AddressController::class, 'suggestAddress'])->name('address.suggest');
     Route::post('/address/suggest/place', [AddressController::class, 'suggestPlace'])->name('address.suggest.place');
+
+    Route::get('/patient/flow', [PatientFlowController::class, 'index'])
+        ->name('patient.flow');
 
 });
 

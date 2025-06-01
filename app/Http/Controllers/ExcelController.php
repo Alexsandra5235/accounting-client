@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\Export\GenerateExcelService;
 use App\Services\LogService;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\RedirectResponse;
@@ -20,31 +21,32 @@ class ExcelController extends Controller
         return view('excel.excel-store');
     }
 
-    /**
-     * @throws ConnectionException
-     */
     public function downloadExcel(Request $request): StreamedResponse|RedirectResponse
     {
-        $request->validate([
-            'date1' => 'required',
-            'date2' => 'required',
-        ]);
+        try {
+            $request->validate([
+                'date1' => 'required',
+                'date2' => 'required',
+            ]);
 
-        $date1 = $request->input('date1');
-        $date2 = $request->input('date2');
+            $date1 = $request->input('date1');
+            $date2 = $request->input('date2');
 
-        $writer = app(GenerateExcelService::class)->getWriter($date1, $date2);
-        $fileName = app(GenerateExcelService::class)->getFileName($date1, $date2);
+            $writer = app(GenerateExcelService::class)->getWriter($date1, $date2);
+            $fileName = app(GenerateExcelService::class)->getFileName($date1, $date2);
 
-        if ($request->input('action') === 'open') {
-            return $this->previewReport($writer, $fileName);
+            if ($request->input('action') === 'open') {
+                return $this->previewReport($writer, $fileName);
+            }
+
+            return response()->streamDownload(function () use ($writer) {
+                $writer->save('php://output');
+            }, $fileName, [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]);
+        } catch (Exception $exception) {
+            return redirect()->back()->withErrors(['error_excel' => $exception->getMessage()]);
         }
-
-        return response()->streamDownload(function () use ($writer) {
-            $writer->save('php://output');
-        }, $fileName, [
-            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        ]);
     }
 
     public function previewReport(Xlsx $writer, string $fileName): RedirectResponse
@@ -55,30 +57,31 @@ class ExcelController extends Controller
         return redirect("/storage/{$fileName}");
     }
 
-    /**
-     * @throws ConnectionException
-     */
     public function downloadExcelSummary(Request $request): StreamedResponse|RedirectResponse
     {
-        $request->validate([
-            'date1' => 'required',
-            'date2' => 'required',
-        ]);
+        try {
+            $request->validate([
+                'date1' => 'required',
+                'date2' => 'required',
+            ]);
 
-        $date1 = $request->input('date1');
-        $date2 = $request->input('date2');
+            $date1 = $request->input('date1');
+            $date2 = $request->input('date2');
 
-        $writer = app(GenerateExcelService::class)->getWriterSummary($date1, $date2);
-        $fileName = app(GenerateExcelService::class)->getFileNameSummary($date1, $date2);
+            $writer = app(GenerateExcelService::class)->getWriterSummary($date1, $date2);
+            $fileName = app(GenerateExcelService::class)->getFileNameSummary($date1, $date2);
 
-        if ($request->input('action') === 'open') {
-            return $this->previewReport($writer, $fileName);
+            if ($request->input('action') === 'open') {
+                return $this->previewReport($writer, $fileName);
+            }
+
+            return response()->streamDownload(function () use ($writer) {
+                $writer->save('php://output');
+            }, $fileName, [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]);
+        } catch (Exception $exception) {
+            return redirect()->back()->withErrors(['error_excel' => $exception->getMessage()]);
         }
-
-        return response()->streamDownload(function () use ($writer) {
-            $writer->save('php://output');
-        }, $fileName, [
-            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        ]);
     }
 }

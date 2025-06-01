@@ -98,7 +98,7 @@ class LogController extends Controller
 
             $message = app(TelegramService::class)->generateMessageUpdate($log);
             SendTelegramNotification::dispatch($message);
-            return redirect()->route('dashboard');
+            return redirect()->route('dashboard')->with('toast', "Запись о пациенте '{$log->patient->name}' успешно обновлена!");
         } catch (Exception $e) {
             return redirect()->back()->withErrors(['error_update' => $e->getMessage()]);
         }

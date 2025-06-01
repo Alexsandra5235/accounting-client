@@ -39,8 +39,8 @@
                 {{ $slot }}
             </main>
         </div>
-    <script>
 
+    <script>
         function mkbAutocomplete(fetchUrl, nameInput, nameValue) {
             return {
                 query: '',
