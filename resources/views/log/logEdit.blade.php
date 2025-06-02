@@ -30,8 +30,8 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Информация о записи</h3>
-                    <p>Дата и время создания записи: <strong style="color: #2563eb">{{ \Carbon\Carbon::parse($log->created_at)->locale('ru')->translatedFormat('D, d M Y') }}</strong></p>
-                    <p>Дата и время последнего редактирования: <strong style="color: #2563eb">{{ \Carbon\Carbon::parse($log->updated_at)->locale('ru')->translatedFormat('D, d M Y') }}</strong></p>
+                    <p>Дата и время создания записи: <strong style="color: #2563eb">{{ \Carbon\Carbon::parse($log->created_at)->addHours(7)->locale('ru')->translatedFormat('D, d M Y H:i') }}</strong></p>
+                    <p>Дата и время последнего редактирования: <strong style="color: #2563eb">{{ \Carbon\Carbon::parse($log->updated_at)->addHours(7)->locale('ru')->translatedFormat('D, d M Y H:i') }}</strong></p>
                     <form action="{{ route('log.destroy', ['id' => $log->id]) }}" method="post" class="mt-2" onsubmit="return confirmDeletion({{ json_encode($log->patient->name) }})">
                         @csrf
                         @method('delete')
