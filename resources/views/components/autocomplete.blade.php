@@ -1,6 +1,6 @@
-@props(['name', 'placeholder' => '', 'url', 'value' => 'Диагноз заболевания'])
+@props(['name', 'placeholder' => '', 'url', 'value' => 'Диагноз заболевания', 'initial' => ''])
 
-<div x-data="addressAutocomplete('{{ $url }}', '{{ $name }}')" class="w-full" @click.outside="suggestions = []">
+<div x-data="addressAutocomplete('{{ $url }}', '{{ $name }}', '{{ $initial }}')" class="w-full" @click.outside="suggestions = []">
     <x-input-label for="{{ $name }}" :value="__($value)" />
     <x-text-input
         id="{{ $name }}"

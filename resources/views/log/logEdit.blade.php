@@ -103,11 +103,21 @@
                                     <x-input-error class="mt-2" :messages="$errors->get('nationality')" />
                                 </div>
 
-                                <div>
-                                    <x-input-label for="address" :value="__('Регистрация по месту жительства')" />
-                                    <x-text-input id="address" name="address" type="text" class="mt-1 block w-full" :value="$log->patient->address" autocomplete="off" />
-                                    <x-input-error class="mt-2" :messages="$errors->get('address')" />
-                                </div>
+                                <x-autocomplete
+                                    name="address"
+                                    placeholder="Начните вводить адрес..."
+                                    url="{{ route('address.suggest') }}"
+                                    value="Регистрация по месту жительства"
+                                    initial="{{ old('address', $log->patient->address) }}"
+                                />
+
+                                <x-autocomplete
+                                    name="register_place"
+                                    placeholder="Начните вводить адрес..."
+                                    url="{{ route('address.suggest.place') }}"
+                                    value="Регистрация по месту пребывания"
+                                    initial="{{ old('register_place', $log->patient->register_place) }}"
+                                />
 
                                 <div>
                                     <x-input-label for="snils" :value="__('СНИСЛ (при наличии)')" />
@@ -151,19 +161,23 @@
                                     <x-input-error class="mt-2" :messages="$errors->get('delivered')" />
                                 </div>
 
-                                <div>
-                                    <x-input-label for="state_code" :value="__('Диагноз заболевания (состояния), поставленный направившей медицинской организацией (код по МКБ)')" />
-                                    <x-text-input id="state_code" name="state_code" type="text" class="mt-1 block w-full" :value="$log->patient->diagnosis->state->code" />
-                                    <input type="text" id="state_value" name="state_value" hidden="hidden" value="{{ $log->patient->diagnosis->state->value }}">
-                                    <x-input-error class="mt-2" :messages="$errors->get('state_code')" />
-                                </div>
+                                <x-mkd-autocomplete
+                                    name="state"
+                                    placeholder="Начните вводить диагноз..."
+                                    url="{{ route('mkd.suggestState') }}"
+                                    value="Диагноз заболевания (состояния), поставленный направившей медицинской организацией (код по МКБ)"
+                                    initial="{{ old('state_code', $log->patient->diagnosis->state->code) }}"
+                                    hidden="{{ old('state_value', $log->patient->diagnosis->state->value) }}"
+                                />
 
-                                <div>
-                                    <x-input-label for="wound_code" :value="__('Причина и обстоятельства травмы (в том числе при дорожно-транспортных происшествиях), отравления (код по МКБ)')" />
-                                    <x-text-input id="wound_code" name="wound_code" type="text" class="mt-1 block w-full" :value="$log->patient->diagnosis->wound->code" />
-                                    <input type="text" id="wound_value" name="wound_value" hidden="hidden" value="{{ $log->patient->diagnosis->wound->value }}">
-                                    <x-input-error class="mt-2" :messages="$errors->get('wound_code')" />
-                                </div>
+                                <x-mkd-autocomplete
+                                    name="wound"
+                                    placeholder="Начните вводить диагноз..."
+                                    url="{{ route('mkd.suggestWound') }}"
+                                    value="Причина и обстоятельства травмы (в том числе при дорожно-транспортных происшествиях), отравления (код по МКБ)"
+                                    initial="{{ old('wound_code', $log->patient->diagnosis->wound->code) }}"
+                                    hidden="{{ old('wound_value', $log->patient->diagnosis->wound->value) }}"
+                                />
 
                                 <div>
                                     <x-input-label for="fact_alcohol" :value="__('Факт употребления алкоголя и иных психоактивных веществ, установление наличия или отсутствия признаков состояния опьянения при поступлении пациента в медицинскую организацию')" />

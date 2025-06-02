@@ -1,11 +1,11 @@
-@props(['name', 'placeholder' => '', 'url', 'value' => 'Диагноз заболевания'])
+@props(['name', 'placeholder' => '', 'url', 'value' => 'Диагноз заболевания', 'initial' => '', 'hidden' => ''])
 
 @php
     $nameCode = $name . '_code';
     $nameValue = $name . '_value';
 @endphp
 
-<div x-data="mkbAutocomplete('{{ $url }}', '{{ $nameCode }}', '{{ $nameValue }}')" class="w-full" @click.outside="suggestions = []">
+<div x-data="mkbAutocomplete('{{ $url }}', '{{ $nameCode }}', '{{ $nameValue }}', '{{ $initial }}', '{{ $hidden }}')" class="w-full" @click.outside="suggestions = []">
     <x-input-label for="{{ $nameCode }}" :value="__($value)" />
     <x-text-input
         id="{{ $nameCode }}"
@@ -34,6 +34,6 @@
             ></li>
         </template>
     </ul>
-    <input type="text" id="{{ $nameValue }}" name="{{ $nameValue }}" hidden="hidden" value="">
+    <input type="text" id="{{ $nameValue }}" name="{{ $nameValue }}" hidden="hidden" value="{{ $hidden }}">
     <x-input-error class="mt-2" :messages="$errors->get('{{ $nameCode }}')" />
 </div>

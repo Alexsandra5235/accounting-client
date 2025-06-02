@@ -333,9 +333,9 @@
             }
         });
 
-        function mkbAutocomplete(fetchUrl, nameInput, nameValue) {
+        function mkbAutocomplete(fetchUrl, nameInput, nameValue, initial, hidden) {
             return {
-                query: '',
+                query: initial,
                 suggestions: [],
                 highlightedIndex: -1,
                 fetchSuggestions() {
@@ -389,9 +389,9 @@
             };
         }
 
-        function addressAutocomplete(fetchUrl, nameInput) {
+        function addressAutocomplete(fetchUrl, nameInput, initial) {
             return {
-                query: '',
+                query: initial,
                 suggestions: [],
                 highlightedIndex: -1,
                 fetchSuggestions() {
