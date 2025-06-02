@@ -43,6 +43,14 @@ class LogController extends Controller
 
             $response = json_decode($response->getBody()->getContents());
 
+            app(HistoryService::class)->store(
+                new HistoryDTO(
+                    action: ActionsEnum::ADD,
+                    user_id: Auth::user()->id,
+                    log: $response->id,
+                )
+            );
+
             $message = app(TelegramService::class)->generateMessageStore($response);
 
             SendTelegramNotification::dispatch($message);
