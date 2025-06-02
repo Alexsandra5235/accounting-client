@@ -80,6 +80,8 @@ class LogController extends Controller
                 return redirect()->back()->withErrors(['error_delete' => $response->getBody()]);
             }
 
+            app(HistoryService::class)->delete($id);
+
             app(HistoryService::class)->store(
                 new HistoryDTO(
                     action: ActionsEnum::DELETE,

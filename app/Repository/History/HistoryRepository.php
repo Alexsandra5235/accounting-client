@@ -16,4 +16,10 @@ class HistoryRepository
             'log_id' => $historyDTO->log,
         ]);
    }
+   public function delete(int $log_id): bool
+   {
+       return History::query()->where('log_id', $log_id)->update([
+           'log_id' => null,
+       ]);
+   }
 }

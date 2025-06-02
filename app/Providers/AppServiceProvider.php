@@ -5,12 +5,14 @@ namespace App\Providers;
 use App\Facades\ExcelStyler;
 use App\Repository\Api\ApiRepository;
 use App\Repository\History\HistoryRepository;
+use App\Repository\Report\ReportRepository;
 use App\Services\Address\AddressService;
 use App\Services\Api\ApiService;
 use App\Services\Export\GenerateExcelService;
 use App\Services\History\HistoryService;
 use App\Services\LogService;
 use App\Services\MKD\MkdService;
+use App\Services\Report\ReportService;
 use App\Services\TelegramService;
 use Illuminate\Support\ServiceProvider;
 
@@ -59,6 +61,14 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->singleton(HistoryService::class, function () {
             return new HistoryService();
+        });
+
+        $this->app->singleton(ReportRepository::class, function () {
+            return new ReportRepository();
+        });
+
+        $this->app->singleton(ReportService::class, function () {
+            return new ReportService();
         });
     }
 

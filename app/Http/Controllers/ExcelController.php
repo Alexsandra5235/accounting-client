@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Report;
 use App\Services\Export\GenerateExcelService;
 use App\Services\LogService;
+use App\Services\Report\ReportService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\View\View;
@@ -34,6 +36,8 @@ class ExcelController extends Controller
 
             $writer = app(GenerateExcelService::class)->getWriter($date1, $date2);
             $fileName = app(GenerateExcelService::class)->getFileName($date1, $date2);
+
+            app(ReportService::class)->store($writer, $fileName);
 
             if ($request->input('action') === 'open') {
                 return $this->previewReport($writer, $fileName);

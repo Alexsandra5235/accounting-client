@@ -16,6 +16,11 @@ class HistoryService
         return app(HistoryRepository::class)->create($historyDTO);
     }
 
+    public function delete(int $log_id): bool
+    {
+        return app(HistoryRepository::class)->delete($log_id);
+    }
+
     public function getDiff(array $logBefore, array $logAfter, string $path = ''): array
     {
         $diff = [];
@@ -32,17 +37,10 @@ class HistoryService
                 $nestedDiff = $this->getDiff($valueBefore, $valueAfter, $fullPath);
                 $diff = array_merge($diff, $nestedDiff);
             } elseif (($valueBefore !== $valueAfter) && $key !== 'updated_at') {
-                if($this->isCarbonDate($valueBefore) && $this->isCarbonDate($valueAfter)) {
-                    $diff[FieldNameTranslator::translate($fullPath)] = [
-                        'before' => Carbon::parse($valueAfter)->locale('ru')->translatedFormat('d.m.Y'),
-                        'after' => Carbon::parse($valueBefore)->locale('ru')->translatedFormat('d.m.Y'),
-                    ];
-                } else {
-                    $diff[FieldNameTranslator::translate($fullPath)] = [
-                        'before' => $valueBefore,
-                        'after' => $valueAfter,
-                    ];
-                }
+                $diff[FieldNameTranslator::translate($fullPath)] = [
+                    'before' => $valueAfter,
+                    'after' => $valueBefore,
+                ];
             }
         }
 
