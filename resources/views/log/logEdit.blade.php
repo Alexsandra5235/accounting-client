@@ -32,6 +32,11 @@
                     <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Информация о записи</h3>
                     <p>Дата и время создания записи: <strong style="color: #2563eb">{{ \Carbon\Carbon::parse($log->created_at)->locale('ru')->translatedFormat('D, d M Y') }}</strong></p>
                     <p>Дата и время последнего редактирования: <strong style="color: #2563eb">{{ \Carbon\Carbon::parse($log->updated_at)->locale('ru')->translatedFormat('D, d M Y') }}</strong></p>
+                    <form action="{{ route('log.destroy', ['id' => $log->id]) }}" method="post" class="mt-2" onsubmit="return confirmDeletion({{ json_encode($log->patient->name) }})">
+                        @csrf
+                        @method('delete')
+                        <x-danger-button>Удалить запись</x-danger-button>
+                    </form>
                 </div>
             </div>
             <form action="{{ route('log.update', ['id' => $log->id]) }}" method="post">

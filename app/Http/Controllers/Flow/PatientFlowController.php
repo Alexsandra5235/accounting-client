@@ -23,10 +23,12 @@ class PatientFlowController extends Controller
         // 1) Получаем параметр группировки из query-string (или 'day' по умолчанию)
         $groupingType = $request->query('grouping', 'day');
 
+
         // 2) Вызываем тот же ApiService, что и в Orchid-экране, чтобы получить данные.
         //    Предполагается, что у вас есть mapped route в ApiService: getGrouping(['grouping' => ...])
         $groups = app(ApiService::class)
             ->getGrouping(['grouping' => $groupingType]);
+
 
         // 3) Собираем все даты (ключи) из admissions и discharges,
         //    чтобы обеспечить, что даже если в каком-то дне/месяце нет данных, точка все равно попадёт на график.
