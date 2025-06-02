@@ -42,13 +42,13 @@ class PlatformProvider extends OrchidServiceProvider
 //                ->icon('bs.columns-gap')
 //                ->route('platform.predict'),
 
-            Menu::make(__('Users'))
+            Menu::make(__('Пользователи'))
                 ->icon('bs.people')
                 ->route('platform.systems.users')
                 ->permission('platform.systems.users')
                 ->title(__('Access Controls')),
 
-            Menu::make(__('Roles'))
+            Menu::make(__('Роли'))
                 ->icon('bs.shield')
                 ->route('platform.systems.roles')
                 ->permission('platform.systems.roles')

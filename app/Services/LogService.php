@@ -6,6 +6,10 @@ use App\Services\Api\ApiService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\Response;
+use Illuminate\Http\Request;
+use function Pest\Laravel\json;
+use function PHPUnit\Framework\isArray;
 
 class LogService
 {

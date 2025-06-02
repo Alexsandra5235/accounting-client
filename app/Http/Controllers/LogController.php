@@ -3,8 +3,13 @@
 namespace App\Http\Controllers;
 
 
+use App\DTO\History\HistoryDTO;
+use App\Enum\ActionsEnum;
 use App\Jobs\SendTelegramNotification;
+use App\Models\User;
 use App\Services\Api\ApiService;
+use App\Services\History\HistoryService;
+use App\Services\LogService;
 use App\Services\TelegramService;
 use Carbon\Carbon;
 use Exception;
@@ -14,6 +19,7 @@ use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use stdClass;
 use Symfony\Component\String\Exception\ExceptionInterface;
 
@@ -84,6 +90,7 @@ class LogController extends Controller
             'medical_card' => ['required'],
         ]);
         try {
+            $logBefore = app(ApiService::class)->getLogById(env('API_LOG_TOKEN'), $id);
             $response = app(ApiService::class)->updateLog($request, env('API_LOG_TOKEN') ,$id);
             if ($response->badRequest()){
                 return redirect()->back()->withErrors(['error_update' => $response->getBody()]);
@@ -93,6 +100,16 @@ class LogController extends Controller
             if ($log->badRequest()){
                 return redirect()->route('dashboard')->withErrors(['error_show' => json_decode($log->getBody())]);
             }
+
+            app(HistoryService::class)->store(
+                new HistoryDTO(
+                    action: ActionsEnum::EDIT,
+                    diff: app(HistoryService::class)
+                        ->getDiff(json_decode($log->getBody(), true), json_decode($logBefore->getBody(), true)),
+                    log: $id,
+                    user_id: Auth::user()->id
+                )
+            );
 
             $log = json_decode($log->getBody());
 
