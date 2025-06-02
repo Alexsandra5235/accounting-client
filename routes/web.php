@@ -4,6 +4,7 @@ use App\Http\Controllers\Address\AddressController;
 use App\Http\Controllers\ExcelController;
 use App\Http\Controllers\Flow\PatientFlowController;
 use App\Http\Controllers\Flow\PredictController;
+use App\Http\Controllers\History\HistoryController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\MKD\MkdController;
 use App\Http\Controllers\ProfileController;
@@ -57,6 +58,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/patient/flow', [PatientFlowController::class, 'index'])
         ->name('patient.flow');
+
+    Route::get('/history', [HistoryController::class, 'index'])->name('history');
 
 });
 

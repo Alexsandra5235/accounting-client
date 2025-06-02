@@ -15,6 +15,7 @@ class HistoryService
 
     public function getDiff(array $logBefore, array $logAfter, string $path = ''): array
     {
+        dd($logBefore);
         $diff = [];
 
         $allKeys = array_unique(array_merge(array_keys($logBefore), array_keys($logAfter)));

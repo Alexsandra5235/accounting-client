@@ -146,21 +146,13 @@
                                     <td class="border border-gray-300 px-4 py-2">{{ \Carbon\Carbon::parse($log->patient->birth_day)->locale('ru')->translatedFormat('d M Y') }} (Полных лет: {{ \Carbon\Carbon::parse($log->patient->birth_day)->age }})</td>
                                     <td class="border border-gray-300 px-4 py-2">{{ $log->patient->medical_card }}</td>
                                     <td class="border border-gray-300 px-4 py-2">
-                                        <button onclick="toggleDropdown(this)"
-                                                style="font-size: 20px;">⋮</button>
-                                        <div class="dropdown-menu absolute right-0 hidden bg-white border border-gray-300 mt-1">
-                                            <ul class="list-none p-2">
-                                                <li class="border"><a href="{{ route('log.edit', ['id' => $log->id]) }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Редактировать</a></li>
-                                                <li class="border block px-4 py-2 text-gray-800 hover:bg-gray-200">
-                                                    <form action="{{ route('log.destroy', ['id' => $log->id]) }}" method="post" onsubmit="return confirmDeletion('{{ addslashes($log->patient->name) }}')">
-                                                        @csrf
-                                                        @method('delete')
-                                                        <input type="submit" value="Удалить">
-                                                    </form>
-                                                </li>
-                                                <li class="border"><a href="{{ route('log.find', ['id' => $log->id]) }}" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Просмотр</a></li>
-                                            </ul>
-                                        </div>
+                                        <x-mini-select
+                                            :edit-route="route('log.edit', ['id' => $log->id])"
+                                            :view-route="route('log.find', ['id' => $log->id])"
+                                            :record-id="$log->id"
+                                            :record-name="$log->patient->name">
+                                        </x-mini-select>
+
                                     </td>
                                 </tr>
                             @endforeach

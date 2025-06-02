@@ -12,40 +12,65 @@ enum ActionsEnum: string
     case EDIT = 'edit';
     case DELETE = 'delete';
 
-    /**
-     * @throws ConnectionException
-     */
-    public function message(int $log_id = null, string $patientName = null): string
+    public function message(): string
     {
         return match ($this) {
-            self::ADD => $this->getAddMessage($log_id),
-            self::EDIT => $this->getEditMessage($log_id),
-            self::DELETE => $this->getDeleteMessage($patientName),
+            self::ADD => 'Новая запись',
+            self::EDIT => 'Обновление записи',
+            self::DELETE => 'Удаление записи',
         };
     }
 
-    /**
-     * @throws ConnectionException
-     */
-    private function getAddMessage(int $log_id): string
+    public function fullMessage(int $log_id = null, int $user_id = null): string
     {
-        $log = app(ApiService::class)->getLogById(env('API_LOG_TOKEN'), $log_id);
-        $log = json_decode($log->getBody(), true);
-        return "Запись о пациенте {$log->patient->name} была добавлена.";
+        return match ($this) {
+            self::ADD => $this->getMessageAdd($log_id, $user_id),
+            self::EDIT => $this->getMessageUpdate($log_id, $user_id),
+            self::DELETE => $this->getMessageDelete($user_id),
+        };
     }
 
-    /**
-     * @throws ConnectionException
-     */
-    private function getEditMessage(int $log_id): string
+    public function getMessageAdd(int $log_id = null, int $user_id = null): string
     {
-        $log = app(ApiService::class)->getLogById(env('API_LOG_TOKEN'), $log_id);
-        $log = json_decode($log->getBody(), true);
-        return "Запись о пациенте {$log->patient->name} была изменена.";
+        if ($log_id === null) {
+            if ($user_id === null) {
+                return 'В систему учета была добавлена новая запись. В настоящий момент она удалена, просмотр данных не возможен. Сотрудник, выполнивший данной действие, вероятнее всего не работает в данный момент на предприятии.';
+            } else {
+                return 'В систему учета была добавлена новая запись. В настоящий момент она удалена, просмотр данных не возможен. Для получения информации о сотруднике, выполнившим операцию, перейдите по ссылке ниже.';
+            }
+        } else {
+            if ($user_id === null) {
+                return 'В систему учета была добавлена новая запись. Для просмотра данных добавленной записи необходимо перейти по ссылке ниже. Сотрудник, выполнивший данной действие, вероятнее всего не работает в данный момент на предприятии.';
+            } else {
+                return 'В систему учета была добавлена новая запись. Для просмотра данных добавленной записи необходимо перейти по ссылке ниже. Для получения информации о сотруднике, выполнившим операцию, перейдите по ссылке ниже.';
+            }
+        }
     }
-    private function getDeleteMessage(string $patientName): string
+
+    public function getMessageUpdate(int $log_id = null, int $user_id = null): string
     {
-        return "Запись о пациенте {$patientName} была удалена.";
+        if ($log_id === null) {
+            if ($user_id === null) {
+                return 'В системе учета была обновлена информация о пациенте. В настоящий момент она удалена, просмотр данных не возможен. Сотрудник, выполнивший данной действие, вероятнее всего не работает в данный момент на предприятии. Для просмотра внесенных изменений воспользуйтесь кнопкой "Просмотр изменений".';
+            } else {
+                return 'В системе учета была обновлена информация о пациенте. В настоящий момент она удалена, просмотр данных не возможен. Для получения информации о сотруднике, выполнившим операцию, перейдите по ссылке ниже. Для просмотра внесенных изменений воспользуйтесь кнопкой "Просмотр изменений".';
+            }
+        } else {
+            if ($user_id === null) {
+                return 'В системе учета была обновлена информация о пациенте. Для просмотра данных добавленной записи необходимо перейти по ссылке ниже. Сотрудник, выполнивший данной действие, вероятнее всего не работает в данный момент на предприятии. Для просмотра внесенных изменений воспользуйтесь кнопкой "Просмотр изменений".';
+            } else {
+                return 'В системе учета была обновлена информация о пациенте. Для просмотра данных добавленной записи необходимо перейти по ссылке ниже. Для получения информации о сотруднике, выполнившим операцию, перейдите по ссылке ниже. Для просмотра внесенных изменений воспользуйтесь кнопкой "Просмотр изменений".';
+            }
+        }
+    }
+
+    public function getMessageDelete(int $user_id = null): string
+    {
+        if ($user_id === null) {
+            return 'В системе учета была удалена запись. Сотрудник, выполнивший данной действие, вероятнее всего не работает в данный момент на предприятии. Для просмотра подробной информации по удаленной записи перейтите в чат-бот телеграмм и найдите сообщение по дате и времени.';
+        } else {
+            return 'В системе учета была удалена запись. Для получения информации о сотруднике, выполнившим операцию, перейдите по ссылке ниже. Для просмотра подробной информации по удаленной записи перейтите в чат-бот телеграмм и найдите сообщение по дате и времени.';
+        }
     }
 
     public function getAction(): Action
