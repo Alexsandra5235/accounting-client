@@ -31,6 +31,12 @@
             </div>
 
             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <x-nav-link :href="route('history.report')" :active="request()->routeIs('history.report')">
+                    {{ __('История отчетов') }}
+                </x-nav-link>
+            </div>
+
+            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                 <x-nav-link :href="route('patient.flow')" :active="request()->routeIs('patient.flow')">
                     {{ __('Статистика') }}
                 </x-nav-link>

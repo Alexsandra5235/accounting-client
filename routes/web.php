@@ -8,6 +8,7 @@ use App\Http\Controllers\History\HistoryController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\MKD\MkdController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Report\ReportController;
 use App\Services\Api\ApiService;
 use Illuminate\Support\Facades\Route;
 
@@ -60,6 +61,9 @@ Route::middleware('auth')->group(function () {
         ->name('patient.flow');
 
     Route::get('/history', [HistoryController::class, 'index'])->name('history');
+    Route::get('/history/report', [ReportController::class, 'index'])->name('history.report');
+    Route::get('/reports/download/{id}', [ReportController::class, 'downloadSaved'])
+        ->name('reports.download');
 
 });
 

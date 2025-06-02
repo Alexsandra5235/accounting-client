@@ -75,6 +75,8 @@ class ExcelController extends Controller
             $writer = app(GenerateExcelService::class)->getWriterSummary($date1, $date2);
             $fileName = app(GenerateExcelService::class)->getFileNameSummary($date1, $date2);
 
+            app(ReportService::class)->store($writer, $fileName);
+
             if ($request->input('action') === 'open') {
                 return $this->previewReport($writer, $fileName);
             }
