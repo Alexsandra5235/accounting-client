@@ -25,11 +25,29 @@
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
             *, html,body{
-                padding:0px;
-                margin:0px;
+                padding:0;
+                margin:0;
                 box-sizing:border-box;
                 font-family:'Poppins', sans-serif;
                 perspective:800px;
+            }
+            /* Для всех scrollable-элементов */
+            .timeline-wrapper::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            .timeline-wrapper::-webkit-scrollbar-track {
+                background: #1e1e1e; /* цвет фона полосы прокрутки */
+            }
+
+            .timeline-wrapper::-webkit-scrollbar-thumb {
+                background-color: #444;  /* цвет "ползунка" */
+                border-radius: 4px;
+            }
+            .timeline-wrapper {
+                max-height: 100vh; /* максимум на высоту экрана */
+                overflow-y: auto;   /* вертикальная прокрутка */
+                padding-right: 10px; /* чтобы скролл не перекрывал контент */
             }
             .timeline{
                 width:800px;
@@ -99,7 +117,8 @@
             /* Стили для модального окна */
 
             .modal-overlay {
-                position: fixed;      /* фиксированное позиционирование относительно окна */
+                position: fixed;
+                overflow: auto; /* фиксированное позиционирование относительно окна */
                 top: 0; left: 0; right: 0; bottom: 0; /* растянуть на весь экран */
                 display: flex;        /* включаем flexbox для центрирования */
                 justify-content: center; /* по горизонтали центр */
@@ -117,6 +136,7 @@
             }
 
             .modal-content {
+                position: absolute;
                 background: #fff;
                 color: #000;
                 border-radius: 8px;
@@ -124,7 +144,6 @@
                 width: 90%;
                 padding: 20px;
                 box-shadow: 0 0 15px rgba(0,0,0,0.3);
-                position: relative;
                 transform: translateY(-20px);
                 transition: transform 0.3s ease;
             }

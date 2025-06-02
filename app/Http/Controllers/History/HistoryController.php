@@ -11,6 +11,6 @@ class HistoryController extends Controller
 {
     public function index(): View
     {
-        return view('history.history', ['history' => History::all()]);
+        return view('history.history', ['history' => History::query()->orderBy('created_at', 'desc')->get()]);
     }
 }
