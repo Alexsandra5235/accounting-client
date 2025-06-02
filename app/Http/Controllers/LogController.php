@@ -72,6 +72,13 @@ class LogController extends Controller
                 return redirect()->back()->withErrors(['error_delete' => $response->getBody()]);
             }
 
+            app(HistoryService::class)->store(
+                new HistoryDTO(
+                    action: ActionsEnum::DELETE,
+                    user_id: Auth::user()->id,
+                )
+            );
+
             $message = app(TelegramService::class)->generateMessageDestroy($log);
             SendTelegramNotification::dispatch($message);
             return redirect()->back()->with('toast', "Запись о пациенте '{$log->patient->name}' успешно удалена!");
@@ -104,10 +111,10 @@ class LogController extends Controller
             app(HistoryService::class)->store(
                 new HistoryDTO(
                     action: ActionsEnum::EDIT,
+                    user_id: Auth::user()->id,
                     diff: app(HistoryService::class)
                         ->getDiff(json_decode($log->getBody(), true), json_decode($logBefore->getBody(), true)),
-                    log: $id,
-                    user_id: Auth::user()->id
+                    log: $id
                 )
             );
 

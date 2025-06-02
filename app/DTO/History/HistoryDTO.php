@@ -11,8 +11,8 @@ class HistoryDTO
      */
     public function __construct(
         public ActionsEnum $action,
-        public ?array $diff,
-        public ?int $log,
         public ?int $user_id,
+        public ?array $diff = null,
+        public ?int $log = null,
     ) { }
 }
