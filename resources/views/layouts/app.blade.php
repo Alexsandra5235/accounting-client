@@ -10,9 +10,11 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
 
-        <!-- jQuery (нужен для toastr) -->
+        <!-- Toastr CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+        <!-- jQuery (нужен для Toastr) -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
         <!-- Toastr JS -->
@@ -223,6 +225,16 @@
 
     <script>
 
+        @if(session('toast'))
+            console.log('заходит е мае')
+            $(document).ready(function() {
+                toastr.success("{{ session('toast') }}", null, {
+                    timeOut: 5000,
+                    extendedTimeOut: 1000,
+                });
+            });
+        @endif
+
         // Получаем элементы
         const modal = document.getElementById('modal');
         const modalTitle = document.getElementById('modal-title');
@@ -430,15 +442,6 @@
                 }
             };
         }
-
-        @if(session('toast'))
-        $(document).ready(function() {
-            toastr.success("{{ session('toast') }}", null, {
-                timeOut: 5000,
-                extendedTimeOut: 1000,
-            });
-        });
-        @endif
 
         function confirmDeletion(patientName) {
             return confirm(`Вы уверены, что хотите удалить запись пациента "${patientName}"? Это действие невозможно будет отменить.`);

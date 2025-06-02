@@ -3,8 +3,11 @@
 namespace App\Services\History;
 
 use App\DTO\History\HistoryDTO;
+use App\Enum\FieldNameTranslator;
 use App\Models\History;
 use App\Repository\History\HistoryRepository;
+use Carbon\Carbon;
+use Exception;
 
 class HistoryService
 {
@@ -15,7 +18,6 @@ class HistoryService
 
     public function getDiff(array $logBefore, array $logAfter, string $path = ''): array
     {
-        dd($logBefore);
         $diff = [];
 
         $allKeys = array_unique(array_merge(array_keys($logBefore), array_keys($logAfter)));
@@ -30,13 +32,28 @@ class HistoryService
                 $nestedDiff = $this->getDiff($valueBefore, $valueAfter, $fullPath);
                 $diff = array_merge($diff, $nestedDiff);
             } elseif (($valueBefore !== $valueAfter) && $key !== 'updated_at') {
-                $diff[$fullPath] = [
-                    'before' => $valueBefore,
-                    'after' => $valueAfter,
-                ];
+                if($this->isCarbonDate($valueBefore) && $this->isCarbonDate($valueAfter)) {
+                    $diff[FieldNameTranslator::translate($fullPath)] = [
+                        'before' => Carbon::parse($valueAfter)->locale('ru')->translatedFormat('d.m.Y'),
+                        'after' => Carbon::parse($valueBefore)->locale('ru')->translatedFormat('d.m.Y'),
+                    ];
+                } else {
+                    $diff[FieldNameTranslator::translate($fullPath)] = [
+                        'before' => $valueBefore,
+                        'after' => $valueAfter,
+                    ];
+                }
             }
         }
 
         return $diff;
+    }
+    private function isCarbonDate($value): bool
+    {
+        try {
+            return Carbon::parse($value) instanceof Carbon;
+        } catch (Exception $e) {
+            return false;
+        }
     }
 }
