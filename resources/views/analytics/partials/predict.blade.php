@@ -30,7 +30,7 @@
             @foreach ($predictions as $item)
                 <tr>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {{ \Carbon\Carbon::parse($item['month'])->format('M Y') }}
+                        {{ \Carbon\Carbon::parse($item['month'])->locale('ru')->translatedFormat('M Y') }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600">
                         {{ $item['admissions'] }}

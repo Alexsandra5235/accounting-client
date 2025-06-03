@@ -77,7 +77,7 @@ class LogController extends Controller
 
             $response = app(ApiService::class)->deleteLog(env('API_LOG_TOKEN'), $id);
             if($response->badRequest()){
-                return redirect()->back()->withErrors(['error_delete' => $response->getBody()]);
+                return redirect()->route('dashboard')->withErrors(['error_delete' => $response->getBody()]);
             }
 
             app(HistoryService::class)->delete($id);
@@ -91,9 +91,9 @@ class LogController extends Controller
 
             $message = app(TelegramService::class)->generateMessageDestroy($log);
             SendTelegramNotification::dispatch($message);
-            return redirect()->back()->with('toast', "Запись о пациенте '{$log->patient->name}' успешно удалена!");
+            return redirect()->route('dashboard')->with('toast', "Запись о пациенте '{$log->patient->name}' успешно удалена!");
         } catch (Exception $exception) {
-            return redirect()->back()->withErrors(['error_delete' => $exception->getMessage()]);
+            return redirect()->route('dashboard')->withErrors(['error_delete' => $exception->getMessage()]);
         }
     }
     public function update(int $id, Request $request): RedirectResponse

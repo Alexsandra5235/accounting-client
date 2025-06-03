@@ -320,5 +320,6 @@ return [
      */
 
     'provider' => \App\Orchid\PlatformProvider::class,
+//    'provider' => \App\Orchid\CustomPlatformProvider::class,
 
 ];

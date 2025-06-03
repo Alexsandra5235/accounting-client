@@ -41,8 +41,8 @@ class PatientFlowController extends Controller
         // 4) Форматируем даты для отображения (для легенды графика или оси X)
         $formattedDates = $periods->map(function ($date) use ($groupingType) {
             return match ($groupingType) {
-                'day'   => Carbon::parse($date)->format('d M Y'),    // напр.: 01 июн 2025
-                'month' => Carbon::parse($date)->format('F Y'),      // напр.: June 2025
+                'day'   => Carbon::parse($date)->locale('ru')->translatedFormat('d M Y'),    // напр.: 01 июн 2025
+                'month' => Carbon::parse($date)->locale('ru')->translatedFormat('F Y'),      // напр.: June 2025
                 default => $date,
             };
         });
@@ -94,7 +94,6 @@ class PatientFlowController extends Controller
         $dischargesLabels  = [];
 
         foreach ($allMonths as $index => $monthStr) {
-            // monthStr — "2024-01", "2024-02" и т. д.
             $dateObj = \DateTime::createFromFormat('Y-m', $monthStr);
             if (!$dateObj) {
                 continue;

@@ -46,7 +46,7 @@ class PlatformProvider extends OrchidServiceProvider
                 ->icon('bs.people')
                 ->route('platform.systems.users')
                 ->permission('platform.systems.users')
-                ->title(__('Access Controls')),
+                ->title(__('Средства контроля доступа')),
 
             Menu::make(__('Роли'))
                 ->icon('bs.shield')
@@ -54,13 +54,13 @@ class PlatformProvider extends OrchidServiceProvider
                 ->permission('platform.systems.roles')
                 ->divider(),
 
-            Menu::make('Documentation')
-                ->title('Docs')
+            Menu::make('Документация')
+                ->title('Документы')
                 ->icon('bs.box-arrow-up-right')
                 ->url('https://orchid.software/en/docs')
                 ->target('_blank'),
 
-            Menu::make('Changelog')
+            Menu::make('Журнал изменений')
                 ->icon('bs.box-arrow-up-right')
                 ->url('https://github.com/orchidsoftware/platform/blob/master/CHANGELOG.md')
                 ->target('_blank')
@@ -82,9 +82,26 @@ class PlatformProvider extends OrchidServiceProvider
     public function permissions(): array
     {
         return [
-            ItemPermission::group(__('System'))
-                ->addPermission('platform.systems.roles', __('Roles'))
-                ->addPermission('platform.systems.users', __('Users')),
+            ItemPermission::group(__('Доступ в систему'))
+                ->addPermission('platform.index', __('Доступ в админку')),
+
+            ItemPermission::group(__('Доступ к средствам контроля доступа'))
+                ->addPermission('platform.systems.roles', __('Роли'))
+                ->addPermission('platform.systems.users', __('Пользователи')),
+
+            ItemPermission::group(__('Доступ к данным'))
+                ->addPermission('access.edit', __('Редактирование'))
+                ->addPermission('access.delete', __('Удаление'))
+                ->addPermission('access.add', __('Добавление')),
+
+            ItemPermission::group(__('Отчеты'))
+                ->addPermission('report.create', __('Формирование отчетов'))
+                ->addPermission('report.history', __('Просмотр истории формирования отчетов')),
+
+            ItemPermission::group(__('Данные санатория'))
+                ->addPermission('statistic', __('Просмотр статистики санатория'))
+                ->addPermission('history', __('Просмотр истории взаимодействия с системой')),
+
         ];
     }
 }

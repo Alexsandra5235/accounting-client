@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>Система учета пациентов санатория "Журавлик"</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -26,13 +26,13 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-            *, html,body{
-                padding:0;
-                margin:0;
-                box-sizing:border-box;
-                font-family:'Poppins', sans-serif;
-                perspective:800px;
-            }
+            /**, html,body{*/
+            /*    padding:0;*/
+            /*    margin:0;*/
+            /*    box-sizing:border-box;*/
+            /*    font-family:'Poppins', sans-serif;*/
+            /*    perspective:800px;*/
+            /*}*/
             /* Для всех scrollable-элементов */
             .timeline-wrapper::-webkit-scrollbar {
                 width: 8px;
@@ -233,6 +233,16 @@
                     extendedTimeOut: 1000,
                 });
             });
+        @endif
+
+        @if(session('toast-warn'))
+        console.log('заходит е мае')
+        $(document).ready(function() {
+            toastr.warning("{{ session('toast-warn') }}", null, {
+                timeOut: 5000,
+                extendedTimeOut: 1000,
+            });
+        });
         @endif
 
         // Получаем элементы

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 Route::get('/dashboard', function () {
     $logs = app(ApiService::class)->getLogs(env('API_LOG_TOKEN'));
@@ -38,31 +38,43 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::post('/log',[LogController::class, 'store'])->name('log.store');
-    Route::delete('/log/{id}',[LogController::class, 'destroy'])->name('log.destroy');
-    Route::get('/log/{id}/update',[LogController::class, 'edit'])->name('log.edit');
-    Route::put('/log/{id}',[LogController::class, 'update'])->name('log.update');
-    Route::get('/log/{id}', [LogController::class, 'findById'])->name('log.find');
-    Route::get('/log', [LogController::class, 'add'])->name('log.add');
-    Route::post('/log/search', [LogController::class, 'getLogByName'])->name('log.search');
+    Route::middleware(['permission:access.add'])->group(function () {
+        Route::post('/log',[LogController::class, 'store'])->name('log.store');
+        Route::get('/log', [LogController::class, 'add'])->name('log.add');
+    });
+    Route::middleware(['permission:access.delete'])->group(function () {
+        Route::delete('/log/{id}',[LogController::class, 'destroy'])->name('log.destroy');
+    });
+    Route::middleware(['permission:access.edit'])->group(function () {
+        Route::get('/log/{id}/update',[LogController::class, 'edit'])->name('log.edit');
+        Route::put('/log/{id}',[LogController::class, 'update'])->name('log.update');
+    });
+    Route::middleware(['permission:report.create'])->group(function () {
+        Route::get('/excel', [ExcelController::class, 'getPageStore'])->name('excel.store');
+        Route::post('/excel/download', [ExcelController::class, 'downloadExcel'])->name('excel.download');
+        Route::post('/excel/download/summary', [ExcelController::class, 'downloadExcelSummary'])->name('excel.download.summary');
+    });
+    Route::middleware(['permission:report.history'])->group(function () {
+        Route::get('/history/report', [ReportController::class, 'index'])->name('history.report');
+        Route::get('/reports/download/{id}', [ReportController::class, 'downloadSaved'])
+            ->name('reports.download');
+    });
+    Route::middleware(['permission:statistic'])->group(function () {
+        Route::get('/patient/flow', [PatientFlowController::class, 'index'])
+            ->name('patient.flow');
+    });
+    Route::middleware(['permission:history'])->group(function () {
+        Route::get('/history', [HistoryController::class, 'index'])->name('history');
+    });
 
-    Route::get('/excel', [ExcelController::class, 'getPageStore'])->name('excel.store');
-    Route::post('/excel/download', [ExcelController::class, 'downloadExcel'])->name('excel.download');
-    Route::post('/excel/download/summary', [ExcelController::class, 'downloadExcelSummary'])->name('excel.download.summary');
+    Route::get('/log/{id}', [LogController::class, 'findById'])->name('log.find');
+    Route::post('/log/search', [LogController::class, 'getLogByName'])->name('log.search');
 
     Route::post('/mkd/suggestions/state', [MkdController::class, 'suggestState'])->name('mkd.suggestState');
     Route::post('/mkd/suggestions/wound', [MkdController::class, 'suggestWound'])->name('mkd.suggestWound');
 
     Route::post('/address/suggest', [AddressController::class, 'suggestAddress'])->name('address.suggest');
     Route::post('/address/suggest/place', [AddressController::class, 'suggestPlace'])->name('address.suggest.place');
-
-    Route::get('/patient/flow', [PatientFlowController::class, 'index'])
-        ->name('patient.flow');
-
-    Route::get('/history', [HistoryController::class, 'index'])->name('history');
-    Route::get('/history/report', [ReportController::class, 'index'])->name('history.report');
-    Route::get('/reports/download/{id}', [ReportController::class, 'downloadSaved'])
-        ->name('reports.download');
 
 });
 

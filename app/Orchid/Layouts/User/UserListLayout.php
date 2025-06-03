@@ -52,7 +52,7 @@ class UserListLayout extends Table
                 ->defaultHidden()
                 ->sort(),
 
-            TD::make('updated_at', __('Послденее изменений'))
+            TD::make('updated_at', __('Поседение изменений'))
                 ->usingComponent(DateTimeSplit::class)
                 ->align(TD::ALIGN_RIGHT)
                 ->sort(),

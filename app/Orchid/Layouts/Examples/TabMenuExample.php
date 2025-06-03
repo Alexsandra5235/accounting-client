@@ -15,16 +15,16 @@ class TabMenuExample extends TabMenu
     protected function navigations(): iterable
     {
         return [
-            Menu::make('Layouts Overview')
+            Menu::make('Обзор макетов')
                 ->route('platform.example.layouts'),
 
-            Menu::make('Get Started')
+            Menu::make('Начать')
                 ->route('platform.main'),
 
-            Menu::make('Documentation')
+            Menu::make('Документация')
                 ->url('https://orchid.software/en/docs'),
 
-            Menu::make('Example Screen')
+            Menu::make('Пример экрана')
                 ->route('platform.example')
                 ->badge(fn () => 6),
         ];

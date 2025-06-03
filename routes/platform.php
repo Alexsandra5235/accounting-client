@@ -48,7 +48,7 @@ Route::screen('profile', UserProfileScreen::class)
      * @throws Throwable
      */ fn (Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Profile'), route('platform.profile')));
+        ->push(__('Профиль'), route('platform.profile')));
 
 // Platform > System > Users > User
 Route::screen('users/{user}/edit', UserEditScreen::class)
@@ -66,7 +66,7 @@ Route::screen('users/create', UserEditScreen::class)
      * @throws Throwable
      */ fn (Trail $trail) => $trail
         ->parent('platform.systems.users')
-        ->push(__('Create'), route('platform.systems.users.create')));
+        ->push(__('Создать'), route('platform.systems.users.create')));
 
 // Platform > System > Users
 Route::screen('users', UserListScreen::class)
@@ -75,7 +75,7 @@ Route::screen('users', UserListScreen::class)
      * @throws Throwable
      */ fn (Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Users'), route('platform.systems.users')));
+        ->push(__('Пользователь'), route('platform.systems.users')));
 
 // Platform > System > Roles > Role
 Route::screen('roles/{role}/edit', RoleEditScreen::class)
@@ -93,7 +93,7 @@ Route::screen('roles/create', RoleEditScreen::class)
      * @throws Throwable
      */ fn (Trail $trail) => $trail
         ->parent('platform.systems.roles')
-        ->push(__('Create'), route('platform.systems.roles.create')));
+        ->push(__('Создать'), route('platform.systems.roles.create')));
 
 // Platform > System > Roles
 Route::screen('roles', RoleListScreen::class)
@@ -102,7 +102,7 @@ Route::screen('roles', RoleListScreen::class)
      * @throws Throwable
      */ fn (Trail $trail) => $trail
         ->parent('platform.index')
-        ->push(__('Roles'), route('platform.systems.roles')));
+        ->push(__('Роли'), route('platform.systems.roles')));
 
 // Example...
 Route::screen('example', ExampleScreen::class)
@@ -111,7 +111,7 @@ Route::screen('example', ExampleScreen::class)
      * @throws Throwable
      */ fn (Trail $trail) => $trail
         ->parent('platform.index')
-        ->push('Example Screen'));
+        ->push('Пример экрана'));
 
 
 Route::screen('patient/flow', PatientFlowScreen::class)->name('platform.patient.flow');
