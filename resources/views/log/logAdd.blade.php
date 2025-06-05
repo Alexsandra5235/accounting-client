@@ -6,7 +6,7 @@
     </x-slot>
 
     @error('error_store')
-    <div style="padding-top: 48px">
+    <div class="pt-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div style="padding: 24px 0 0 24px" class="flex items-center text-gray-900 dark:text-gray-100">
@@ -25,7 +25,7 @@
     </div>
     @enderror
 
-    <div class="py-12">
+    <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <form action="{{ route('log.store') }}" method="post">
                 @csrf
@@ -52,13 +52,13 @@
 
                                 <div>
                                     <x-input-label for="name" :value="__('Фамилия, имя, отчество (при наличии)')" />
-                                    <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" />
+                                    <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" value="{{ old('name') }}"/>
                                     <x-input-error class="mt-2" :messages="$errors->get('name')" />
                                 </div>
 
                                 <div>
                                     <x-input-label for="birth_day" :value="__('Дата рождения (число, месяц, год)')" />
-                                    <x-text-input id="birth_day" name="birth_day" type="date" class="mt-1 block w-full"  />
+                                    <x-text-input id="birth_day" name="birth_day" type="date" class="mt-1 block w-full" value="{{ old('birth_day') }}"/>
                                     <x-input-error class="mt-2" :messages="$errors->get('birth_day')" />
                                 </div>
 
@@ -74,13 +74,13 @@
 
                                 <div>
                                     <x-input-label for="medical_card" :value="__('Номер медицинской карты')" />
-                                    <x-text-input id="medical_card" name="medical_card" type="text" class="mt-1 block w-full"  />
+                                    <x-text-input id="medical_card" name="medical_card" type="text" class="mt-1 block w-full" value="{{ old('medical_card') }}" />
                                     <x-input-error class="mt-2" :messages="$errors->get('medical_card')" />
                                 </div>
 
                                 <div>
                                     <x-input-label for="passport" :value="__('Серия и номер паспорта или иного документа, удостоверяющего личность (при наличии)')" />
-                                    <x-text-input id="passport" name="passport" type="text" class="mt-1 block w-full"  />
+                                    <x-text-input id="passport" name="passport" type="text" class="mt-1 block w-full" value="{{ old('passport') }}" />
                                     <x-input-error class="mt-2" :messages="$errors->get('passport')" />
                                 </div>
 
