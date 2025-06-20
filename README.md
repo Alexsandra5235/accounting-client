@@ -7,6 +7,10 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## О сервисе
+
+Данный сирвис реализует методы [api](https://github.com/Alexsandra5235/accounting-api) и предоставляет интерфейс для работы с этими данными. Сервис импользуется для учета пациентов и предоставляет необходимые методы для работы и ведения статистики в предприятии.
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
