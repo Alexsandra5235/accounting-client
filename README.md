@@ -13,7 +13,7 @@
 
 ## Разворачиваем
 
-1. composer install
+1. composer install --ignore-platform-reqs
 2. npm install
 3. Создаем .env
 4. php artisan key:generate
