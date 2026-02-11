@@ -1,294 +1,641 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Редактирование информации') }}
-        </h2>
-    </x-slot>
 
+    <!-- Информация о записи и кнопка удаления -->
+    <div class="card mb-6">
+        <div class="card-body">
+            <div class="flex items-center justify-between flex-wrap gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                        <i class="fas fa-info-circle text-blue-600 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">Информация о записи</h3>
+                        <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 mt-1">
+                            <p class="text-sm text-gray-600">
+                                <span class="font-medium">Создана:</span>
+                                <span class="text-blue-600 font-medium">{{ \Carbon\Carbon::parse($log->created_at)->addHours(7)->locale('ru')->translatedFormat('d M Y H:i') }}</span>
+                            </p>
+                            <p class="text-sm text-gray-600">
+                                <span class="font-medium">Изменена:</span>
+                                <span class="text-blue-600 font-medium">{{ \Carbon\Carbon::parse($log->updated_at)->addHours(7)->locale('ru')->translatedFormat('d M Y H:i') }}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <form action="{{ route('log.destroy', ['id' => $log->id]) }}"
+                      method="post"
+                      onsubmit="return confirmDeletion({{ json_encode($log->patient->name) }})"
+                      class="inline">
+                    @csrf
+                    @method('delete')
+                    <button type="submit" class="btn btn-outline border-red-500 text-red-600 hover:bg-red-500 hover:text-white transition-colors">
+                        <i class="fas fa-trash-alt mr-2"></i>
+                        Удалить запись
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ошибки -->
     @error('error_update')
-    <div class="pt-4">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div style="padding: 24px 0 0 24px" class="flex items-center text-gray-900 dark:text-gray-100">
-                    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                        {{ __('Ошибка сохранения записи') }}
-                    </h2>
+    <div class="card mb-6 border-red-200 bg-red-50">
+        <div class="card-body">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                    <i class="fas fa-exclamation-circle text-red-600"></i>
                 </div>
-                <div class="flex items-center p-6 text-gray-900 dark:text-gray-100">
-                    <svg class="w-6 h-6 text-red-500 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12c0 4.97-4.03 9-9 9S3 16.97 3 12 7.03 3 12 3s9 4.03 9 9z" />
-                    </svg>
-                    {{ $message }}
+                <div class="flex-1">
+                    <h4 class="font-semibold text-red-800">Ошибка сохранения записи</h4>
+                    <p class="text-red-600 mt-1">{{ $message }}</p>
                 </div>
+                <button onclick="this.parentElement.parentElement.parentElement.remove()"
+                        class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
         </div>
     </div>
     @enderror
 
-    <div class="py-4">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mb-6">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">Информация о записи</h3>
-                    <p>Дата и время создания записи: <strong style="color: #2563eb">{{ \Carbon\Carbon::parse($log->created_at)->addHours(7)->locale('ru')->translatedFormat('D, d M Y H:i') }}</strong></p>
-                    <p>Дата и время последнего редактирования: <strong style="color: #2563eb">{{ \Carbon\Carbon::parse($log->updated_at)->addHours(7)->locale('ru')->translatedFormat('D, d M Y H:i') }}</strong></p>
-                    <form action="{{ route('log.destroy', ['id' => $log->id]) }}" method="post" class="mt-2" onsubmit="return confirmDeletion({{ json_encode($log->patient->name) }})">
-                        @csrf
-                        @method('delete')
-                        <x-danger-button>Удалить запись</x-danger-button>
-                    </form>
+    <!-- Форма редактирования -->
+    <form action="{{ route('log.update', ['id' => $log->id]) }}" method="post">
+        @csrf
+        @method('put')
+
+        <!-- Раздел 1: Основная информация -->
+        <div class="card mb-6">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-user-circle"></i>
+                    Основная информация о пациенте
+                </h3>
+                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded">Обязательно</span>
+            </div>
+            <div class="card-body space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="date_receipt" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-calendar-alt mr-1 text-blue-600"></i>
+                            Дата поступления
+                        </label>
+                        <input type="date"
+                               id="date_receipt"
+                               name="date_receipt"
+                               value="{{ \Carbon\Carbon::parse($log->log_receipt->date_receipt)->format('Y-m-d') }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                               required>
+                        @error('date_receipt')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="time_receipt" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-clock mr-1 text-blue-600"></i>
+                            Время поступления
+                        </label>
+                        <input type="time"
+                               id="time_receipt"
+                               name="time_receipt"
+                               value="{{ \Carbon\Carbon::parse($log->log_receipt->time_receipt)->format('H:i') }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                               required>
+                        @error('time_receipt')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-user mr-1 text-blue-600"></i>
+                            Фамилия, имя, отчество (при наличии)
+                        </label>
+                        <input type="text"
+                               id="name"
+                               name="name"
+                               value="{{ $log->patient->name }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                               placeholder="Иванов Иван Иванович"
+                               required>
+                        @error('name')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="birth_day" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-birthday-cake mr-1 text-blue-600"></i>
+                            Дата рождения
+                        </label>
+                        <input type="date"
+                               id="birth_day"
+                               name="birth_day"
+                               value="{{ $log->patient->birth_day }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                               required>
+                        @error('birth_day')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                        @if($log->patient->birth_day)
+                            <div class="mt-1 text-xs text-gray-500">
+                                Возраст: {{ \Carbon\Carbon::parse($log->patient->birth_day)->age }} лет
+                            </div>
+                        @endif
+                    </div>
+
+                    <div>
+                        <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-venus-mars mr-1 text-blue-600"></i>
+                            Пол
+                        </label>
+                        <select id="gender"
+                                name="gender"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                required>
+                            <option value="">Выберите пол</option>
+                            <option value="мужской" {{ $log->patient->gender == 'мужской' ? 'selected' : '' }}>Мужской</option>
+                            <option value="женский" {{ $log->patient->gender == 'женский' ? 'selected' : '' }}>Женский</option>
+                        </select>
+                        @error('gender')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="medical_card" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-file-medical mr-1 text-blue-600"></i>
+                            Номер медицинской карты
+                        </label>
+                        <input type="text"
+                               id="medical_card"
+                               name="medical_card"
+                               value="{{ $log->patient->medical_card }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                               placeholder="МК-123456"
+                               required>
+                        @error('medical_card')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="passport" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-id-card mr-1 text-blue-600"></i>
+                            Паспортные данные
+                        </label>
+                        <input type="text"
+                               id="passport"
+                               name="passport"
+                               value="{{ $log->patient->passport }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                               placeholder="4510 123456">
+                        @error('passport')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="nationality" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-globe mr-1 text-blue-600"></i>
+                            Гражданство
+                        </label>
+                        <input type="text"
+                               id="nationality"
+                               name="nationality"
+                               value="{{ $log->patient->nationality }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                               placeholder="Российская Федерация">
+                        @error('nationality')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Адреса -->
+                <div class="space-y-4">
+                    <div>
+                        <x-autocomplete
+                            name="address"
+                            placeholder="Начните вводить адрес..."
+                            url="{{ route('address.suggest') }}"
+                            label="Адрес регистрации по месту жительства"
+                            icon="home"
+                            initial="{{ old('address', $log->patient->address) }}"
+                        />
+                    </div>
+
+                    <div>
+                        <x-autocomplete
+                            name="register_place"
+                            placeholder="Начните вводить адрес..."
+                            url="{{ route('address.suggest.place') }}"
+                            label="Адрес регистрации по месту пребывания"
+                            icon="building"
+                            initial="{{ old('register_place', $log->patient->register_place) }}"
+                        />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="snils" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-address-card mr-1 text-blue-600"></i>
+                            СНИЛС
+                        </label>
+                        <input type="text"
+                               id="snils"
+                               name="snils"
+                               value="{{ $log->patient->snils }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                               placeholder="123-456-789 01">
+                        @error('snils')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="polis" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-heartbeat mr-1 text-blue-600"></i>
+                            Полис ОМС
+                        </label>
+                        <input type="text"
+                               id="polis"
+                               name="polis"
+                               value="{{ $log->patient->polis }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                               placeholder="1234 5678901234">
+                        @error('polis')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
             </div>
-            <form action="{{ route('log.update', ['id' => $log->id]) }}" method="post">
-                @csrf
-                @method('put')
-                <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg mb-6">
-                    <div>
-                        <section>
-                            <header>
-                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                    {{ __('Информация о пациенте') }}
-                                </h2>
-                            </header>
-                            <div class="mt-6 space-y-6">
-                                <div>
-                                    <x-input-label for="date_receipt" :value="__('Дата поступления')" />
-                                    <x-text-input id="date_receipt" name="date_receipt" type="date" class="mt-1 block w-full" :value="\Carbon\Carbon::parse($log->log_receipt->date_receipt)->locale('ru')->translatedFormat('Y-m-d')"/>
-                                    <x-input-error class="mt-2" :messages="$errors->get('date_receipt')" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="time_receipt" :value="__('Время поступления')" />
-                                    <x-text-input id="time_receipt" name="time_receipt" type="time" class="mt-1 block w-full" :value="\Carbon\Carbon::parse($log->log_receipt->time_receipt)->locale('ru')->translatedFormat('H:i')"/>
-                                    <x-input-error class="mt-2" :messages="$errors->get('time_receipt')" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="name" :value="__('Фамилия, имя, отчество (при наличии)')" />
-                                    <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="$log->patient->name"/>
-                                    <x-input-error class="mt-2" :messages="$errors->get('name')" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="birth_day" :value="__('Дата рождения (число, месяц, год)')" />
-                                    <x-text-input id="birth_day" name="birth_day" type="date" class="mt-1 block w-full" :value="$log->patient->birth_day" />
-                                    <x-input-error class="mt-2" :messages="$errors->get('birth_day')" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="gender" :value="__('Пол (мужской, женский)')"/>
-                                    <x-select id="gender" name="gender" class="mt-1 block w-full">
-                                        <option value="" style="font-weight: bold">Пожалуйста, сделайте выбор</option>
-                                        <option value="мужской" {{ $log->patient->gender == 'мужской' ? 'selected' : '' }}>мужской</option>
-                                        <option value="женский" {{ $log->patient->gender == 'женский' ? 'selected' : '' }}>женский</option>
-                                    </x-select>
-                                    <x-input-error class="mt-2" :messages="$errors->get('gender')" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="medical_card" :value="__('Номер медицинской карты')" />
-                                    <x-text-input id="medical_card" name="medical_card" type="text" class="mt-1 block w-full" :value="$log->patient->medical_card" />
-                                    <x-input-error class="mt-2" :messages="$errors->get('medical_card')" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="passport" :value="__('Серия и номер паспорта или иного документа, удостоверяющего личность (при наличии)')" />
-                                    <x-text-input id="passport" name="passport" type="text" class="mt-1 block w-full" :value="$log->patient->passport" />
-                                    <x-input-error class="mt-2" :messages="$errors->get('passport')" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="nationality" :value="__('Гражданство')" />
-                                    <x-text-input id="nationality" name="nationality" type="text" class="mt-1 block w-full" :value="$log->patient->nationality" />
-                                    <x-input-error class="mt-2" :messages="$errors->get('nationality')" />
-                                </div>
-
-                                <x-autocomplete
-                                    name="address"
-                                    placeholder="Начните вводить адрес..."
-                                    url="{{ route('address.suggest') }}"
-                                    value="Регистрация по месту жительства"
-                                    initial="{{ old('address', $log->patient->address) }}"
-                                />
-
-                                <x-autocomplete
-                                    name="register_place"
-                                    placeholder="Начните вводить адрес..."
-                                    url="{{ route('address.suggest.place') }}"
-                                    value="Регистрация по месту пребывания"
-                                    initial="{{ old('register_place', $log->patient->register_place) }}"
-                                />
-
-                                <div>
-                                    <x-input-label for="snils" :value="__('СНИСЛ (при наличии)')" />
-                                    <x-text-input id="snils" name="snils" type="text" class="mt-1 block w-full" :value="$log->patient->snils" />
-                                    <x-input-error class="mt-2" :messages="$errors->get('snils')" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="polis" :value="__('Полис обязательного медицинского страхования (при наличии)')" />
-                                    <x-text-input id="polis" name="polis" type="text" class="mt-1 block w-full" :value="$log->patient->polis" />
-                                    <x-input-error class="mt-2" :messages="$errors->get('polis')" />
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                </div>
-                <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg mb-6">
-                    <div>
-                        <section>
-                            <header>
-                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                    {{ __('Дополнительная информация') }}
-                                </h2>
-                            </header>
-                            <div class="mt-6 space-y-6">
-                                <div>
-                                    <x-input-label for="phone_agent" :value="__('Номер телефона законного представителя, лица, которому может быть передана информация о состоянии здоровья пациента')" />
-                                    <x-text-input id="phone_agent" name="phone_agent" type="text" class="mt-1 block w-full" :value="$log->log_receipt->phone_agent" />
-                                    <x-input-error class="mt-2" :messages="$errors->get('phone_agent')" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="delivered" :value="__('Пациент доставлен (направлен)')" />
-                                    <x-select id="delivered" name="delivered" class="mt-1 block w-full">
-                                        <option value="" style="font-weight: bold">Пожалуйста, сделайте выбор</option>
-                                        <option value="полицией" {{ $log->log_receipt->delivered == 'полицией' ? 'selected' : '' }}>полицией</option>
-                                        <option value="выездной бригадой скорой медицинской помощи" {{ $log->log_receipt->delivered == 'выездной бригадой скорой медицинской помощи' ? 'selected' : '' }}>выездной бригадой скорой медицинской помощи</option>
-                                        <option value="другой медицинской организацией" {{ $log->log_receipt->delivered == 'другой медицинской организацией' ? 'selected' : '' }}>другой медицинской организацией</option>
-                                        <option value="обратился самостоятельно" {{ $log->log_receipt->delivered == 'обратился самостоятельно' ? 'selected' : '' }}>обратился самостоятельно</option>
-                                    </x-select>
-                                    <x-input-error class="mt-2" :messages="$errors->get('delivered')" />
-                                </div>
-
-                                <x-mkd-autocomplete
-                                    name="state"
-                                    placeholder="Начните вводить диагноз..."
-                                    url="{{ route('mkd.suggestState') }}"
-                                    value="Диагноз заболевания (состояния), поставленный направившей медицинской организацией (код по МКБ)"
-                                    initial="{{ old('state_code', $log->patient->diagnosis->state->code) }}"
-                                    hidden="{{ old('state_value', $log->patient->diagnosis->state->value) }}"
-                                />
-
-                                <x-mkd-autocomplete
-                                    name="wound"
-                                    placeholder="Начните вводить диагноз..."
-                                    url="{{ route('mkd.suggestWound') }}"
-                                    value="Причина и обстоятельства травмы (в том числе при дорожно-транспортных происшествиях), отравления (код по МКБ)"
-                                    initial="{{ old('wound_code', $log->patient->diagnosis->wound->code) }}"
-                                    hidden="{{ old('wound_value', $log->patient->diagnosis->wound->value) }}"
-                                />
-
-                                <div>
-                                    <x-input-label for="fact_alcohol" :value="__('Факт употребления алкоголя и иных психоактивных веществ, установление наличия или отсутствия признаков состояния опьянения при поступлении пациента в медицинскую организацию')" />
-                                    <x-text-input id="fact_alcohol" name="fact_alcohol" type="text" class="mt-1 block w-full" :value="$log->log_receipt->fact_alcohol" />
-                                    <x-input-error class="mt-2" :messages="$errors->get('fact_alcohol')" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="datetime_alcohol" :value="__('Дата и время взятия пробы')" />
-                                    <x-text-input id="datetime_alcohol" name="datetime_alcohol" type="datetime-local" class="mt-1 block w-full" :value="$log->log_receipt->datetime_alcohol" />
-                                    <x-input-error class="mt-2" :messages="$errors->get('datetime_alcohol')" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="result_research" :value="__('Результаты лабораторных исследований')" />
-                                    <x-text-input id="result_research" name="result_research" type="text" class="mt-1 block w-full" :value="$log->log_receipt->result_research" />
-                                    <x-input-error class="mt-2" :messages="$errors->get('result_research')" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="section_medical" :value="__('Отделение медицинской организации, в которое направлен пациент')" />
-                                    <x-text-input id="section_medical" name="section_medical" type="text" class="mt-1 block w-full" :value="$log->log_receipt->section_medical" />
-                                    <x-input-error class="mt-2" :messages="$errors->get('section_medical')" />
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                </div>
-                <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg mb-6">
-                    <div>
-                        <section>
-                            <header>
-                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                    {{ __('Выписка пациента') }}
-                                </h2>
-                            </header>
-                            <div class="mt-6 space-y-6">
-                                <div>
-                                    <x-input-label for="outcome" :value="__('Исход госпитализации')" />
-                                    <x-select id="outcome" name="outcome" class="mt-1 block w-full">
-                                        <option value="" style="font-weight: bold">Пожалуйста, сделайте выбор</option>
-                                        <option value="выписан" {{ $log->log_discharge->outcome == 'выписан' ? 'selected' : '' }}>выписан</option>
-                                        <option value="переведен в другую медицинскую организацию" {{ $log->log_discharge->outcome == 'переведен в другую медицинскую организацию' ? 'selected' : '' }}>переведен в другую медицинскую организацию</option>
-                                        <option value="умер" {{ $log->log_discharge->outcome == 'умер' ? 'selected' : '' }}>умер</option>
-                                    </x-select>
-                                    <x-input-error class="mt-2" :messages="$errors->get('outcome')" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="datetime_discharge" :value="__('Дата и время исхода')" />
-                                    <x-text-input id="datetime_discharge" name="datetime_discharge" type="datetime-local" class="mt-1 block w-full" :value="$log->log_discharge->datetime_discharge" />
-                                    <x-input-error class="mt-2" :messages="$errors->get('datetime_discharge')" />
-                                </div>
-
-                                <div id="medicalOrgField">
-                                    <x-input-label for="section_transferred" :value="__('Наименование медицинской организации, куда переведен пациент')" />
-                                    <x-text-input id="section_transferred" name="section_transferred" type="text" class="mt-1 block w-full" :value="$log->log_discharge->section_transferred" />
-                                    <x-input-error class="mt-2" :messages="$errors->get('section_transferred')" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="datetime_inform" :value="__('Дата и время сообщения законному представителю, иному лицу или медицинской организации, направившей пациента, о госпитализации (отказе в госпитализации) пациента, ее исходе')" />
-                                    <x-text-input id="datetime_inform" name="datetime_inform" type="datetime-local" class="mt-1 block w-full" :value="$log->log_discharge->datetime_inform" />
-                                    <x-input-error class="mt-2" :messages="$errors->get('datetime_inform')" />
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-                </div>
-                <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg mb-6">
-                    <div>
-                        <section>
-                            <header>
-                                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                    {{ __('Отказ в госпитализации') }}
-                                </h2>
-                            </header>
-                            <div class="mt-6 space-y-6">
-                                <div>
-                                    <x-input-label for="reason_refusal" :value="__('Причина отказа в госпитализации')" />
-                                    <x-select id="reason_refusal" name="reason_refusal" class="mt-1 block w-full">
-                                        <option value="" selected style="font-weight: bold">Пожалуйста, сделайте выбор...</option>
-                                        <option value="отказался пациент" {{ $log->log_reject->reason_refusal == 'отказался пациент' ? 'selected' : '' }}>отказался пациент</option>
-                                        <option value="отсутствие показаний" {{ $log->log_reject->reason_refusal == 'отсутствие показаний' ? 'selected' : '' }}>отсутствие показаний</option>
-                                        <option value="помощь оказана в приемном отделении медицинской организации" {{ $log->log_reject->reason_refusal == 'помощь оказана в приемном отделении медицинской организации' ? 'selected' : '' }}>помощь оказана в приемном отделении медицинской организации</option>
-                                        <option value="направлен в другую медицинскую организацию" {{ $log->log_reject->reason_refusal == 'направлен в другую медицинскую организацию' ? 'selected' : '' }}>направлен в другую медицинскую организацию</option>
-                                        <option value="иная причина" {{ $log->log_reject->reason_refusal == 'иная причина' ? 'selected' : '' }}>иная причина</option>
-                                    </x-select>
-                                    <x-input-error class="mt-2" :messages="$errors->get('reason_refusal')" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="name_medical_worker" :value="__('Фамилия, имя, отчество (при наличии) медицинского работника, зафиксировавшего причину отказа в госпитализации')" />
-                                    <x-text-input id="name_medical_worker" name="name_medical_worker" type="text" class="mt-1 block w-full" :value="$log->log_reject->name_medical_worker" />
-                                    <x-input-error class="mt-2" :messages="$errors->get('name_medical_worker')" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="add_info" :value="__('Дополнительные сведения')" />
-                                    <x-text-input id="add_info" name="add_info" type="text" class="mt-1 block w-full" :value="$log->log_reject->add_info" />
-                                    <x-input-error class="mt-2" :messages="$errors->get('add_info')" />
-                                </div>
-                                <div class="flex items-center gap-4">
-                                    <x-primary-button>{{ __('Сохранить') }}</x-primary-button>
-                                </div>
-
-                            </div>
-                        </section>
-                    </div>
-                </div>
-            </form>
         </div>
-    </div>
+
+        <!-- Раздел 2: Дополнительная информация -->
+        <div class="card mb-6">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-info-circle"></i>
+                    Дополнительная информация
+                </h3>
+                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded">Рекомендуется</span>
+            </div>
+            <div class="card-body space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="phone_agent" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-phone mr-1 text-green-600"></i>
+                            Телефон представителя
+                        </label>
+                        <input type="text"
+                               id="phone_agent"
+                               name="phone_agent"
+                               value="{{ $log->log_receipt->phone_agent }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
+                               placeholder="+7 (999) 123-45-67">
+                        @error('phone_agent')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="delivered" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-ambulance mr-1 text-green-600"></i>
+                            Доставлен (направлен)
+                        </label>
+                        <select id="delivered"
+                                name="delivered"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                            <option value="">Выберите способ доставки</option>
+                            <option value="полицией" {{ $log->log_receipt->delivered == 'полицией' ? 'selected' : '' }}>Полицией</option>
+                            <option value="выездной бригадой скорой медицинской помощи" {{ $log->log_receipt->delivered == 'выездной бригадой скорой медицинской помощи' ? 'selected' : '' }}>Скорой помощью</option>
+                            <option value="другой медицинской организацией" {{ $log->log_receipt->delivered == 'другой медицинской организацией' ? 'selected' : '' }}>Другой медорганизацией</option>
+                            <option value="обратился самостоятельно" {{ $log->log_receipt->delivered == 'обратился самостоятельно' ? 'selected' : '' }}>Обратился самостоятельно</option>
+                        </select>
+                        @error('delivered')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- МКБ диагнозы -->
+                <div class="space-y-4">
+                    <div>
+                        <x-mkd-autocomplete
+                            name="state"
+                            placeholder="Начните вводить диагноз..."
+                            url="{{ route('mkd.suggestState') }}"
+                            label="Диагноз заболевания (код по МКБ)"
+                            icon="file-medical"
+                            initial="{{ old('state_code', $log->patient->diagnosis->state->code ?? '') }}"
+                            hidden="{{ old('state_value', $log->patient->diagnosis->state->value ?? '') }}"
+                        />
+                    </div>
+
+                    <div>
+                        <x-mkd-autocomplete
+                            name="wound"
+                            placeholder="Начните вводить диагноз..."
+                            url="{{ route('mkd.suggestWound') }}"
+                            label="Причина травмы/отравления (код по МКБ)"
+                            icon="band-aid"
+                            initial="{{ old('wound_code', $log->patient->diagnosis->wound->code ?? '') }}"
+                            hidden="{{ old('wound_value', $log->patient->diagnosis->wound->value ?? '') }}"
+                        />
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="fact_alcohol" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-flask mr-1 text-green-600"></i>
+                            Факт употребления алкоголя/ПАВ
+                        </label>
+                        <input type="text"
+                               id="fact_alcohol"
+                               name="fact_alcohol"
+                               value="{{ $log->log_receipt->fact_alcohol }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
+                               placeholder="Наличие/отсутствие признаков">
+                        @error('fact_alcohol')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="datetime_alcohol" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-calendar-plus mr-1 text-green-600"></i>
+                            Дата/время взятия пробы
+                        </label>
+                        <input type="datetime-local"
+                               id="datetime_alcohol"
+                               name="datetime_alcohol"
+                               value="{{ $log->log_receipt->datetime_alcohol }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition">
+                        @error('datetime_alcohol')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="result_research" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-microscope mr-1 text-green-600"></i>
+                            Результаты исследований
+                        </label>
+                        <input type="text"
+                               id="result_research"
+                               name="result_research"
+                               value="{{ $log->log_receipt->result_research }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
+                               placeholder="Результаты лабораторных анализов">
+                        @error('result_research')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="section_medical" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-procedures mr-1 text-green-600"></i>
+                            Отделение госпитализации
+                        </label>
+                        <input type="text"
+                               id="section_medical"
+                               name="section_medical"
+                               value="{{ $log->log_receipt->section_medical }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
+                               placeholder="Терапевтическое отделение">
+                        @error('section_medical')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Раздел 3: Выписка пациента -->
+        <div class="card mb-6">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Выписка пациента
+                </h3>
+                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded">При необходимости</span>
+            </div>
+            <div class="card-body space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="outcome" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-clipboard-check mr-1 text-yellow-600"></i>
+                            Исход госпитализации
+                        </label>
+                        <select id="outcome"
+                                name="outcome"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition">
+                            <option value="">Выберите исход</option>
+                            <option value="выписан" {{ $log->log_discharge->outcome == 'выписан' ? 'selected' : '' }}>Выписан</option>
+                            <option value="переведен в другую медицинскую организацию" {{ $log->log_discharge->outcome == 'переведен в другую медицинскую организацию' ? 'selected' : '' }}>Переведен в другую МО</option>
+                            <option value="умер" {{ $log->log_discharge->outcome == 'умер' ? 'selected' : '' }}>Умер</option>
+                        </select>
+                        @error('outcome')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="datetime_discharge" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-calendar-times mr-1 text-yellow-600"></i>
+                            Дата и время исхода
+                        </label>
+                        <input type="datetime-local"
+                               id="datetime_discharge"
+                               name="datetime_discharge"
+                               value="{{ $log->log_discharge->datetime_discharge }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition">
+                        @error('datetime_discharge')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <div id="medicalOrgField" class="{{ $log->log_discharge->outcome != 'переведен в другую медицинскую организацию' ? 'hidden' : '' }}">
+                    <label for="section_transferred" class="block text-sm font-medium text-gray-700 mb-1">
+                        <i class="fas fa-hospital mr-1 text-yellow-600"></i>
+                        Медицинская организация перевода
+                    </label>
+                    <input type="text"
+                           id="section_transferred"
+                           name="section_transferred"
+                           value="{{ $log->log_discharge->section_transferred }}"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition"
+                           placeholder="Городская больница №1">
+                    @error('section_transferred')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div>
+                    <label for="datetime_inform" class="block text-sm font-medium text-gray-700 mb-1">
+                        <i class="fas fa-bullhorn mr-1 text-yellow-600"></i>
+                        Дата/время уведомления
+                    </label>
+                    <input type="datetime-local"
+                           id="datetime_inform"
+                           name="datetime_inform"
+                           value="{{ $log->log_discharge->datetime_inform }}"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition">
+                    @error('datetime_inform')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+        </div>
+
+        <!-- Раздел 4: Отказ в госпитализации -->
+        <div class="card mb-6">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-times-circle"></i>
+                    Отказ в госпитализации
+                </h3>
+                <span class="px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded">При отказе</span>
+            </div>
+            <div class="card-body space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="reason_refusal" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-ban mr-1 text-red-600"></i>
+                            Причина отказа
+                        </label>
+                        <select id="reason_refusal"
+                                name="reason_refusal"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition">
+                            <option value="">Выберите причину отказа</option>
+                            <option value="отказался пациент" {{ $log->log_reject->reason_refusal == 'отказался пациент' ? 'selected' : '' }}>Отказался пациент</option>
+                            <option value="отсутствие показаний" {{ $log->log_reject->reason_refusal == 'отсутствие показаний' ? 'selected' : '' }}>Отсутствие показаний</option>
+                            <option value="помощь оказана в приемном отделении медицинской организации" {{ $log->log_reject->reason_refusal == 'помощь оказана в приемном отделении медицинской организации' ? 'selected' : '' }}>Помощь оказана в приемном отделении</option>
+                            <option value="направлен в другую медицинскую организацию" {{ $log->log_reject->reason_refusal == 'направлен в другую медицинскую организацию' ? 'selected' : '' }}>Направлен в другую МО</option>
+                            <option value="иная причина" {{ $log->log_reject->reason_refusal == 'иная причина' ? 'selected' : '' }}>Иная причина</option>
+                        </select>
+                        @error('reason_refusal')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="name_medical_worker" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-user-md mr-1 text-red-600"></i>
+                            Медицинский работник
+                        </label>
+                        <input type="text"
+                               id="name_medical_worker"
+                               name="name_medical_worker"
+                               value="{{ $log->log_reject->name_medical_worker }}"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition"
+                               placeholder="Петров Пётр Петрович">
+                        @error('name_medical_worker')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <div>
+                    <label for="add_info" class="block text-sm font-medium text-gray-700 mb-1">
+                        <i class="fas fa-sticky-note mr-1 text-red-600"></i>
+                        Дополнительные сведения
+                    </label>
+                    <textarea id="add_info"
+                              name="add_info"
+                              rows="3"
+                              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition"
+                              placeholder="Дополнительная информация об отказе...">{{ $log->log_reject->add_info }}</textarea>
+                    @error('add_info')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+        </div>
+
+        <!-- Кнопки действий -->
+        <div class="card mb-6">
+            <div class="card-body">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="text-sm text-gray-600">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Все поля отмеченные как <span class="text-blue-600 font-semibold">"Обязательно"</span> должны быть заполнены
+                    </div>
+                    <div class="flex gap-3">
+                        <a href="{{ route('dashboard') }}" class="btn btn-outline">
+                            <i class="fas fa-times mr-2"></i>
+                            Отмена
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save mr-2"></i>
+                            Сохранить изменения
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        // Показать/скрыть поле медицинской организации при выборе перевода
+        document.addEventListener('DOMContentLoaded', function() {
+            const outcomeSelect = document.getElementById('outcome');
+            const medicalOrgField = document.getElementById('medicalOrgField');
+
+            if (outcomeSelect) {
+                outcomeSelect.addEventListener('change', function() {
+                    if (this.value === 'переведен в другую медицинскую организацию') {
+                        medicalOrgField.classList.remove('hidden');
+                        medicalOrgField.querySelector('input').required = true;
+                    } else {
+                        medicalOrgField.classList.add('hidden');
+                        medicalOrgField.querySelector('input').required = false;
+                    }
+                });
+
+                // Инициализация при загрузке
+                if (outcomeSelect.value === 'переведен в другую медицинскую организацию') {
+                    medicalOrgField.classList.remove('hidden');
+                    medicalOrgField.querySelector('input').required = true;
+                }
+            }
+        });
+
+        function confirmDeletion(patientName) {
+            return confirm(`Вы уверены, что хотите удалить запись пациента "${patientName}"?\n\nЭто действие невозможно будет отменить.`);
+        }
+
+        // Форматирование СНИЛС
+        document.getElementById('snils')?.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 11) value = value.slice(0, 11);
+
+            if (value.length > 9) {
+                value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1-$2-$3 $4');
+            } else if (value.length > 6) {
+                value = value.replace(/^(\d{3})(\d{3})(\d{0,3})$/, '$1-$2-$3');
+            } else if (value.length > 3) {
+                value = value.replace(/^(\d{3})(\d{0,3})$/, '$1-$2');
+            }
+
+            e.target.value = value;
+        });
+
+        // Форматирование полиса
+        document.getElementById('polis')?.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 16) value = value.slice(0, 16);
+
+            if (value.length > 4) {
+                value = value.replace(/^(\d{4})(\d{0,12})$/, '$1 $2');
+            }
+
+            e.target.value = value;
+        });
+    </script>
 </x-app-layout>

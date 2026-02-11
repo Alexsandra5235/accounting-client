@@ -28,7 +28,11 @@ class AddressService
         }
 
         // Выполняем POST-запрос
-        return Http::withHeaders([
+        return Http::withOptions([
+            'verify' => false, // Отключаем SSL проверку
+            'timeout' => 30,
+            'connect_timeout' => 10,
+        ])->withHeaders([
             'Content-Type'  => 'application/json',
             'Accept'        => 'application/json',
             'Authorization' => 'Token ' . $apiKey,
