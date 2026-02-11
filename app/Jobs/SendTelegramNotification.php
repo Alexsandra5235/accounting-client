@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class SendTelegramNotification implements ShouldQueue
 {
@@ -28,6 +29,7 @@ class SendTelegramNotification implements ShouldQueue
      */
     public function handle(): void
     {
+        Log::info("Попытка отправить сообщение");
         app(TelegramService::class)->sendMessage($this->message);
     }
 }

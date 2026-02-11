@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use Carbon\Carbon;
-use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
@@ -40,10 +40,28 @@ class TelegramService
     }
     public function sendMessage(string $message): void
     {
-        Http::post("https://api.telegram.org/bot{$this->token}/sendMessage", [
-            'chat_id' => $this->chatId,
-            'text'    => $message,
-            'parse_mode' => 'HTML',
-        ]);
+        try {
+            Log::info("Попытка отправить сообщение в Telegram: " . $this->chatId . ' ' .$this->token. "...");
+
+            // Отключаем SSL проверку для этого запроса
+            $response = Http::withOptions([
+                'verify' => false,
+                'timeout' => 30,
+            ])->post("https://api.telegram.org/bot{$this->token}/sendMessage", [
+                'chat_id' => $this->chatId,
+                'text'    => $message,
+                'parse_mode' => 'HTML',
+            ]);
+
+            // Проверяем ответ
+            if ($response->successful()) {
+                Log::info("Сообщение успешно отправлено в Telegram");
+            } else {
+                Log::error("Ошибка Telegram API: " . $response->body());
+            }
+
+        } catch (\Exception $e) {
+            Log::error("Ошибка отправки сообщения ТГ бота: " . $e->getMessage());
+        }
     }
 }

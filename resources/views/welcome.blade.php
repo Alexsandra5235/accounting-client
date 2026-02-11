@@ -150,14 +150,6 @@
         </div>
     </div>
 
-    {{-- Нижний логотип или иллюстрация --}}
-    <div class="mt-6">
-        <svg class="w-32 h-32 text-gray-800 dark:text-gray-200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M50 150 C75 100, 125 100, 150 150" stroke="currentColor" stroke-width="6" fill="none" />
-            <path d="M70 130 L100 90 L130 130" stroke="currentColor" stroke-width="6" fill="none" />
-            <circle cx="100" cy="80" r="5" fill="currentColor" />
-        </svg>
-    </div>
 </main>
 
 {{-- Футер --}}

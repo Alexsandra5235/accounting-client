@@ -14,6 +14,7 @@ use App\Services\LogService;
 use App\Services\MKD\MkdService;
 use App\Services\Report\ReportService;
 use App\Services\TelegramService;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -77,6 +78,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Schema::defaultStringLength(191);
     }
 }

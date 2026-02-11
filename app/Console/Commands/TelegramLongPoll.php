@@ -7,8 +7,10 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Api;
+use Telegram\Bot\Exceptions\TelegramSDKException;
 use Telegram\Bot\FileUpload\InputFile;
 use Telegram\Bot\Laravel\Facades\Telegram;
 use Telegram\Bot\Objects\Update;
@@ -29,8 +31,10 @@ class TelegramLongPoll extends Command
      */
     protected $description = 'Запускает Long Polling для получения обновлений от Telegram';
 
+    private Api $telegram;
+
     // Храним последний offset, чтобы не обрабатывать одни и те же апдейты повторно.
-    protected $offset = 0;
+    protected $offset = -1;
 
     /**
      * Execute the console command.
@@ -41,7 +45,19 @@ class TelegramLongPoll extends Command
 
         while (true) {
             try {
-                $telegram = new Api(env('TELEGRAM_BOT_TOKEN'));
+                // Создаем Guzzle клиент с отключенной SSL проверкой
+                $guzzleClient = new \GuzzleHttp\Client([
+                    'verify' => false, // ОТКЛЮЧАЕМ SSL проверку
+                    'timeout' => 35,
+                    'connect_timeout' => 10,
+                ]);
+
+                // Создаем HttpClientHandler для Telegram SDK
+                $httpClientHandler = new \Telegram\Bot\HttpClients\GuzzleHttpClient($guzzleClient);
+
+                // Передаем handler в конструктор Api
+                $this->telegram = new Api(env('TELEGRAM_BOT_TOKEN'), false, $httpClientHandler);
+                $this->telegram->getUpdates(['offset' => -1]);
 
                 $params = [
                     'offset' => $this->offset,
@@ -49,7 +65,7 @@ class TelegramLongPoll extends Command
                     'allowed_updates' => ['message'],
                 ];
 
-                $updates = $telegram->getUpdates($params);
+                $updates = $this->telegram->getUpdates($params);
 
                 foreach ($updates as $update) {
                     $this->processUpdate($update);
@@ -67,6 +83,7 @@ class TelegramLongPoll extends Command
      *
      * @param Update $update
      * @throws ConnectionException
+     * @throws TelegramSDKException
      */
     protected function processUpdate(Update $update): void
     {
@@ -79,14 +96,13 @@ class TelegramLongPoll extends Command
         $text = trim($message->getText());
         $chatId = $message->getChat()->getId();
 
-        Log::info("New message from {$chatId}: {$text}");
+        Log::info("New message from {$chatId}: {$text}.");
 
         // Если текст начинается с '/' — это команда
         if (str_starts_with($text, '/')) {
             $this->handleCommand($chatId, $text);
         } else {
-            // Иначе можно реагировать на «свободный текст»
-            Telegram::sendMessage([
+            $this->telegram->sendMessage([
                 'chat_id' => $chatId,
                 'text'    => "🤔 Хмм...\nТакой команды не найдено!\nНапишите /help, чтобы увидеть список команд.",
             ]);
@@ -98,6 +114,7 @@ class TelegramLongPoll extends Command
      *
      * @param int $chatId
      * @param string $text
+     * @throws TelegramSDKException
      */
     protected function handleCommand(int $chatId, string $text): void
     {
@@ -117,13 +134,13 @@ class TelegramLongPoll extends Command
                     } elseif ($type === 2) {
                         $this->sendExcelReportToTelegramSummary($chatId, $date1, $date2);
                     } else {
-                        Telegram::sendMessage([
+                        $this->telegram->sendMessage([
                             'chat_id' => $chatId,
                             'text' => "Неизвестный тип отчета. Допустимые: type=1 или type=2",
                         ]);
                     }
                 } else {
-                    Telegram::sendMessage([
+                    $this->telegram->sendMessage([
                         'chat_id' => $chatId,
                         'text' => "Не хватает аргументов.\nДля генерации отчета напишите отчетный период\nНапример: /report type=1 22.03.2025 23.03.2025",
                     ]);
@@ -131,14 +148,14 @@ class TelegramLongPoll extends Command
                 break;
 
             case 'start':
-                Telegram::sendMessage([
+                $this->telegram->sendMessage([
                     'chat_id' => $chatId,
                     'text'    => "🙋‍♀️ Привет!\n\n📄 Этот бот занимается формированием отчетной документации по движению пациентов санатория 'Журавлик'.\n\n Чтобы получить Excel-отчёт, напиши:\n/report type=1 22.05.2025 23.05.2025",
                 ]);
                 break;
 
             case 'help':
-                Telegram::sendMessage([
+                $this->telegram->sendMessage([
                     'chat_id' => $chatId,
                     'text'    => "Доступные команды:\n\n"
                         ."/start — стартовое сообщение\n\n"
@@ -149,7 +166,7 @@ class TelegramLongPoll extends Command
                 break;
 
             default:
-                Telegram::sendMessage([
+                $this->telegram->sendMessage([
                     'chat_id' => $chatId,
                     'text'    => "Неизвестная команда: /{$command}\n"
                         ."Напишите /help, чтобы увидеть список команд.",
@@ -171,7 +188,7 @@ class TelegramLongPoll extends Command
             $writer->save($filePath);
 
             // Отправляем документ в Telegram
-            Telegram::sendDocument([
+            $this->telegram->sendDocument([
                 'chat_id' => $chatId,
                 'document' => InputFile::create($filePath),
                 'caption' => "📊 Отчет с {$date1} по {$date2}",
@@ -193,7 +210,7 @@ class TelegramLongPoll extends Command
             $writer->save($filePath);
 
             // Отправляем документ в Telegram
-            Telegram::sendDocument([
+            $this->telegram->sendDocument([
                 'chat_id' => $chatId,
                 'document' => InputFile::create($filePath),
                 'caption' => "📊 Отчет с {$date1} по {$date2}",
