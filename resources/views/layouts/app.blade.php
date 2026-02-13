@@ -610,7 +610,7 @@
             <div class="user-menu">
                 <button class="user-btn">
                     <div class="user-avatar">
-                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                        {{ strtoupper(substr(Auth::user()->name, 0, 0)) }}
                     </div>
                     <div class="user-name">{{ Auth::user()->name }}</div>
                     <i class="fas fa-chevron-down"></i>

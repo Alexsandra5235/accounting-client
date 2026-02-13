@@ -31,6 +31,9 @@ class History extends Model
      * @throws ConnectionException
      */
     public function log() {
+        if (!$this->log_id) {
+            return null;
+        }
         return app(ApiService::class)->getLogById(env('API_LOG_TOKEN'), $this->log_id);
     }
 

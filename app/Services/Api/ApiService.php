@@ -80,4 +80,52 @@ class ApiService
             throw new Exception($exception->getMessage());
         }
     }
+
+    /**
+     * @throws Exception
+     */
+    public function getCurrentPatient(): Collection
+    {
+        try {
+            $currentPatient = app(ApiRepository::class)->getRequest(env('API_LOG_TOKEN'), env('API_LOG_CURRENT_PATIENT'));
+            if ($currentPatient->badRequest()){
+                throw new Exception($currentPatient->getBody());
+            }
+            return collect(json_decode($currentPatient->getBody()->getContents(), true));
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage());
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getTodayReceipt(): Collection
+    {
+        try {
+            $currentPatient = app(ApiRepository::class)->getRequest(env('API_LOG_TOKEN'), env('API_LOG_TODAY_RECEIPT'));
+            if ($currentPatient->badRequest()){
+                throw new Exception($currentPatient->getBody());
+            }
+            return collect(json_decode($currentPatient->getBody()->getContents(), true));
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage());
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getTodayDischarge(): Collection
+    {
+        try {
+            $currentPatient = app(ApiRepository::class)->getRequest(env('API_LOG_TOKEN'), env('API_LOG_TODAY_DISCHARGE'));
+            if ($currentPatient->badRequest()){
+                throw new Exception($currentPatient->getBody());
+            }
+            return collect(json_decode($currentPatient->getBody()->getContents(), true));
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage());
+        }
+    }
 }

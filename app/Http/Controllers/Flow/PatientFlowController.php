@@ -38,6 +38,8 @@ class PatientFlowController extends Controller
             ->sort()
             ->values();
 
+
+
         // 4) Форматируем даты для отображения (для легенды графика или оси X)
         $formattedDates = $periods->map(function ($date) use ($groupingType) {
             return match ($groupingType) {
@@ -142,6 +144,13 @@ class PatientFlowController extends Controller
             ];
         }
 
+        $statistic = [
+            'currentPatient' => app(ApiService::class)->getCurrentPatient()->first(),
+            'todayPatient' => app(ApiService::class)->getTodayReceipt()->first(),
+            'todayDischarge' => app(ApiService::class)->getTodayDischarge()->first(),
+            'total' => count(app(ApiService::class)->getLogs(env('API_LOG_TOKEN'))),
+        ];
+
         // 7) Возвращаем Blade-шаблон и передаём туда:
         //    - текущую группировку (чтобы сбросить значение select)
         //    - сформированные данные для Chart.js
@@ -150,6 +159,7 @@ class PatientFlowController extends Controller
             'charts'   => $charts,
             'predictions' => $futurePredictions,
             'message'     => $message,
+            'statistic' => $statistic,
         ]);
     }
 }
