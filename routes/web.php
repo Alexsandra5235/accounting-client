@@ -17,19 +17,31 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     $logs = app(ApiService::class)->getLogs(env('API_LOG_TOKEN'));
+
+    // Сортируем все записи по дате/времени (новые сверху)
     usort($logs, function($a, $b) {
-        // Получаем дату + время как строку
         $datetimeA = $a->log_receipt->date_receipt . ' ' . $a->log_receipt->time_receipt;
         $datetimeB = $b->log_receipt->date_receipt . ' ' . $b->log_receipt->time_receipt;
 
-        // Конвертируем в timestamp для сравнения
         $timestampA = strtotime($datetimeA);
         $timestampB = strtotime($datetimeB);
 
-        // Сравниваем по убыванию — то есть больший timestamp должен идти первым
         return $timestampB <=> $timestampA;
     });
-    return view('dashboard', compact('logs'));
+
+    // Разделяем на текущих и выписанных
+    $currentPatients = [];
+    $dischargedPatients = [];
+
+    foreach ($logs as $log) {
+        if (!empty($log->log_discharge->datetime_discharge)) {
+            $dischargedPatients[] = $log;
+        } else {
+            $currentPatients[] = $log;
+        }
+    }
+
+    return view('dashboard', compact('currentPatients', 'dischargedPatients'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {

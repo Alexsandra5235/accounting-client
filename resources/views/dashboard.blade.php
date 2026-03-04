@@ -97,226 +97,113 @@
     </div>
     @enderror
 
-    <!-- Список пациентов -->
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">
-                <i class="fas fa-user-injured"></i>
-                Пациенты санатория
-            </h3>
-            @if(!empty($logs))
-                <span class="ml-2 px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
-                    {{ is_countable($logs) ? count($logs) : 0 }} записей
-                </span>
-            @endif
-        </div>
+    <!-- Вкладки с пациентами -->
+    <div class="mb-4 border-b border-gray-200">
+        <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="patientTabs" role="tablist">
+            <li class="mr-2" role="presentation">
+                <button class="inline-block p-4 border-b-2 rounded-t-lg active-tab"
+                        id="current-patients-tab"
+                        type="button"
+                        role="tab"
+                        onclick="switchTab('current')">
+                    <i class="fas fa-user-injured mr-2"></i>
+                    Пациенты санатория
+                    <span class="ml-2 px-2 py-0.5 bg-blue-100 text-blue-800 rounded-full text-xs">
+                        {{ count($currentPatients) }}
+                    </span>
+                </button>
+            </li>
+            <li class="mr-2" role="presentation">
+                <button class="inline-block p-4 border-b-2 rounded-t-lg border-transparent hover:text-gray-600 hover:border-gray-300"
+                        id="discharged-patients-tab"
+                        type="button"
+                        role="tab"
+                        onclick="switchTab('discharged')">
+                    <i class="fas fa-user-check mr-2"></i>
+                    Выписанные пациенты
+                    <span class="ml-2 px-2 py-0.5 bg-gray-100 text-gray-800 rounded-full text-xs">
+                        {{ count($dischargedPatients) }}
+                    </span>
+                </button>
+            </li>
+        </ul>
+    </div>
 
-        <div class="card-body">
-            @if(empty($logs))
-                <div class="text-center py-8">
-                    <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
-                        <i class="fas fa-user-slash text-gray-400 text-2xl"></i>
-                    </div>
-                    <h3 class="text-lg font-semibold text-gray-700 mb-2">Записи не найдены</h3>
-                    <p class="text-gray-500">
-                        @if(request()->has('search_name') && !empty($search_name))
-                            Пациенты по запросу "{{ $search_name }}" не найдены
-                        @else
-                            В системе пока нет пациентов
-                        @endif
-                    </p>
-                    <a href="{{ route('log.add') }}" class="btn btn-primary mt-4">
-                        <i class="fas fa-plus"></i>
-                        Добавить первого пациента
-                    </a>
-                </div>
-            @else
-                <div class="mb-4">
-                    <p class="text-gray-600">
-                        В таблице представлена информация о пациентах. Для взаимодействия с данными используйте кнопки действий.
-                    </p>
-                </div>
+    <!-- Вкладка Пациенты санатория -->
+    <div id="tab-current" class="tab-content">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-user-injured"></i>
+                    Пациенты санатория
+                </h3>
+                @if(!empty($currentPatients))
+                    <span class="ml-2 px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">
+                        {{ count($currentPatients) }} записей
+                    </span>
+                @endif
+            </div>
 
-                <div class="overflow-x-auto rounded-lg border border-gray-200">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                <div class="flex items-center gap-1">
-                                    <i class="fas fa-calendar"></i>
-                                    Дата приема
-                                </div>
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                <div class="flex items-center gap-1">
-                                    <i class="fas fa-clock"></i>
-                                    Время
-                                </div>
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                <div class="flex items-center gap-1">
-                                    <i class="fas fa-user"></i>
-                                    ФИО пациента
-                                </div>
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                <div class="flex items-center gap-1">
-                                    <i class="fas fa-birthday-cake"></i>
-                                    Дата рождения
-                                </div>
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                <div class="flex items-center gap-1">
-                                    <i class="fas fa-file-medical"></i>
-                                    Мед. карта
-                                </div>
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                <div class="flex items-center gap-1">
-                                    <i class="fas fa-cog"></i>
-                                    Действия
-                                </div>
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                        @foreach ($logs as $log)
-                            @php
-                                // Обработка как массива или объекта
-                                $patientName = is_array($log)
-                                    ? ($log['patient']['name'] ?? $log['patient']->name ?? 'Не указано')
-                                    : ($log->patient->name ?? 'Не указано');
-
-                                $patientBirthDay = is_array($log)
-                                    ? ($log['patient']['birth_day'] ?? $log['patient']->birth_day ?? null)
-                                    : ($log->patient->birth_day ?? null);
-
-                                $patientMedicalCard = is_array($log)
-                                    ? ($log['patient']['medical_card'] ?? $log['patient']->medical_card ?? 'Не указано')
-                                    : ($log->patient->medical_card ?? 'Не указано');
-
-                                $dateReceipt = is_array($log)
-                                    ? ($log['log_receipt']['date_receipt'] ?? $log['log_receipt']->date_receipt ?? null)
-                                    : ($log->log_receipt->date_receipt ?? null);
-
-                                $timeReceipt = is_array($log)
-                                    ? ($log['log_receipt']['time_receipt'] ?? $log['log_receipt']->time_receipt ?? null)
-                                    : ($log->log_receipt->time_receipt ?? null);
-
-                                $logId = is_array($log) ? ($log['id'] ?? $log->id) : $log->id;
-
-                                // Вычисление возраста
-                                $age = $patientBirthDay ? \Carbon\Carbon::parse($patientBirthDay)->age : 'N/A';
-                            @endphp
-
-                            <tr class="hover:bg-gray-50 transition-colors">
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                                            <i class="fas fa-calendar-day text-blue-600 text-sm"></i>
-                                        </div>
-                                        <span class="text-sm font-medium text-gray-900">
-                                                @if($dateReceipt)
-                                                {{ \Carbon\Carbon::parse($dateReceipt)->translatedFormat('d M Y') }}
-                                            @else
-                                                Не указана
-                                            @endif
-                                            </span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($timeReceipt)
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                            <i class="fas fa-clock mr-1"></i>
-                                            {{ \Carbon\Carbon::parse($timeReceipt)->format('H:i') }}
-                                        </span>
-                                    @else
-                                        <span class="text-gray-400 text-sm">Не указано</span>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center">
-                                        <div>
-                                            <div class="text-sm font-medium text-gray-900">{{ $patientName }}</div>
-                                            <div class="text-xs text-gray-500">ID: {{ $logId }}</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-gray-900">
-                                        @if($patientBirthDay)
-                                            {{ \Carbon\Carbon::parse($patientBirthDay)->translatedFormat('d M Y') }}
-                                        @else
-                                            Не указана
-                                        @endif
-                                    </div>
-                                    @if($patientBirthDay && $age !== 'N/A')
-                                        <div class="text-xs text-gray-500">
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
-                                                <i class="fas fa-user-clock mr-1"></i>
-                                                {{ $age }} лет
-                                            </span>
-                                        </div>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center">
-                                        <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mr-2">
-                                            <i class="fas fa-file-medical-alt text-green-600"></i>
-                                        </div>
-                                        <span class="text-sm font-mono font-medium text-gray-900">
-                                                {{ $patientMedicalCard }}
-                                            </span>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <div class="flex items-center gap-2">
-                                        <a href="{{ route('log.find', ['id' => $logId]) }}"
-                                           class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
-                                            <i class="fas fa-eye mr-1"></i>
-                                            Просмотр
-                                        </a>
-                                        <a href="{{ route('log.edit', ['id' => $logId]) }}"
-                                           class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition">
-                                            <i class="fas fa-edit mr-1"></i>
-                                            Редактировать
-                                        </a>
-                                        <form method="POST" action="{{ route('log.destroy', ['id' => $logId]) }}"
-                                              onsubmit="return confirmDeletion('{{ addslashes($patientName) }}')"
-                                              class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                    class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-full text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition">
-                                                <i class="fas fa-trash-alt mr-1"></i>
-                                                Удалить
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Информация о результатах -->
-                <div class="mt-4 p-4 bg-gray-50 rounded-lg">
-                    <div class="flex items-center justify-between">
-                        <div class="text-sm text-gray-600">
-                            <i class="fas fa-info-circle mr-2"></i>
-                            Отображено {{ is_countable($logs) ? count($logs) : 0 }} записей
+            <div class="card-body">
+                @if(empty($currentPatients))
+                    <div class="text-center py-8">
+                        <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+                            <i class="fas fa-user-slash text-gray-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-2">Записи не найдены</h3>
+                        <p class="text-gray-500">
                             @if(request()->has('search_name') && !empty($search_name))
-                                по запросу "<span class="font-semibold">{{ $search_name }}</span>"
+                                Пациенты по запросу "{{ $search_name }}" не найдены
+                            @else
+                                В санатории пока нет пациентов
                             @endif
-                        </div>
-                        <div class="text-sm text-gray-600">
-                            <i class="fas fa-database mr-2"></i>
-                            Обновлено: {{ now()->translatedFormat('d M Y, H:i') }}
-                        </div>
+                        </p>
+                        <a href="{{ route('log.add') }}" class="btn btn-primary mt-4">
+                            <i class="fas fa-plus"></i>
+                            Добавить первого пациента
+                        </a>
                     </div>
-                </div>
-            @endif
+                @else
+                    @include('partials.current-patients-table', ['logs' => $currentPatients])
+                @endif
+            </div>
+        </div>
+    </div>
+
+    <!-- Вкладка Выписанные пациенты (скрыта по умолчанию) -->
+    <div id="tab-discharged" class="tab-content hidden">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-user-check"></i>
+                    Выписанные пациенты
+                </h3>
+                @if(!empty($dischargedPatients))
+                    <span class="ml-2 px-3 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full">
+                        {{ count($dischargedPatients) }} записей
+                    </span>
+                @endif
+            </div>
+
+            <div class="card-body">
+                @if(empty($dischargedPatients))
+                    <div class="text-center py-8">
+                        <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center">
+                            <i class="fas fa-user-check text-gray-400 text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-2">Нет выписанных пациентов</h3>
+                        <p class="text-gray-500">
+                            @if(request()->has('search_name') && !empty($search_name))
+                                Выписанные пациенты по запросу "{{ $search_name }}" не найдены
+                            @else
+                                В системе пока нет выписанных пациентов
+                            @endif
+                        </p>
+                    </div>
+                @else
+                    @include('partials.discharged-patients-table', ['logs' => $dischargedPatients])
+                @endif
+            </div>
         </div>
     </div>
 
@@ -357,6 +244,43 @@
         function confirmDeletion(patientName) {
             return confirm(`Вы уверены, что хотите удалить запись пациента "${patientName}"?\n\nЭто действие невозможно будет отменить.`);
         }
+
+        function switchTab(tabName) {
+            // Скрываем все вкладки
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+
+            // Показываем выбранную вкладку
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+
+            // Обновляем стили кнопок
+            document.querySelectorAll('#patientTabs button').forEach(btn => {
+                btn.classList.remove('active-tab', 'border-blue-600', 'text-blue-600');
+                btn.classList.add('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
+            });
+
+            // Активируем выбранную кнопку
+            const activeBtn = document.getElementById(`${tabName}-patients-tab`);
+            activeBtn.classList.remove('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
+            activeBtn.classList.add('active-tab', 'border-blue-600', 'text-blue-600');
+        }
+
+        // Добавляем стили для активной вкладки
+        document.addEventListener('DOMContentLoaded', function() {
+            const style = document.createElement('style');
+            style.textContent = `
+                .active-tab {
+                    color: #2563eb;
+                    border-bottom-color: #2563eb;
+                }
+                .active-tab:hover {
+                    color: #2563eb;
+                    border-bottom-color: #2563eb;
+                }
+            `;
+            document.head.appendChild(style);
+        });
     </script>
 
     <style>

@@ -20,7 +20,7 @@
 
                         <!-- Фильтры -->
                         <div class="flex gap-2" id="filterContainer">
-                            <select id="actionFilter" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <select id="actionFilter" class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500" style="padding-right: 35px">
                                 <option value="all">Все действия</option>
                                 <option value="add">Создание</option>
                                 <option value="edit">Редактирование</option>
