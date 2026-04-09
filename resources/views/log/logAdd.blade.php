@@ -1,4 +1,13 @@
+@push('styles')
+    @vite('resources/css/log-add.css')
+@endpush
+
+@push('scripts')
+    @vite('resources/js/log-add.js')
+@endpush
+
 <x-app-layout>
+    <div class="log-add-page">
 
     <!-- Ошибки -->
     @error('error_store')
@@ -20,40 +29,6 @@
         </div>
     </div>
     @enderror
-
-    <!-- Прогресс шагов -->
-    <div class="card mb-6">
-        <div class="card-body">
-            <div class="mb-4">
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Добавление новой записи пациента</h3>
-                <p class="text-gray-600">Заполните все разделы формы для создания новой записи о поступлении пациента</p>
-            </div>
-
-            <div class="flex items-center justify-between mb-8">
-                <div class="flex items-center space-x-4">
-                    <div class="flex items-center">
-                        <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold">1</div>
-                        <span class="ml-2 text-sm font-medium text-gray-900">Основные данные</span>
-                    </div>
-                    <div class="h-1 w-8 bg-gray-300"></div>
-                    <div class="flex items-center">
-                        <div class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-semibold">2</div>
-                        <span class="ml-2 text-sm font-medium text-gray-500">Дополнительная информация</span>
-                    </div>
-                    <div class="h-1 w-8 bg-gray-300"></div>
-                    <div class="flex items-center">
-                        <div class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-semibold">3</div>
-                        <span class="ml-2 text-sm font-medium text-gray-500">Выписка</span>
-                    </div>
-                    <div class="h-1 w-8 bg-gray-300"></div>
-                    <div class="flex items-center">
-                        <div class="w-8 h-8 rounded-full bg-gray-300 text-gray-600 flex items-center justify-center font-semibold">4</div>
-                        <span class="ml-2 text-sm font-medium text-gray-500">Завершение</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <form action="{{ route('log.store') }}" method="post" id="patientForm">
         @csrf
@@ -402,85 +377,7 @@
             </div>
         </div>
 
-        <!-- Раздел 3: Выписка пациента -->
-        <div class="card mb-6">
-            <div class="card-header">
-                <h3 class="card-title">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Выписка пациента
-                </h3>
-                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded">При выписке</span>
-            </div>
-            <div class="card-body space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label for="outcome" class="block text-sm font-medium text-gray-700 mb-1">
-                            <i class="fas fa-clipboard-check mr-1 text-yellow-600"></i>
-                            Исход госпитализации
-                        </label>
-                        <select id="outcome"
-                                name="outcome"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition">
-                            <option value="">Выберите исход</option>
-                            <option value="выписан" {{ old('outcome') == 'выписан' ? 'selected' : '' }}>Выписан</option>
-                            <option value="переведен в другую медицинскую организацию" {{ old('outcome') == 'переведен в другую медицинскую организацию' ? 'selected' : '' }}>Переведен в другую МО</option>
-                            <option value="умер" {{ old('outcome') == 'умер' ? 'selected' : '' }}>Умер</option>
-                        </select>
-                        @error('outcome')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="datetime_discharge" class="block text-sm font-medium text-gray-700 mb-1">
-                            <i class="fas fa-calendar-times mr-1 text-yellow-600"></i>
-                            Дата и время исхода
-                        </label>
-                        <input type="datetime-local"
-                               id="datetime_discharge"
-                               name="datetime_discharge"
-                               value="{{ old('datetime_discharge') }}"
-                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition">
-                        @error('datetime_discharge')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-
-                <div id="medicalOrgField" class="{{ old('outcome') != 'переведен в другую медицинскую организацию' ? 'hidden' : '' }}">
-                    <label for="section_transferred" class="block text-sm font-medium text-gray-700 mb-1">
-                        <i class="fas fa-hospital mr-1 text-yellow-600"></i>
-                        Медицинская организация перевода
-                    </label>
-                    <input type="text"
-                           id="section_transferred"
-                           name="section_transferred"
-                           value="{{ old('section_transferred') }}"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition"
-                           placeholder="Городская больница №1">
-                    @error('section_transferred')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div>
-                    <label for="datetime_inform" class="block text-sm font-medium text-gray-700 mb-1">
-                        <i class="fas fa-bullhorn mr-1 text-yellow-600"></i>
-                        Дата/время уведомления
-                    </label>
-                    <input type="datetime-local"
-                           id="datetime_inform"
-                           name="datetime_inform"
-                           value="{{ old('datetime_inform') }}"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition">
-                    @error('datetime_inform')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
-        </div>
-
-        <!-- Раздел 4: Отказ в госпитализации -->
+        <!-- Раздел 3: Отказ в госпитализации -->
         <div class="card mb-6">
             <div class="card-header">
                 <h3 class="card-title">
@@ -546,7 +443,7 @@
         </div>
 
         <!-- Кнопки действий -->
-        <div class="card mb-6">
+        <div class="card mb-6" id="actionsCardAnchor">
             <div class="card-body">
                 <div class="flex flex-col md:flex-row items-center justify-between gap-4">
                     <div class="text-sm text-gray-600">
@@ -554,7 +451,7 @@
                         Все поля отмеченные как "Обязательно" должны быть заполнены
                     </div>
                     <div class="flex gap-3">
-                        <a href="{{ route('dashboard') }}" class="btn btn-outline">
+                        <a href="{{ route('dashboard') }}" class="btn btn-outline btn-cancel">
                             <i class="fas fa-times mr-2"></i>
                             Отменить
                         </a>
@@ -562,186 +459,22 @@
                             <i class="fas fa-save mr-2"></i>
                             Сохранить запись
                         </button>
-                        <button type="button" onclick="previewForm()" class="btn btn-secondary">
-                            <i class="fas fa-eye mr-2"></i>
-                            Предварительный просмотр
-                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </form>
-
-    <script>
-        // Показать/скрыть поле медицинской организации при выборе перевода
-        document.getElementById('outcome').addEventListener('change', function() {
-            const medicalOrgField = document.getElementById('medicalOrgField');
-            if (this.value === 'переведен в другую медицинскую организацию') {
-                medicalOrgField.classList.remove('hidden');
-                medicalOrgField.querySelector('input').required = true;
-            } else {
-                medicalOrgField.classList.add('hidden');
-                medicalOrgField.querySelector('input').required = false;
-            }
-        });
-
-        // Валидация формы
-        function validateForm() {
-            const requiredFields = document.querySelectorAll('[required]');
-            let isValid = true;
-
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    field.classList.add('border-red-500');
-                    isValid = false;
-                } else {
-                    field.classList.remove('border-red-500');
-                }
-            });
-
-            return isValid;
-        }
-
-        // Предварительный просмотр
-        function previewForm() {
-            if (validateForm()) {
-                // Здесь можно добавить логику предпросмотра
-                alert('Форма заполнена корректно. Можно сохранять запись.');
-            } else {
-                alert('Пожалуйста, заполните все обязательные поля (помечены красной иконкой).');
-            }
-        }
-
-        // Автоматический расчет возраста
-        document.getElementById('birth_day').addEventListener('change', function() {
-            const birthDate = new Date(this.value);
-            const today = new Date();
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const monthDiff = today.getMonth() - birthDate.getMonth();
-
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
-            }
-
-            // Можно добавить отображение возраста рядом с полем
-            const ageDisplay = document.getElementById('age-display') || (() => {
-                const div = document.createElement('div');
-                div.id = 'age-display';
-                div.className = 'text-sm text-gray-600 mt-1';
-                this.parentNode.appendChild(div);
-                return div;
-            })();
-
-            ageDisplay.textContent = `Возраст пациента: ${age} лет`;
-        });
-
-        // Инициализация при загрузке
-        document.addEventListener('DOMContentLoaded', function() {
-            // Инициализация скрытых полей
-            const outcomeSelect = document.getElementById('outcome');
-            if (outcomeSelect) {
-                outcomeSelect.dispatchEvent(new Event('change'));
-            }
-
-            // Подсказки для полей
-            const tooltips = {
-                'snils': 'Формат: XXX-XXX-XXX XX',
-                'polis': 'Формат: XXXX XXXXXXXXXXXX',
-                'phone_agent': 'Формат: +7 (XXX) XXX-XX-XX',
-                'passport': 'Формат: XXXX XXXXXX'
-            };
-
-            Object.entries(tooltips).forEach(([id, text]) => {
-                const input = document.getElementById(id);
-                if (input) {
-                    input.placeholder = text;
-                }
-            });
-        });
-    </script>
-
-    <style>
-        /* Стили для обязательных полей */
-        label[for]:has(+ input[required]),
-        label[for]:has(+ select[required]),
-        label[for]:has(+ textarea[required]) {
-            position: relative;
-        }
-
-        label[for]:has(+ input[required])::after,
-        label[for]:has(+ select[required])::after,
-        label[for]:has(+ textarea[required])::after {
-            content: "*";
-            color: #ef4444;
-            margin-left: 4px;
-        }
-
-        /* Анимация фокуса */
-        input:focus, select:focus, textarea:focus {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-        }
-
-        /* Стили для ошибок */
-        .border-red-500 {
-            border-color: #ef4444 !important;
-            animation: shake 0.5s ease-in-out;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-
-        /* Адаптивность */
-        @media (max-width: 768px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .card-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
-            }
-
-            .card-header .ml-2 {
-                margin-left: 0 !important;
-                margin-top: 0.5rem;
-            }
-
-            .flex-col.md\:flex-row {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .flex-col.md\:flex-row .btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .grid-cols-1.md\:grid-cols-2 {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Стили для прогресс-бара */
-        .progress-step.active {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            color: white;
-            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-        }
-
-        .progress-step.completed {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-        }
-    </style>
+    <div id="floatingActions" class="floating-actions hidden">
+        <div class="floating-actions-inner">
+            <a href="{{ route('dashboard') }}" class="btn btn-outline btn-cancel">
+                <i class="fas fa-times mr-2"></i>
+                Отменить
+            </a>
+            <button type="submit" form="patientForm" class="btn btn-primary">
+                <i class="fas fa-save mr-2"></i>
+                Сохранить запись
+            </button>
+        </div>
+    </div>
+    </div>
 </x-app-layout>

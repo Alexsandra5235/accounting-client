@@ -37,7 +37,7 @@ class LogController extends Controller
             'medical_card' => ['required'],
         ]);
         try {
-            $response = app(ApiService::class)->createLog($request, env('API_LOG_TOKEN'));
+            $response = app(ApiService::class)->createLog($request, config('api.log_token'));
             if ($response->badRequest()){
                 return redirect()->back()->withErrors(['error_store' => $response->getBody()]);
             }
@@ -56,7 +56,7 @@ class LogController extends Controller
 
             SendTelegramNotification::dispatch($message);
 
-            return redirect()->route('dashboard')->with('toast', 'Запись успешно добавлена!');;
+            return redirect()->route('dashboard')->with('toast', 'Запись успешно добавлена!');
         } catch (Exception $exception) {
             return redirect()->back()->withErrors(['error_store' => $exception->getMessage()]);
         }
@@ -69,14 +69,14 @@ class LogController extends Controller
     public function destroy(int $id): bool|string
     {
         try {
-            $log = app(ApiService::class)->getLogById(env('API_LOG_TOKEN'), $id);
+            $log = app(ApiService::class)->getLogById(config('api.log_token'), $id);
             if ($log->badRequest()){
                 return redirect()->route('dashboard')->withErrors(['error_delete' => json_decode($log->getBody())]);
             }
 
             $log = json_decode($log->getBody());
 
-            $response = app(ApiService::class)->deleteLog(env('API_LOG_TOKEN'), $id);
+            $response = app(ApiService::class)->deleteLog(config('api.log_token'), $id);
             if($response->badRequest()){
                 return redirect()->route('dashboard')->withErrors(['error_delete' => $response->getBody()]);
             }
@@ -108,13 +108,13 @@ class LogController extends Controller
             'medical_card' => ['required'],
         ]);
         try {
-            $logBefore = app(ApiService::class)->getLogById(env('API_LOG_TOKEN'), $id);
-            $response = app(ApiService::class)->updateLog($request, env('API_LOG_TOKEN') ,$id);
+            $logBefore = app(ApiService::class)->getLogById(config('api.log_token'), $id);
+            $response = app(ApiService::class)->updateLog($request, config('api.log_token'), $id);
             if ($response->badRequest()){
                 return redirect()->back()->withErrors(['error_update' => $response->getBody()]);
             }
 
-            $log = app(ApiService::class)->getLogById(env('API_LOG_TOKEN'), $id);
+            $log = app(ApiService::class)->getLogById(config('api.log_token'), $id);
             if ($log->badRequest()){
                 return redirect()->route('dashboard')->withErrors(['error_show' => json_decode($log->getBody())]);
             }
@@ -141,7 +141,7 @@ class LogController extends Controller
     public function findById(int $id): View|RedirectResponse
     {
         try {
-            $log = app(ApiService::class)->getLogById(env('API_LOG_TOKEN'), $id);
+            $log = app(ApiService::class)->getLogById(config('api.log_token'), $id);
             if ($log->badRequest()){
                 return redirect()->route('dashboard')->withErrors(['error_show' => json_decode($log->getBody())]);
             }
@@ -154,7 +154,7 @@ class LogController extends Controller
     public function edit(int $id): View|RedirectResponse
     {
         try {
-            $log = app(ApiService::class)->getLogById(env('API_LOG_TOKEN'), $id);
+            $log = app(ApiService::class)->getLogById(config('api.log_token'), $id);
             if ($log->badRequest()){
                 return redirect()->route('dashboard')->withErrors(['error_show' => json_decode($log->getBody())]);
             }
@@ -174,22 +174,30 @@ class LogController extends Controller
      */
     public function getLogByName(Request $request): View
     {
-        $response = app(ApiService::class)->getLogByName(env('API_LOG_TOKEN'), $request);
+        $response = app(ApiService::class)->getLogByName(config('api.log_token'), $request);
         $logs = json_decode($response->getBody());
-        $search_name = $request->input('search_name');
-        return view('dashboard', compact(['logs', 'search_name']));
-    }
+        usort($logs, function($a, $b) {
+            $datetimeA = $a->log_receipt->date_receipt . ' ' . $a->log_receipt->time_receipt;
+            $datetimeB = $b->log_receipt->date_receipt . ' ' . $b->log_receipt->time_receipt;
 
-    public function getGrouping(Request $request): stdClass|string
-    {
-        try {
-            $group = app(ApiService::class)->getGrouping(env('API_LOG_TOKEN'), $request);
-            if ($group->badRequest()){
-                return $group->getBody();
+            $timestampA = strtotime($datetimeA);
+            $timestampB = strtotime($datetimeB);
+
+            return $timestampB <=> $timestampA;
+        });
+
+        // Разделяем на текущих и выписанных
+        $currentPatients = [];
+        $dischargedPatients = [];
+
+        foreach ($logs as $log) {
+            if (!empty($log->log_discharge->datetime_discharge)) {
+                $dischargedPatients[] = $log;
+            } else {
+                $currentPatients[] = $log;
             }
-            return json_decode($group->getBody());
-        } catch (Exception $exception) {
-            return $exception->getMessage();
         }
+        $search_name = $request->input('search_name');
+        return view('dashboard', compact('logs', 'search_name', 'currentPatients', 'dischargedPatients'));
     }
 }

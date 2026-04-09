@@ -1,5 +1,17 @@
-<x-app-layout>
+@push('styles')
+    @vite('resources/css/log-add.css')
+@endpush
 
+@push('scripts')
+    @vite('resources/js/log-add.js')
+@endpush
+
+@push('scripts')
+    @vite('resources/js/log-edit.js')
+@endpush
+
+<x-app-layout>
+    <div class="log-add-page">
     <!-- Информация о записи и кнопка удаления -->
     <div class="card mb-6">
         <div class="card-body">
@@ -60,7 +72,7 @@
     @enderror
 
     <!-- Форма редактирования -->
-    <form action="{{ route('log.update', ['id' => $log->id]) }}" method="post">
+    <form action="{{ route('log.update', ['id' => $log->id]) }}" method="post" id="patientForm">
         @csrf
         @method('put')
 
@@ -559,15 +571,15 @@
         </div>
 
         <!-- Кнопки действий -->
-        <div class="card mb-6">
+        <div class="card mb-6" id="actionsCardAnchor">
             <div class="card-body">
                 <div class="flex flex-col md:flex-row items-center justify-between gap-4">
                     <div class="text-sm text-gray-600">
                         <i class="fas fa-info-circle mr-1"></i>
-                        Все поля отмеченные как <span class="text-blue-600 font-semibold">"Обязательно"</span> должны быть заполнены
+                        Все поля отмеченные как "Обязательно" должны быть заполнены
                     </div>
                     <div class="flex gap-3">
-                        <a href="{{ route('dashboard') }}" class="btn btn-outline">
+                        <a href="{{ route('dashboard') }}" class="btn btn-outline btn-cancel">
                             <i class="fas fa-times mr-2"></i>
                             Отмена
                         </a>
@@ -580,62 +592,17 @@
             </div>
         </div>
     </form>
-
-    <script>
-        // Показать/скрыть поле медицинской организации при выборе перевода
-        document.addEventListener('DOMContentLoaded', function() {
-            const outcomeSelect = document.getElementById('outcome');
-            const medicalOrgField = document.getElementById('medicalOrgField');
-
-            if (outcomeSelect) {
-                outcomeSelect.addEventListener('change', function() {
-                    if (this.value === 'переведен в другую медицинскую организацию') {
-                        medicalOrgField.classList.remove('hidden');
-                        medicalOrgField.querySelector('input').required = true;
-                    } else {
-                        medicalOrgField.classList.add('hidden');
-                        medicalOrgField.querySelector('input').required = false;
-                    }
-                });
-
-                // Инициализация при загрузке
-                if (outcomeSelect.value === 'переведен в другую медицинскую организацию') {
-                    medicalOrgField.classList.remove('hidden');
-                    medicalOrgField.querySelector('input').required = true;
-                }
-            }
-        });
-
-        function confirmDeletion(patientName) {
-            return confirm(`Вы уверены, что хотите удалить запись пациента "${patientName}"?\n\nЭто действие невозможно будет отменить.`);
-        }
-
-        // Форматирование СНИЛС
-        document.getElementById('snils')?.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length > 11) value = value.slice(0, 11);
-
-            if (value.length > 9) {
-                value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1-$2-$3 $4');
-            } else if (value.length > 6) {
-                value = value.replace(/^(\d{3})(\d{3})(\d{0,3})$/, '$1-$2-$3');
-            } else if (value.length > 3) {
-                value = value.replace(/^(\d{3})(\d{0,3})$/, '$1-$2');
-            }
-
-            e.target.value = value;
-        });
-
-        // Форматирование полиса
-        document.getElementById('polis')?.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length > 16) value = value.slice(0, 16);
-
-            if (value.length > 4) {
-                value = value.replace(/^(\d{4})(\d{0,12})$/, '$1 $2');
-            }
-
-            e.target.value = value;
-        });
-    </script>
+    <div id="floatingActions" class="floating-actions hidden">
+        <div class="floating-actions-inner">
+            <a href="{{ route('dashboard') }}" class="btn btn-outline btn-cancel">
+                <i class="fas fa-times mr-2"></i>
+                Отмена
+            </a>
+            <button type="submit" form="patientForm" class="btn btn-primary">
+                <i class="fas fa-save mr-2"></i>
+                Сохранить изменения
+            </button>
+        </div>
+    </div>
+    </div>
 </x-app-layout>

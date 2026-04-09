@@ -1,4 +1,9 @@
+@push('styles')
+    @vite('resources/css/log-show.css')
+@endpush
+
 <x-app-layout>
+    <div class="log-show-page">
     <!-- Информация о записи и кнопки действий -->
     <div class="card mb-6">
         <div class="card-body">
@@ -22,7 +27,12 @@
                     </div>
                 </div>
 
-                <div class="flex gap-3">
+                <div class="flex gap-3 flex-wrap">
+                    <a href="{{ route('dashboard') }}" class="btn btn-outline">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Вернуться к списку пациентов
+                    </a>
+
                     <a href="{{ route('log.edit', ['id' => $log->id]) }}" class="btn btn-primary">
                         <i class="fas fa-edit mr-2"></i>
                         Редактировать
@@ -34,52 +44,12 @@
                           class="inline">
                         @csrf
                         @method('delete')
-                        <button type="submit" class="btn btn-outline border-red-500 text-red-600 hover:bg-red-500 hover:text-white transition-colors">
+                        <button type="submit" class="btn btn-outline btn-delete">
                             <i class="fas fa-trash-alt mr-2"></i>
                             Удалить
                         </button>
                     </form>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Прогресс просмотра -->
-    <div class="card mb-6">
-        <div class="card-body">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-2">
-                    <div class="flex items-center">
-                        <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold">
-                            <i class="fas fa-user text-sm"></i>
-                        </div>
-                        <span class="ml-2 text-sm font-medium text-gray-900">Основные данные</span>
-                    </div>
-                    <div class="h-1 w-8 bg-blue-200"></div>
-                    <div class="flex items-center">
-                        <div class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-semibold">
-                            <i class="fas fa-info-circle text-sm"></i>
-                        </div>
-                        <span class="ml-2 text-sm font-medium text-gray-600">Дополнительная</span>
-                    </div>
-                    <div class="h-1 w-8 bg-gray-200"></div>
-                    <div class="flex items-center">
-                        <div class="w-8 h-8 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center font-semibold">
-                            <i class="fas fa-sign-out-alt text-sm"></i>
-                        </div>
-                        <span class="ml-2 text-sm font-medium text-gray-600">Выписка</span>
-                    </div>
-                    <div class="h-1 w-8 bg-gray-200"></div>
-                    <div class="flex items-center">
-                        <div class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-semibold">
-                            <i class="fas fa-times-circle text-sm"></i>
-                        </div>
-                        <span class="ml-2 text-sm font-medium text-gray-600">Отказ</span>
-                    </div>
-                </div>
-                <span class="text-xs text-gray-500">
-                    <i class="fas fa-lock mr-1"></i> Режим просмотра
-                </span>
             </div>
         </div>
     </div>
@@ -97,7 +67,6 @@
             <!-- ФИО и возраст -->
             <div class="flex items-start gap-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg mb-6">
                 <div class="w-16 h-16 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 flex items-center justify-center text-white text-2xl font-semibold shadow-md">
-                    {{ strtoupper(substr($log->patient->name, 0, 1)) }}
                 </div>
                 <div class="flex-1">
                     <h2 class="text-2xl font-bold text-gray-900">{{ $log->patient->name }}</h2>
@@ -421,17 +390,5 @@
         </div>
     </div>
 
-    <!-- Кнопка возврата -->
-    <div class="flex justify-center mt-8">
-        <a href="{{ route('dashboard') }}" class="btn btn-outline">
-            <i class="fas fa-arrow-left mr-2"></i>
-            Вернуться к списку пациентов
-        </a>
     </div>
-
-    <script>
-        function confirmDeletion(patientName) {
-            return confirm(`Вы уверены, что хотите удалить запись пациента "${patientName}"?\n\nЭто действие невозможно будет отменить.`);
-        }
-    </script>
 </x-app-layout>

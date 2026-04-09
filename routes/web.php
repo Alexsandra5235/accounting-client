@@ -16,7 +16,7 @@ Route::get('/', function () {
 })->name('welcome');
 
 Route::get('/dashboard', function () {
-    $logs = app(ApiService::class)->getLogs(env('API_LOG_TOKEN'));
+    $logs = app(ApiService::class)->getLogs(config('api.log_token'));
 
     // Сортируем все записи по дате/времени (новые сверху)
     usort($logs, function($a, $b) {

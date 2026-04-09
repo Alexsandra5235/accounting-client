@@ -1,3 +1,16 @@
+@push('styles')
+    @vite('resources/css/log-show.css')
+@endpush
+
+@push('styles')
+    @vite('resources/css/excel.css')
+@endpush
+
+@push('scripts')
+    @vite('resources/js/excel.js')
+@endpush
+
+
 <x-app-layout>
     <!-- Ошибки -->
     @error('error_excel')
@@ -20,6 +33,7 @@
     </div>
     @enderror
 
+    <div class="log-show-page">
     <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
 
@@ -207,6 +221,7 @@
             </div>
         </div>
     </div>
+    </div>
 
     <!-- Модальное окно помощи -->
     <div id="helpModal" class="modal-overlay" style="display: none;">
@@ -259,110 +274,4 @@
             </div>
         </div>
     </div>
-
-    <script>
-        function showHelpModal() {
-            document.getElementById('helpModal').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeHelpModal() {
-            document.getElementById('helpModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        // Валидация дат
-        document.addEventListener('DOMContentLoaded', function() {
-            const dateInputs = document.querySelectorAll('input[type="date"]');
-            const today = new Date().toISOString().split('T')[0];
-
-            dateInputs.forEach(input => {
-                input.max = today;
-
-                input.addEventListener('change', function() {
-                    const form = this.closest('form');
-                    const date1 = form.querySelector('input[name="date1"]');
-                    const date2 = form.querySelector('input[name="date2"]');
-
-                    if (date1 && date2 && date1.value && date2.value) {
-                        if (date2.value < date1.value) {
-                            alert('Дата окончания не может быть раньше даты начала');
-                            date2.value = date1.value;
-                        }
-
-                        // Проверка на период > 31 дня
-                        const start = new Date(date1.value);
-                        const end = new Date(date2.value);
-                        const diffTime = Math.abs(end - start);
-                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-
-                    }
-                });
-            });
-        });
-    </script>
-
-    <style>
-        /* Стили для модального окна */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            backdrop-filter: blur(4px);
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 16px;
-            padding: 28px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: none;
-            border: none;
-            font-size: 20px;
-            color: #6b7280;
-            cursor: pointer;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
-
-        .modal-close:hover {
-            background: #f3f4f6;
-            color: #374151;
-        }
-
-        @media (max-width: 640px) {
-            .modal-content {
-                padding: 20px;
-                width: 95%;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-    </style>
 </x-app-layout>

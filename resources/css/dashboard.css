@@ -1,0 +1,138 @@
+/* Dashboard-only styles */
+.active-tab {
+    color: #2563eb;
+    border-bottom-color: #2563eb;
+}
+
+.active-tab:hover {
+    color: #2563eb;
+    border-bottom-color: #2563eb;
+}
+
+/* Keep dashboard cards static on hover */
+.dashboard-page .card:hover {
+    transform: none;
+}
+
+/* Keep quick action icons static on hover */
+.dashboard-page .quick-action-icon {
+    transform: none !important;
+}
+
+/* Compact search block */
+.dashboard-search-card .dashboard-search-header {
+    padding: 0.75rem 1rem;
+}
+
+.dashboard-search-card .dashboard-search-body {
+    padding: 0.75rem 1rem 0.9rem;
+}
+
+.dashboard-search-title {
+    font-size: 1rem;
+    gap: 0.5rem;
+}
+
+.dashboard-search-form {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+}
+
+.dashboard-search-input-wrap {
+    flex: 1;
+    min-width: 220px;
+}
+
+.dashboard-search-input {
+    min-height: 36px;
+    padding-top: 0.45rem;
+    padding-bottom: 0.45rem;
+}
+
+.dashboard-search-actions {
+    flex-shrink: 0;
+    margin: 0;
+}
+
+.dashboard-search-actions .btn {
+    min-height: 36px;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.875rem;
+}
+
+/* Custom table styles */
+table th {
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+}
+
+table tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+table tr:hover {
+    background-color: #f3f4f6;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .dashboard-search-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .dashboard-search-input-wrap {
+        min-width: 100%;
+    }
+
+    .dashboard-search-actions {
+        width: 100%;
+    }
+
+    .dashboard-search-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .quick-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .card-body .flex.items-center.gap-2 {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .card-body .flex.items-center.gap-2 a,
+    .card-body .flex.items-center.gap-2 form {
+        flex: 1;
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .card-header .ml-2 {
+        margin-left: 0 !important;
+        margin-top: 0.5rem;
+    }
+}

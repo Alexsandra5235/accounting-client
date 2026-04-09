@@ -1,0 +1,66 @@
+/* Анимация для карточек */
+.grid > div {
+    transition: all 0.3s ease;
+}
+
+/* Градиентные иконки */
+.bg-blue-100 {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+}
+
+.bg-green-100 {
+    background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+}
+
+.bg-red-100 {
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+}
+
+.bg-purple-100 {
+    background: linear-gradient(135deg, #f3e8ff, #e9d5ff);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .grid-cols-2.md\:grid-cols-4 {
+        gap: 0.75rem;
+    }
+
+    .grid > div .text-3xl {
+        font-size: 1.875rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .grid-cols-2.md\:grid-cols-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Дополнительные стили для статистики */
+.stat-card .stat-icon.orange {
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), rgba(249, 115, 22, 0.2));
+    color: #f97316;
+}
+
+.stat-card .stat-icon.purple {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.2));
+    color: #8b5cf6;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    #patientFlowChart {
+        height: 250px !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}

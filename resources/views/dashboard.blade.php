@@ -1,37 +1,37 @@
+@push('styles')
+    @vite('resources/css/dashboard.css')
+@endpush
+
+@push('scripts')
+    @vite('resources/js/dashboard.js')
+@endpush
+
 <x-app-layout>
+    <div class="dashboard-page">
     <!-- Статистика сверху -->
     <!-- Поиск пациента -->
-    <div class="card mb-6">
-        <div class="card-header">
-            <h3 class="card-title">
+    <div class="card mb-6 dashboard-search-card">
+        <div class="card-header dashboard-search-header">
+            <h3 class="card-title dashboard-search-title">
                 <i class="fas fa-search"></i>
                 Поиск пациента
             </h3>
         </div>
-        <div class="card-body">
-            <div class="mb-4">
-                <div class="text-gray-600">
-                    Поиск по ФИО пациента. Результаты будут содержать записи, в которых имя пациента включает введенный фрагмент.
-                </div>
-            </div>
-
-            <form method="post" action="{{ route('log.search') }}" class="space-y-4">
+        <div class="card-body dashboard-search-body">
+            <form method="post" action="{{ route('log.search') }}" class="dashboard-search-form">
                 @csrf
 
-                <div>
-                    <label for="search_name" class="block text-sm font-medium text-gray-700 mb-1">
-                        ФИО пациента
-                    </label>
+                <div class="dashboard-search-input-wrap">
                     <input type="text"
                            id="search_name"
                            name="search_name"
                            value="{{ $search_name ?? '' }}"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                           placeholder="Введите ФИО пациента..."
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition dashboard-search-input"
+                           placeholder="Поиск по ФИО пациента"
                            autofocus>
                 </div>
 
-                <div class="flex gap-3">
+                <div class="flex gap-3 dashboard-search-actions">
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-search"></i>
                         Найти пациента
@@ -208,10 +208,10 @@
     </div>
 
     <!-- Быстрые действия -->
-    <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <a href="{{ route('log.add') }}" class="card group hover:shadow-lg transition-shadow">
+    <div class="quick-actions mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <a href="{{ route('log.add') }}" class="card group transition-shadow">
             <div class="card-body text-center">
-                <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white text-2xl group-hover:scale-110 transition-transform">
+                <div class="quick-action-icon w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white text-2xl transition-transform">
                     <i class="fas fa-user-plus"></i>
                 </div>
                 <h4 class="font-semibold text-gray-900 mb-2">Добавить пациента</h4>
@@ -219,9 +219,9 @@
             </div>
         </a>
 
-        <a href="{{ route('excel.store') }}" class="card group hover:shadow-lg transition-shadow">
+        <a href="{{ route('excel.store') }}" class="card group transition-shadow">
             <div class="card-body text-center">
-                <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-green-500 to-green-600 flex items-center justify-center text-white text-2xl group-hover:scale-110 transition-transform">
+                <div class="quick-action-icon w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-green-500 to-green-600 flex items-center justify-center text-white text-2xl transition-transform">
                     <i class="fas fa-file-excel"></i>
                 </div>
                 <h4 class="font-semibold text-gray-900 mb-2">Отчеты</h4>
@@ -229,9 +229,9 @@
             </div>
         </a>
 
-        <a href="{{ route('patient.flow') }}" class="card group hover:shadow-lg transition-shadow">
+        <a href="{{ route('patient.flow') }}" class="card group transition-shadow">
             <div class="card-body text-center">
-                <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-purple-500 to-purple-600 flex items-center justify-center text-white text-2xl group-hover:scale-110 transition-transform">
+                <div class="quick-action-icon w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-purple-500 to-purple-600 flex items-center justify-center text-white text-2xl transition-transform">
                     <i class="fas fa-chart-line"></i>
                 </div>
                 <h4 class="font-semibold text-gray-900 mb-2">Статистика</h4>
@@ -239,107 +239,5 @@
             </div>
         </a>
     </div>
-
-    <script>
-        function confirmDeletion(patientName) {
-            return confirm(`Вы уверены, что хотите удалить запись пациента "${patientName}"?\n\nЭто действие невозможно будет отменить.`);
-        }
-
-        function switchTab(tabName) {
-            // Скрываем все вкладки
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.add('hidden');
-            });
-
-            // Показываем выбранную вкладку
-            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-
-            // Обновляем стили кнопок
-            document.querySelectorAll('#patientTabs button').forEach(btn => {
-                btn.classList.remove('active-tab', 'border-blue-600', 'text-blue-600');
-                btn.classList.add('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
-            });
-
-            // Активируем выбранную кнопку
-            const activeBtn = document.getElementById(`${tabName}-patients-tab`);
-            activeBtn.classList.remove('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
-            activeBtn.classList.add('active-tab', 'border-blue-600', 'text-blue-600');
-        }
-
-        // Добавляем стили для активной вкладки
-        document.addEventListener('DOMContentLoaded', function() {
-            const style = document.createElement('style');
-            style.textContent = `
-                .active-tab {
-                    color: #2563eb;
-                    border-bottom-color: #2563eb;
-                }
-                .active-tab:hover {
-                    color: #2563eb;
-                    border-bottom-color: #2563eb;
-                }
-            `;
-            document.head.appendChild(style);
-        });
-    </script>
-
-    <style>
-        /* Кастомные стили для таблицы */
-        table th {
-            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-        }
-
-        table tr:nth-child(even) {
-            background-color: #f9fafb;
-        }
-
-        table tr:hover {
-            background-color: #f3f4f6;
-        }
-
-        /* Адаптивность для мобильных */
-        @media (max-width: 768px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            table {
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
-            }
-
-            .quick-actions {
-                grid-template-columns: 1fr;
-            }
-
-            .card-body .flex.items-center.gap-2 {
-                flex-wrap: wrap;
-                gap: 0.5rem;
-            }
-
-            .card-body .flex.items-center.gap-2 a,
-            .card-body .flex.items-center.gap-2 form {
-                flex: 1;
-                min-width: 120px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .card-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
-            }
-
-            .card-header .ml-2 {
-                margin-left: 0 !important;
-                margin-top: 0.5rem;
-            }
-        }
-    </style>
+    </div>
 </x-app-layout>

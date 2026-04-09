@@ -1,0 +1,71 @@
+label[for]:has(+ input[required]),
+label[for]:has(+ select[required]),
+label[for]:has(+ textarea[required]) {
+    position: relative;
+}
+
+label[for]:has(+ input[required])::after,
+label[for]:has(+ select[required])::after,
+label[for]:has(+ textarea[required])::after {
+    content: "*";
+    color: #ef4444;
+    margin-left: 4px;
+}
+
+#patientForm input:focus,
+#patientForm select:focus,
+#patientForm textarea:focus {
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+/* Keep elements static on hover for log add page */
+.log-add-page .card:hover {
+    transform: none;
+}
+
+.log-add-page .btn:hover {
+    transform: none;
+}
+
+.log-add-page .btn-cancel {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+.log-add-page .btn-cancel:hover {
+    background: #ef4444;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+
+.floating-actions {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 90;
+    padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+    background: rgba(255, 255, 255, 0.92);
+    border-top: 1px solid #e5e7eb;
+    backdrop-filter: blur(6px);
+}
+
+.floating-actions-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+@media (max-width: 768px) {
+    .floating-actions-inner {
+        justify-content: stretch;
+        width: 100%;
+    }
+
+    .floating-actions-inner .btn {
+        flex: 1;
+        justify-content: center;
+    }
+}

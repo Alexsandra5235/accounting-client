@@ -1,0 +1,15 @@
+/* Keep show page static on hover */
+.log-show-page .card:hover {
+    transform: none;
+}
+
+.log-show-page .btn-delete {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+.log-show-page .btn-delete:hover {
+    background: #ef4444;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
