@@ -64,7 +64,7 @@
                     >
                         <div class="flex items-start space-x-2">
                             <div class="flex-shrink-0">
-                                <div class="w-8 h-6 flex items-center justify-center bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">
+                                <div class="w-14 h-6 flex items-center justify-center bg-blue-100 text-blue-700 rounded text-xs font-mono font-bold">
                                     <span x-text="item.code"></span>
                                 </div>
                             </div>
@@ -124,7 +124,7 @@
                         'X-CSRF-TOKEN': csrfToken,
                     },
                     body: JSON.stringify({
-                        [nameInput]: this.query
+                        ['query']: this.query
                     }),
                 })
                     .then(res => res.json())

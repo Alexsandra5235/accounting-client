@@ -11,39 +11,22 @@ use Illuminate\Http\Request;
 class MkdController extends Controller
 {
     /**
-     * @throws ConnectionException
+     * @throws \Exception
      */
     public function suggestState(Request $request): JsonResponse
     {
-        $query = app(MkdService::class)->getRequestState($request);
-        if (!$query) {
-            return response()->json();
-        }
-
-        $response = app(MkdService::class)->suggest($query);
-
-        if ($response->failed()) {
-            return response()->json();
-        }
+        $response = app(MkdService::class)->suggest($request);
 
         return app(MkdService::class)->getResult($response);
     }
 
+
     /**
-     * @throws ConnectionException
+     * @throws \Exception
      */
     public function suggestWound(Request $request): JsonResponse
     {
-        $query = app(MkdService::class)->getRequestWound($request);
-        if (!$query) {
-            return response()->json();
-        }
-
-        $response = app(MkdService::class)->suggest($query);
-
-        if ($response->failed()) {
-            return response()->json();
-        }
+        $response = app(MkdService::class)->suggest($request);
 
         return app(MkdService::class)->getResult($response);
     }

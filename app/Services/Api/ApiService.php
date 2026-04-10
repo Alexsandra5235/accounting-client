@@ -128,4 +128,21 @@ class ApiService
             throw new Exception($exception->getMessage());
         }
     }
+
+    /**
+     * @throws Exception
+     */
+    public function findClassifiers(Request $request): array
+    {
+        try {
+            $classifiers = app(ApiRepository::class)
+                ->postRequest(config('api.log_token'), config('api.log_classifiers_url'), $request);
+            if ($classifiers->badRequest() || $classifiers->getStatusCode() !== 200){
+                throw new Exception($classifiers->getBody());
+            }
+            return json_decode($classifiers->getBody()->getContents(), true);
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage());
+        }
+    }
 }
