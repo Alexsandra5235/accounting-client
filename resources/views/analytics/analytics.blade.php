@@ -36,7 +36,7 @@
                             </div>
                             <div class="mt-4 pt-4 border-t border-gray-100 flex items-center text-xs text-gray-500">
                                 <i class="fas fa-arrow-up text-green-500 mr-1"></i>
-                                <span>+3 за последние 24ч</span>
+                                <span>+{{ $statistic['todayPatient'] }} за последние 24ч</span>
                             </div>
                         </div>
                     </div>
