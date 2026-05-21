@@ -712,7 +712,7 @@ class GenerateExcelService
             $rowIndex = $i + 8;
             $fullName = $log->patient->name ?? '';
             $card = $log->patient->medical_card ?? '';
-            $text = "{$fullName} \n№ {$card}";
+            $text = "{$fullName}. Мед.карта № {$card}";
 
             ExcelStyler::setDefaultSettings(
                 $sheet,

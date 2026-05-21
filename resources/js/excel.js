@@ -14,8 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const today = new Date().toISOString().split('T')[0];
 
     dateInputs.forEach(input => {
-        input.max = today;
-
         input.addEventListener('change', function() {
             const form = this.closest('form');
             const date1 = form.querySelector('input[name="date1"]');
@@ -31,9 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const start = new Date(date1.value);
                 const end = new Date(date2.value);
                 const diffTime = Math.abs(end - start);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-
             }
         });
     });

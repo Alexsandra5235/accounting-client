@@ -339,12 +339,10 @@
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 @if($growth > 0)
                                                     <span class="inline-flex items-center px-2.5 py-1.5 rounded-md text-sm font-medium bg-green-100 text-green-800">
-                                                            <i class="fas fa-plus mr-1"></i>
                                                             +{{ $growth }}
                                                         </span>
                                                 @elseif($growth < 0)
                                                     <span class="inline-flex items-center px-2.5 py-1.5 rounded-md text-sm font-medium bg-orange-100 text-orange-800">
-                                                        <i class="fas fa-minus mr-1"></i>
                                                         {{ $growth }}
                                                     </span>
                                                 @else

@@ -61,12 +61,11 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label for="daily_date1" class="block text-sm font-medium text-gray-700 mb-1">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
                                     <i class="fas fa-calendar-plus mr-1 text-blue-600"></i>
                                     Дата начала
                                 </label>
                                 <input type="date"
-                                       id="daily_date1"
                                        name="date1"
                                        value="{{ old('date1') }}"
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
@@ -77,12 +76,11 @@
                             </div>
 
                             <div>
-                                <label for="daily_date2" class="block text-sm font-medium text-gray-700 mb-1">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
                                     <i class="fas fa-calendar-check mr-1 text-blue-600"></i>
                                     Дата окончания
                                 </label>
                                 <input type="date"
-                                       id="daily_date2"
                                        name="date2"
                                        value="{{ old('date2') }}"
                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
