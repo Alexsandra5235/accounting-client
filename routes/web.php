@@ -16,7 +16,8 @@ Route::get('/', function () {
 })->name('welcome');
 
 Route::get('/dashboard', function () {
-    $logs = app(ApiService::class)->getLogs(config('api.log_token'));
+    $apiService = app(ApiService::class);
+    $logs = $apiService->getLogs(config('api.log_token'));
 
     // Сортируем все записи по дате/времени (новые сверху)
     usort($logs, function($a, $b) {
@@ -41,7 +42,30 @@ Route::get('/dashboard', function () {
         }
     }
 
-    return view('dashboard', compact('currentPatients', 'dischargedPatients'));
+    // Получаем текущую страницу для каждого таба из запроса
+    $currentPage = request()->get('current_page', 1);
+    $dischargedPage = request()->get('discharged_page', 1);
+    $perPage = 10; // Количество записей на странице
+
+    // Создаем пагинацию для текущих пациентов
+    $currentPatientsPaginated = new \Illuminate\Pagination\LengthAwarePaginator(
+        array_slice($currentPatients, ($currentPage - 1) * $perPage, $perPage),
+        count($currentPatients),
+        $perPage,
+        $currentPage,
+        ['path' => request()->url(), 'pageName' => 'current_page']
+    );
+
+    // Создаем пагинацию для выписанных пациентов
+    $dischargedPatientsPaginated = new \Illuminate\Pagination\LengthAwarePaginator(
+        array_slice($dischargedPatients, ($dischargedPage - 1) * $perPage, $perPage),
+        count($dischargedPatients),
+        $perPage,
+        $dischargedPage,
+        ['path' => request()->url(), 'pageName' => 'discharged_page']
+    );
+
+    return view('dashboard', compact('currentPatientsPaginated', 'dischargedPatientsPaginated'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
