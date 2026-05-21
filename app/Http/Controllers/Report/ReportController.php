@@ -14,7 +14,15 @@ class ReportController extends Controller
 {
     public function index(): View
     {
-        return view('report.report', ['reports' => Report::query()->orderBy('created_at', 'desc')->get()]);
+        $perPage = 5; // Количество отчетов на странице
+
+        $reports = Report::query()
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
+
+        return view('report.report', [
+            'reports' => $reports
+        ]);
     }
 
     /**
