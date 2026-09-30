@@ -13,6 +13,9 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
+    'tesseract' => [
+        'path' => env('TESSERACT_PATH', '/usr/bin/tesseract'),
+    ],
 
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),

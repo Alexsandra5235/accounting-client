@@ -3,12 +3,8 @@
 namespace App\Services\MKD;
 
 use App\Services\Api\ApiService;
-use Http;
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Http\Client\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 
 
 class MkdService
@@ -28,6 +24,18 @@ class MkdService
     public function suggest(Request $request): array
     {
         return app(ApiService::class)->findClassifiers($request);
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function search(string $query): array
+    {
+        $request = new \Illuminate\Http\Request([
+            'query' => $query,
+        ]);
+
+        return $this->suggest($request);
     }
 
     public function getResult(array $suggestions): JsonResponse

@@ -6,10 +6,8 @@ use App\Repository\Api\ApiRepository;
 use Exception;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Response;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use stdClass;
 
 class ApiService
 {
@@ -42,7 +40,7 @@ class ApiService
     /**
      * @throws ConnectionException
      */
-    public function createLog(Request $request, string $token): Response
+    public function createLog(Request|array $request, string $token): Response
     {
         return app(ApiRepository::class)->postRequest($token, env('API_LOG_URL'), $request);
     }
@@ -137,10 +135,15 @@ class ApiService
         try {
             $classifiers = app(ApiRepository::class)
                 ->postRequest(config('api.log_token'), config('api.log_classifiers_url'), $request);
+            \Log::warning('Classifiers: ' . $classifiers);
+            \Log::warning(json_decode($classifiers->getBody(), true));
+            if (empty($classifiers)){
+                return [];
+            }
             if ($classifiers->badRequest() || $classifiers->getStatusCode() !== 200){
                 throw new Exception($classifiers->getBody());
             }
-            return json_decode($classifiers->getBody()->getContents(), true);
+            return json_decode($classifiers->getBody(), true);
         } catch (Exception $exception) {
             throw new Exception($exception->getMessage());
         }

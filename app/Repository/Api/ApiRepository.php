@@ -54,17 +54,19 @@ class ApiRepository implements ApiInterface
     /**
      * @param string $token
      * @param string $url
-     * @param Request $request
+     * @param Request|array $request
      * @return Response
      * @throws ConnectionException
      */
-    public function postRequest(string $token, string $url, Request $request): Response
+    public function postRequest(string $token, string $url, Request|array $request): Response
     {
+        $data = is_array($request) ? $request : $request->all();
+        \Log::warning('Request: ' . json_encode($data));
         return Http::withHeaders([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $token
-        ])->asForm()->post($url, $request->all());
+        ])->asForm()->post($url, $data);
     }
 
     /**

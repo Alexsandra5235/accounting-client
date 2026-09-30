@@ -1,0 +1,1074 @@
+/* ===== Индикатор шагов ===== */
+.steps-progress {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+}
+
+.steps-progress-bar {
+    height: 4px;
+    background: #e5e7eb;
+    border-radius: 2px;
+    margin-bottom: 20px;
+}
+
+.steps-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+    border-radius: 2px;
+    width: 33.33%;
+    transition: width 0.3s ease;
+}
+
+.steps-items {
+    display: flex;
+    justify-content: space-between;
+}
+
+.step-indicator {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.step-indicator.active {
+    opacity: 1;
+}
+
+.step-indicator.completed {
+    opacity: 1;
+}
+
+.step-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #9ca3af;
+    transition: all 0.3s ease;
+}
+
+.step-indicator.active .step-circle {
+    background: #3b82f6;
+    color: white;
+}
+
+.step-indicator.completed .step-circle {
+    background: #10b981;
+    color: white;
+}
+
+.step-label {
+    display: flex;
+    flex-direction: column;
+}
+
+.step-number {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.step-name {
+    font-size: 14px;
+    color: #1f2937;
+    font-weight: 600;
+}
+
+/* ===== Карточки (без движения) ===== */
+.import-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+}
+
+.import-card-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+}
+
+.import-card-body {
+    padding: 24px;
+}
+
+.import-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+/* ===== Шаги ===== */
+.step-content {
+    transition: opacity 0.3s ease;
+}
+
+.step-content.hidden {
+    display: none;
+}
+
+.step-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* ===== Зона загрузки ===== */
+.upload-zone {
+    border: 2px dashed #d1d5db;
+    border-radius: 12px;
+    padding: 48px 24px;
+    text-align: center;
+    cursor: pointer;
+    background: #fafbfc;
+}
+
+.upload-zone:hover {
+    border-color: #3b82f6;
+    background: #f0f7ff;
+}
+
+.upload-zone.drag-over {
+    border-color: #3b82f6;
+    background: #eff6ff;
+}
+
+.upload-zone-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    color: white;
+}
+
+.upload-zone-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 8px;
+}
+
+.upload-zone-subtitle {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 16px;
+}
+
+.upload-zone-formats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 12px;
+}
+
+.format-badge {
+    padding: 2px 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 12px;
+    color: #374151;
+}
+
+.upload-zone-limit {
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+/* ===== Предпросмотр ===== */
+.preview-container {
+    margin-top: 24px;
+}
+
+.preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.preview-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.preview-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.preview-item {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+}
+
+.preview-item-image {
+    height: 150px;
+    overflow: hidden;
+    background: #f3f4f6;
+}
+
+.preview-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.preview-pdf-icon {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: #dc2626;
+}
+
+.preview-item-info {
+    padding: 8px 12px;
+}
+
+.preview-item-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.preview-item-size {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-top: 4px;
+}
+
+.preview-item-remove {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+}
+
+.preview-item:hover .preview-item-remove {
+    opacity: 1;
+}
+
+.preview-item-remove:hover {
+    background: rgba(220, 38, 38, 0.9);
+}
+
+/* ===== Прогресс ===== */
+.progress-container {
+    margin-top: 24px;
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 8px;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.progress-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+}
+
+.progress-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #3b82f6;
+}
+
+.progress-bar {
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+}
+
+/* ===== Инструкция ===== */
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+}
+
+.step-item {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 8px;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.step-content-inner {
+    flex: 1;
+}
+
+.step-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 4px;
+}
+
+.step-desc {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+/* ===== Группировка по файлам (Шаг 2) ===== */
+.file-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.file-group {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.file-group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    cursor: pointer;
+}
+
+.file-group-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.file-group-thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #e5e7eb;
+}
+
+.file-group-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.file-group-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.file-group-count {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.file-group-toggle {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: #e5e7eb;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.file-group-toggle.open {
+    transform: rotate(180deg);
+}
+
+.file-group-body {
+    overflow-x: auto;
+}
+
+.file-group-body.hidden {
+    display: none;
+}
+
+.file-group-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.file-group-table th {
+    background: #f9fafb;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #4b5563;
+    border-bottom: 2px solid #e5e7eb;
+    white-space: nowrap;
+    font-size: 12px;
+}
+
+.file-group-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #f3f4f6;
+    vertical-align: middle;
+}
+
+.file-group-table input {
+    width: 100%;
+    padding: 4px 8px;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    font-size: 13px;
+    transition: border-color 0.2s;
+}
+
+.file-group-table input:focus {
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.file-group-table input.changed {
+    border-color: #f59e0b;
+    background: #fffbeb;
+}
+
+.view-photo-btn {
+    padding: 4px 8px;
+    border: 1px solid #d1d5db;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #6b7280;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.view-photo-btn:hover {
+    background: #f3f4f6;
+    color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+.confidence-cell {
+    text-align: center;
+}
+
+.confidence-badge {
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.confidence-high {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.confidence-medium {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.confidence-low {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* ===== Шаг 3: Итоги ===== */
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.summary-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: #f9fafb;
+    border-radius: 8px;
+}
+
+.summary-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+
+.summary-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.summary-label {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.summary-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+/* ===== Модальное окно фото ===== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+.modal-photo-container {
+    background: white;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 900px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.modal-photo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-photo-body {
+    padding: 24px;
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-photo-image {
+    max-width: 100%;
+    max-height: 70vh;
+    border-radius: 8px;
+    object-fit: contain;
+}
+
+.modal-close-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: #f3f4f6;
+    border-radius: 8px;
+    color: #6b7280;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.modal-close-btn:hover {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+/* ===== Статус-баджи ===== */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.status-success {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+/* ===== Адаптивность ===== */
+@media (max-width: 768px) {
+    .steps-items {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .upload-zone {
+        padding: 32px 16px;
+    }
+
+    .upload-zone-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 28px;
+    }
+
+    .preview-list {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+
+    .steps-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .step-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .step-actions button {
+        width: 100%;
+    }
+}
+
+/* ===== Карточки пациентов (Шаг 2) ===== */
+.patient-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* В import.css */
+.notification-warning {
+    border-left: 4px solid #f59e0b;
+}
+
+.notification-warning i {
+    color: #f59e0b;
+}
+
+.patient-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    background: white;
+}
+
+.patient-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    cursor: pointer;
+    user-select: none;
+}
+
+.patient-card-header:hover {
+    background: #f3f4f6;
+}
+
+.patient-card-header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.patient-photo-thumb {
+    width: 56px;
+    height: 56px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #e5e7eb;
+    flex-shrink: 0;
+    border: 2px solid #e5e7eb;
+}
+
+.patient-photo-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.patient-card-title {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.patient-card-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.patient-card-name.empty {
+    color: #9ca3af;
+    font-style: italic;
+}
+
+.patient-card-filename {
+    font-size: 12px;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.patient-card-toggle {
+    width: 34px;
+    height: 34px;
+    border: none;
+    background: #e5e7eb;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+    transition: transform 0.3s ease, background 0.2s;
+}
+
+.patient-card-toggle:hover {
+    background: #d1d5db;
+}
+
+.patient-card-toggle.open {
+    transform: rotate(180deg);
+}
+
+.patient-card-body {
+    transition: max-height 0.3s ease;
+}
+
+.patient-card-body.hidden {
+    display: none;
+}
+
+.patient-fields-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+    padding: 20px;
+}
+
+.patient-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.patient-field-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.patient-field-label .required-star {
+    color: #ef4444;
+}
+
+.patient-field-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #1f2937;
+    background: white;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.patient-field-input:focus {
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.patient-field-input.changed {
+    border-color: #f59e0b;
+    background: #fffbeb;
+}
+
+.patient-field-input.changed:focus {
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+}
+
+.patient-field-select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #1f2937;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.patient-field-select:focus {
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.patient-field-select.changed {
+    border-color: #f59e0b;
+    background: #fffbeb;
+}
+
+/* Блок диагноза */
+.diagnosis-block {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px dashed #d1d5db;
+}
+
+.diagnosis-block-title {
+    grid-column: 1 / -1;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+/* Точность распознавания */
+.patient-confidence {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: #f0fdf4;
+    border-radius: 6px;
+    margin-bottom: 16px;
+}
+
+.patient-confidence-label {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.confidence-badge {
+    padding: 2px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.confidence-high {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.confidence-medium {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.confidence-low {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Кнопка просмотра фото */
+.patient-card-actions {
+    padding: 12px 20px;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.btn-view-photo {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1px solid #d1d5db;
+    background: white;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #4b5563;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-view-photo:hover {
+    background: #f3f4f6;
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+
+/* Автодополнение МКБ */
+.mkb-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.mkb-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    max-height: 250px;
+    overflow-y: auto;
+    z-index: 100;
+}
+
+.mkb-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.mkb-item:hover {
+    background: #f8fafc;
+}
+
+.mkb-code {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 14px;
+    min-width: 70px;
+}
+
+.mkb-name {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.hidden {
+    display: none;
+}
+
+.patient-card-filename {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-view-photo {
+    background: transparent;
+    border: none;
+    padding: 2px 4px;
+    color: #4a90e2;
+    cursor: pointer;
+    opacity: .7;
+    transition: opacity .15s, transform .15s;
+}
+.btn-view-photo:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* overlay на превью */
+.patient-photo-thumb { position: relative; cursor: zoom-in; }
+.patient-photo-thumb .thumb-overlay {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,.4);
+    color: #fff; opacity: 0;
+    transition: opacity .15s;
+}
+.patient-photo-thumb:hover .thumb-overlay { opacity: 1; }

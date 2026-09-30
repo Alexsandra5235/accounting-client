@@ -4,6 +4,7 @@ use App\Http\Controllers\Address\AddressController;
 use App\Http\Controllers\ExcelController;
 use App\Http\Controllers\Flow\PatientFlowController;
 use App\Http\Controllers\History\HistoryController;
+use App\Http\Controllers\Import\ImportController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\MKD\MkdController;
 use App\Http\Controllers\ProfileController;
@@ -112,6 +113,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/address/suggest', [AddressController::class, 'suggestAddress'])->name('address.suggest');
     Route::post('/address/suggest/place', [AddressController::class, 'suggestPlace'])->name('address.suggest.place');
 
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/import', [ImportController::class, 'index'])->name('import.index');
+    Route::post('/import/upload', [ImportController::class, 'upload'])->name('import.upload');
+    Route::post('/import/save', [ImportController::class, 'save'])->name('import.save');
 });
 
 require __DIR__.'/auth.php';

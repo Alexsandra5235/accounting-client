@@ -15,8 +15,6 @@ window.switchTab = function switchTab(tabName) {
     activeBtn?.classList.add('active-tab', 'border-blue-600', 'text-blue-600');
 };
 
-// resources/js/dashboard.js
-
 // Функция переключения табов с сохранением состояния
 window.switchTab = function(tabName) {
     // Скрываем все табы

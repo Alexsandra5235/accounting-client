@@ -7,6 +7,8 @@
     <meta name="toast-success" content="{{ session('toast') ?? '' }}">
     <meta name="toast-warn" content="{{ session('toast-warn') ?? '' }}">
 
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+
     <title>Система учета пациентов санатория "Журавлик"</title>
 
     <!-- Fonts -->
@@ -16,6 +18,8 @@
 
     <!-- Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <!-- Toastr CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
@@ -31,6 +35,9 @@
         'resources/js/layout.js',
     ])
     @stack('styles')
+
+    @vite('resources/js/layout.js')
+    @vite('resources/js/app.js')
 </head>
 <body class="font-sans antialiased">
 <div class="app-container">
@@ -55,6 +62,11 @@
                 <a href="{{ route('log.add') }}" class="nav-link js-nav-item {{ request()->routeIs('log.add') ? 'active' : '' }}">
                     <i class="fas fa-plus-circle"></i>
                     <span>Добавить запись</span>
+                </a>
+
+                <a href="{{ route('import.index') }}" class="nav-link js-nav-item {{ request()->routeIs('import.index') ? 'active' : '' }}">
+                    <i class="fas fa-upload"></i>
+                    <span>Импорт данных</span>
                 </a>
 
                 <a href="{{ route('excel.store') }}" class="nav-link js-nav-item {{ request()->routeIs('excel.store') ? 'active' : '' }}">
