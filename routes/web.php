@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Address\AddressController;
 use App\Http\Controllers\ExcelController;
+use App\Http\Controllers\Export\ExportController;
 use App\Http\Controllers\Flow\PatientFlowController;
 use App\Http\Controllers\History\HistoryController;
 use App\Http\Controllers\Import\ImportController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\MKD\MkdController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Report\ReportController;
 use App\Services\Api\ApiService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,6 +21,8 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     $apiService = app(ApiService::class);
     $logs = $apiService->getLogs(config('api.log_token'));
+
+    Log::info('Logs data', $logs);
 
     // Сортируем все записи по дате/времени (новые сверху)
     usort($logs, function($a, $b) {
@@ -113,6 +117,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/address/suggest', [AddressController::class, 'suggestAddress'])->name('address.suggest');
     Route::post('/address/suggest/place', [AddressController::class, 'suggestPlace'])->name('address.suggest.place');
 
+    Route::get('/patients/export/csv', [ExportController::class, 'exportToCsv'])
+        ->name('patients.export.csv');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

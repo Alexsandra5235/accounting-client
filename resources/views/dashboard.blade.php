@@ -97,36 +97,59 @@
         </div>
         @enderror
 
-        <!-- Вкладки с пациентами -->
-        <div class="mb-4 border-b border-gray-200">
-            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="patientTabs" role="tablist">
+        <!-- Вкладки с пациентами и экспорт -->
+        <div class="mb-4 border-b border-gray-200 flex items-end justify-between gap-4">
+
+            <!-- Вкладки -->
+            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center"
+                id="patientTabs"
+                role="tablist">
+
                 <li class="mr-2" role="presentation">
                     <button class="inline-block p-4 border-b-2 rounded-t-lg active-tab"
                             id="current-patients-tab"
                             type="button"
                             role="tab"
                             onclick="switchTab('current')">
+
                         <i class="fas fa-user-injured mr-2"></i>
+
                         Пациенты санатория
+
                         <span class="ml-2 px-2 py-0.5 bg-blue-100 text-blue-800 rounded-full text-xs">
-                        {{ $currentPatientsPaginated->total() }}
-                    </span>
+                    {{ $currentPatientsPaginated->total() }}
+                </span>
                     </button>
                 </li>
+
                 <li class="mr-2" role="presentation">
                     <button class="inline-block p-4 border-b-2 rounded-t-lg border-transparent hover:text-gray-600 hover:border-gray-300"
                             id="discharged-patients-tab"
                             type="button"
                             role="tab"
                             onclick="switchTab('discharged')">
+
                         <i class="fas fa-user-check mr-2"></i>
+
                         Выписанные пациенты
+
                         <span class="ml-2 px-2 py-0.5 bg-gray-100 text-gray-800 rounded-full text-xs">
-                        {{ $dischargedPatientsPaginated->total() }}
-                    </span>
+                    {{ $dischargedPatientsPaginated->total() }}
+                </span>
                     </button>
                 </li>
             </ul>
+
+            <!-- Экспорт -->
+            <div class="pb-2">
+                <a href="{{ route('patients.export.csv') }}"
+                   class="btn btn-outline btn-export"
+                   title="Экспортировать данные пациентов в CSV">
+                    <i class="fas fa-file-csv"></i>
+                    Экспорт CSV
+                </a>
+            </div>
+
         </div>
 
         <!-- Вкладка Пациенты санатория -->
