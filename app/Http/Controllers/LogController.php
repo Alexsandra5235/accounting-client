@@ -198,6 +198,29 @@ class LogController extends Controller
             }
         }
         $search_name = $request->input('search_name');
-        return view('dashboard', compact('logs', 'search_name', 'currentPatients', 'dischargedPatients'));
+
+        // Получаем текущую страницу для каждого таба из запроса
+        $currentPage = request()->get('current_page', 1);
+        $dischargedPage = request()->get('discharged_page', 1);
+        $perPage = 10; // Количество записей на странице
+
+        // Создаем пагинацию для текущих пациентов
+        $currentPatientsPaginated = new \Illuminate\Pagination\LengthAwarePaginator(
+            array_slice($currentPatients, ($currentPage - 1) * $perPage, $perPage),
+            count($currentPatients),
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'pageName' => 'current_page']
+        );
+
+        // Создаем пагинацию для выписанных пациентов
+        $dischargedPatientsPaginated = new \Illuminate\Pagination\LengthAwarePaginator(
+            array_slice($dischargedPatients, ($dischargedPage - 1) * $perPage, $perPage),
+            count($dischargedPatients),
+            $perPage,
+            $dischargedPage,
+            ['path' => request()->url(), 'pageName' => 'discharged_page']
+        );
+        return view('dashboard', compact('logs', 'search_name', 'currentPatients', 'dischargedPatients', 'currentPatientsPaginated', 'dischargedPatientsPaginated'));
     }
 }
